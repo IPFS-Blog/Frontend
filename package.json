@@ -17,7 +17,7 @@
     "pages/**/*.**": "prettier --check --ignore-unknown --write"
   },
   "dependencies": {
-    "autoprefixer": "^10.4.13",
+    "autoprefixer": "^10.4.14",
     "next": "13.2.3",
     "postcss": "^8.4.21",
     "react": "18.2.0",

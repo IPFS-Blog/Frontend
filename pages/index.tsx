@@ -15,6 +15,10 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <div className="bg-blue-500 p-4 text-white">This is a component styled with Tailwind CSS!</div>
+      <label>
+        <div className="text-blue-600"> Customized</div>
+      </label>
       <main className={styles.main}>
         <div className={styles.description}>
           <p>

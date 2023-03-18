@@ -11,8 +11,8 @@ function Logo() {
             rx="211"
             ry="208.5"
             fill="#4183C0"
-            fill-opacity="0.7"
-            shape-rendering="crispEdges"
+            fillOpacity="0.7"
+            shapeRendering="crispEdges"
           />
         </g>
         <circle id="Ellipse 3" cx="323" cy="171" r="16" fill="#3C3C3C" />
@@ -56,7 +56,7 @@ function Logo() {
             fill="#3F444B"
           />
         </g>
-        <path id="Vector 2" d="M380.5 213L398.5 244.5L418 213" stroke="#3B3B3B" stroke-width="6" />
+        <path id="Vector 2" d="M380.5 213L398.5 244.5L418 213" stroke="#3B3B3B" strokeWidth="6" />
       </g>
       <defs>
         <filter
@@ -66,9 +66,9 @@ function Logo() {
           width="622"
           height="617"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"

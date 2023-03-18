@@ -1,15 +1,22 @@
 import classNames from "classnames";
 import Link from "next/link";
 import React, { useState } from "react";
+import {
+  AiOutlineDoubleLeft,
+  AiOutlineFileText,
+  AiOutlineForm,
+  AiOutlineHome,
+  AiOutlineLayout,
+  AiOutlineUsergroupDelete,
+} from "react-icons/ai";
 
-import { ArticleIcon, CollapsIcon, DashboardIcon, HomeIcon, UsersIcon, VideosIcon } from "./icons";
 import Users from "./Users";
 //TODO:更改打開導覽、關閉導覽按鈕
 const menuItems = [
-  { id: 1, label: "首頁", icon: HomeIcon, link: "/" },
-  { id: 2, label: "我的後台", icon: DashboardIcon, link: "/Dashboard" },
-  { id: 3, label: "文件", icon: ArticleIcon, link: "/docs" },
-  { id: 4, label: "創作", icon: VideosIcon, link: "/create/dashboard" },
+  { id: 1, label: "首頁", icon: AiOutlineHome, link: "/" },
+  { id: 2, label: "我的後台", icon: AiOutlineLayout, link: "/Dashboard" },
+  { id: 3, label: "文件", icon: AiOutlineFileText, link: "/docs" },
+  { id: 4, label: "創作", icon: AiOutlineForm, link: "/create/dashboard" },
 ];
 const Sidebar = () => {
   const [toggleCollapse, setToggleCollapse] = useState(false);
@@ -47,7 +54,7 @@ const Sidebar = () => {
           <div className="flex items-center gap-4 pl-1">
             {isCollapsible && (
               <button className={collapseIconClasses} onClick={handleSidebarToggle}>
-                <CollapsIcon />
+                <AiOutlineDoubleLeft />
               </button>
             )}
           </div>
@@ -56,34 +63,31 @@ const Sidebar = () => {
           {menuItems.map(({ icon: Icon, ...menu }) => {
             const classes = getNavItemClasses(menu);
             return (
-              // eslint-disable-next-line react/jsx-key
-              <div className={classes}>
+              <div key={menu.id} className={classes}>
                 <Link href={menu.link}>
-                  {/* //TODO:看有沒有更好的寫法 */}
-                  <p className="flex h-full w-full items-center py-4 px-3">
+                  <div className="flex h-full w-full items-center py-4 px-3">
                     <div style={{ width: "2.5rem" }}>
                       <Icon />
                     </div>
-                    {!toggleCollapse && <span className={classNames("font-medium text-dark")}>{menu.label}</span>}
-                  </p>
+                    {!toggleCollapse && <div className={classNames("font-medium text-dark")}>{menu.label}</div>}
+                  </div>
                 </Link>
               </div>
             );
           })}
         </div>
-
         <div
           className={classNames("flex flex-col", {
             hidden: toggleCollapse,
           })}
         >
-          <div className="mt-5 flex flex-row">
+          <div className="mt-5 flex h-full w-full items-center py-4 px-3">
             <div style={{ width: "2.5rem" }}>
-              <UsersIcon />
+              <AiOutlineUsergroupDelete />
             </div>
-            <span className="font-medium">已追蹤</span>
+            <div className="font-medium">已追蹤</div>
           </div>
-          <div className="mt-3 px-2">
+          <div className="mt-1 flex w-full items-center px-3">
             <Users />
           </div>
         </div>
@@ -91,5 +95,4 @@ const Sidebar = () => {
     </div>
   );
 };
-
 export default Sidebar;

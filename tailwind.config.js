@@ -22,7 +22,13 @@ module.exports = {
         card: "0px 35px 120px -15px #211e35",
       },
       screens: {
-        xs: "450px",
+        //TODO:響應式斷點，手機、平板、筆電
+        phone: "450px",
+        // => @media (min-width: 450px) { ... }
+        tablet: "768px",
+        // => @media (min-width: 640px) { ... }
+        laptop: "1024px",
+        // => @media (min-width: 1024px) { ... }
       },
       backgroundImage: {
         //"hero-pattern": "url('/src/assets/herobg.png')",

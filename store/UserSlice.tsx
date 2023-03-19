@@ -4,7 +4,6 @@ interface UserState {
   profile: {
     address: string;
     username: string;
-    email: string;
     login: boolean;
   };
 }
@@ -13,7 +12,6 @@ const initialState: UserState = {
   profile: {
     address: "",
     username: "",
-    email: "",
     login: false,
   },
 };

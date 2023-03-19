@@ -9,7 +9,9 @@ import TextField from "@mui/material/TextField";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import axios from "axios";
 import React, { useState } from "react";
+// import { useDispatch } from "react-redux";
 
+// import { setLogin } from "@/store/UserSlice";
 // TypeScript 中聲明 window.ethereum 這個屬性的類型，讓 TypeScript 知道它的存在。
 declare global {
   interface Window {
@@ -22,30 +24,44 @@ export default function Register() {
   const [address, setAddress] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  // const dispatch = useDispatch();
   // API Header設定
   const config = { headers: { "Content-Type": "application/json" } };
 
   async function connectMetaMask() {
+    // 有無token
+    // const HasToken = await axios.get("api/user");
     if (typeof window.ethereum !== "undefined") {
       console.log("MetaMask is installed!");
       try {
         // 使用 MetaMask 的 Web3 Provider 發起請求，詢問用戶是否授權網站使用其帳戶
         // 如果用戶同意，將返回用戶的帳戶地址
         setAddress(await window.ethereum.request({ method: "eth_requestAccounts" }));
-
-        // FIXME:這邊要用一個 API 判斷是否有註冊過
-        // const data = { address };
-        // axios
-        //   .post(`${process.env.NEXT_PUBLIC_API}/users/register`, data, config)
-        //   .then(res => console.log(res))
-        //   .catch(err => console.log(err));
-
-        // 如果沒有出錯，表示 MetaMask 已經授權網站使用用戶的帳戶
-
-        // FIXME: 註冊過=>跳轉驗證
-
-        // TODO: 未註冊過=>跳轉註冊畫面
-        setOpen(true);
+        // if (HasToken.data.message == "success") {
+        // const token = HasToken.data.token;
+        // await axios.post("/api/auth/login", token);
+        // TODO:登入成功
+        // FIXME: TOKEN中解析 當初是說username而已
+        //   login();
+        // }
+        // TODO:驗證未通過
+        // if (HasToken.data.message == "Invalid JWT") {
+        //   // FIXME: API問候端這個錢包 有沒有註冊過
+        //   const data = { address };
+        //   await axios
+        //     .post(`${process.env.NEXT_PUBLIC_API}/users/register`, data, config)
+        //     .then(res => {
+        //       const token = res.data.token;
+        //       axios.post("/api/auth/login", token);
+        //       // TODO:登入成功
+        //       // login();
+        //     })
+        //     .catch(err => {
+        //       // TODO: 未註冊過=>跳轉註冊畫面
+        //       setOpen(true);
+        //       console.log(err);
+        //     });
+        // }
       } catch (error) {
         //FIXME: 可以新增吐司之類的UI提醒使用者拒絕授權
         console.log("用戶拒絕了授權:\nerror:", error);
@@ -61,12 +77,14 @@ export default function Register() {
     //確認無誤後發送信箱
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     const data = { address, username, email };
-
     axios
       .post(`${process.env.NEXT_PUBLIC_API}/users/register`, data, config)
       .then(res => {
+        // const token = res.data.token;
+        // axios.post("/api/auth/login", token);
+        // TODO:登入成功
         console.log("正確:", res);
       })
       .catch(error => {
@@ -89,7 +107,16 @@ export default function Register() {
         }
       });
   }
-
+  // 登入成功設定
+  // function login() {
+  //   dispatch(
+  //     setLogin({
+  //       address,
+  //       username,
+  //       login: true,
+  //     }),
+  //   );
+  // }
   // TODO: UI function
   const [open, setOpen] = useState(false);
   const [errorMessageUsername, seterrorMessageUsername] = useState("");

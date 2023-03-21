@@ -3,7 +3,7 @@ const secret = process.env.NEXT_SECRET;
 export default async function user(req: any, res: any) {
   const { cookies } = req;
 
-  const jwt = cookies.UserJWT;
+  const jwt = cookies.get("UserJWT")?.value;
 
   if (jwt === undefined) {
     res.json({ message: "Invalid JWT" });

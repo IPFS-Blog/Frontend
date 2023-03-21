@@ -27,16 +27,19 @@ export default function Register() {
   // const dispatch = useDispatch();
   // API Header設定
   const config = { headers: { "Content-Type": "application/json" } };
-
+  function setcookie() {
+    const user = axios.post("/api/auth/login", "");
+    console.log(user);
+  }
   async function connectMetaMask() {
-    // 有無token
-    // const HasToken = await axios.get("api/user");
     if (typeof window.ethereum !== "undefined") {
       console.log("MetaMask is installed!");
       try {
         // 使用 MetaMask 的 Web3 Provider 發起請求，詢問用戶是否授權網站使用其帳戶
         // 如果用戶同意，將返回用戶的帳戶地址
         setAddress(await window.ethereum.request({ method: "eth_requestAccounts" }));
+        // 有無token
+        // const HasToken = await axios.get("/api/user");
         // if (HasToken.data.message == "success") {
         // const token = HasToken.data.token;
         // await axios.post("/api/auth/login", token);
@@ -151,7 +154,14 @@ export default function Register() {
       >
         Connect
       </Button>
-
+      <Button
+        variant="outlined"
+        onClick={() => {
+          setcookie();
+        }}
+      >
+        setcookie
+      </Button>
       <Dialog
         fullScreen={fullScreen}
         open={open}

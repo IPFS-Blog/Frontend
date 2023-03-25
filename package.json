@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint:check": "eslint . --ext .js,.jsx,.cjs,.mjs,.tsx,.ts",
     "lint:save": "eslint . --ext .js,.jsx,.cjs,.mjs,.tsx,.ts --fix --ignore-path .gitignore",
     "prepare": "husky install"
   },

@@ -95,13 +95,17 @@ export default function Register() {
           const StatusCode = error.response.data;
           console.log("HTTP 回應代碼", StatusCode);
           console.log("錯誤訊息", error);
-          //FIXME:查看錯誤來指定欄位上出現錯誤
-          if (error.includes("信箱")) {
-            seterrorMessageEmail(error);
-          } else if (error.includes("名稱")) {
-            seterrorMessageUsername(error);
-          } else {
-            seterrorMessage(error);
+         //查看錯誤來指定欄位上出現錯誤
+          const errorMess = error.respose.data.message;
+          for (let i = 0; i < errorMess.length; i++) {
+            console.log(i);
+            if (errorMess[i].includes("email")) {
+              seterrorMessageEmail(JSON.stringify(errorMess[i]));
+            } else if (errorMess[i].includes("name")) {
+              seterrorMessageUsername(JSON.stringify(errorMess[i]));
+            } else {
+              seterrorMessage(JSON.stringify(errorMess[i]));
+            }
           }
         } else {
           setOpen(false);

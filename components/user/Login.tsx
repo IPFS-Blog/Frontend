@@ -95,7 +95,7 @@ export default function Register() {
           const StatusCode = error.response.data;
           console.log("HTTP 回應代碼", StatusCode);
           console.log("錯誤訊息", error);
-         //查看錯誤來指定欄位上出現錯誤
+          //查看錯誤來指定欄位上出現錯誤
           const errorMess = error.respose.data.message;
           for (let i = 0; i < errorMess.length; i++) {
             console.log(i);

@@ -8,6 +8,7 @@ import { useTheme } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import axios from "axios";
+import Image from "next/image";
 import React, { useState } from "react";
 // import { useDispatch } from "react-redux";
 
@@ -19,7 +20,7 @@ declare global {
   }
 }
 
-export default function Register() {
+export default function Login() {
   // TODO: Handle funcion
   const [address, setAddress] = useState("");
   const [username, setUsername] = useState("");
@@ -156,6 +157,7 @@ export default function Register() {
           connectMetaMask();
         }}
       >
+        <Image src="/MetaMask.png" alt="Null" width={35} height={35}></Image>
         Connect
       </Button>
       <Button

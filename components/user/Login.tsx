@@ -45,15 +45,15 @@ export default function Login() {
       window.open("https://metamask.io/download/", "_blank");
     }
   }
-  function JwtToCookie(JWT: string) {
-    axios.post("/api/auth/login", { JWT }).then(response => console.log(response));
+  async function JwtToCookie(JWT: string) {
+    await axios.post("/api/auth/login", { JWT }).then(response => console.log(response));
+    login();
   }
   function CheckCookie() {
     // 從Cookie撈看看有沒有Token
     axios
       .get("/api/user")
       .then(res => CheckToken(res.data.token))
-      .then(() => login())
       .catch(errorMessage => {
         console.log("CheckCookie failed: 沒有Cookie" + errorMessage);
         CheckIsUser();
@@ -90,7 +90,7 @@ export default function Login() {
     GetToken(await signer.sign(nonce, accounts[0], ""));
   }
   function GetToken(signature: string) {
-    const data = { address: address[0], signature };
+    const data = { address: address, signature };
     console.log("Address:", address);
     console.log("signature:", signature);
     console.log("DATA:", data);
@@ -139,11 +139,11 @@ export default function Login() {
             }
           }
         } else {
-          setOpen(false);
           console.log("錯誤!!!!!!!!!!!!!!", error.message);
           console.log("錯誤", error.message);
         }
       });
+    setOpen(false);
   }
   // 登入成功設定
   function login() {
@@ -154,17 +154,6 @@ export default function Login() {
         login: true,
       }),
     );
-  }
-  function TEST() {
-    axios
-      .get("/api/user")
-      .then(res => {
-        console.log(res);
-      })
-      .then(() => login())
-      .catch(errorMessage => {
-        console.log(errorMessage.message);
-      });
   }
   // TODO: UI function
   const [open, setOpen] = useState(false);
@@ -200,14 +189,6 @@ export default function Login() {
       >
         <Image src="/MetaMask.png" alt="Null" width={35} height={35}></Image>
         Connect
-      </Button>
-      <Button
-        variant="outlined"
-        onClick={() => {
-          TEST();
-        }}
-      >
-        TEST
       </Button>
       <Dialog
         fullScreen={fullScreen}

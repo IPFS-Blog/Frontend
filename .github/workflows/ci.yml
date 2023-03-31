@@ -32,7 +32,6 @@ jobs:
           # If source files changed but packages didn't, rebuild from a prior cache.
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}-
-      - run: npm install -g yarn
       - run: yarn install --frozen-lockfile --check-files # --frozen-lockfile鎖定package.lock.json文件=>版本穩定性
       - run: yarn build
 

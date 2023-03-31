@@ -12,7 +12,7 @@
   },
   "lint-staged": {
     "*.{ts,js,jsx,tsx}": [
-      "eslint --fix"
+      "yarn lint:save"
     ],
     "pages/**/*.**": "prettier --check --ignore-unknown --write"
   },

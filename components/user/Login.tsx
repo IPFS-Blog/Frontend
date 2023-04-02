@@ -1,9 +1,11 @@
+import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import Snackbar from "@mui/material/Snackbar";
 import { useTheme } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -22,6 +24,10 @@ declare global {
 }
 // API Header設定
 const config = { headers: { "Content-Type": "application/json" } };
+//material ui toast
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 export default function Login() {
   // TODO: Handle funcion
@@ -37,8 +43,7 @@ export default function Login() {
         setAddress((await window.ethereum.request({ method: "eth_requestAccounts" }))[0]);
         CheckCookie();
       } catch (error) {
-        //FIXME: 可以新增吐司之類的UI提醒使用者拒絕授權
-        console.log("用戶拒絕了授權:\nerror:", error);
+        handleClick();
       }
     } else {
       window.alert("Please download MetaMask");
@@ -80,7 +85,7 @@ export default function Login() {
       .catch(err => {
         // TODO: 未註冊過=>跳轉註冊畫面
         console.log("滾去註冊:", err);
-        setOpen(true);
+        registerSetOpen(true);
       });
   }
   async function GetSignature(nonce: string) {
@@ -143,7 +148,7 @@ export default function Login() {
           console.log("錯誤", error.message);
         }
       });
-    setOpen(false);
+    registerSetOpen(false);
   }
   // 登入成功設定
   function login() {
@@ -156,15 +161,23 @@ export default function Login() {
     );
   }
   // TODO: UI function
-  const [open, setOpen] = useState(false);
+  const [registerOpen, registerSetOpen] = useState(false);
+  const [alertOpen, alertSetOpen] = useState(false);
   const [errorMessageUsername, seterrorMessageUsername] = useState("");
   const [errorMessageEmail, seterrorMessageEmail] = useState("");
   const [errorMessage, seterrorMessage] = useState("");
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("xs"));
 
-  const handleClose = () => {
-    setOpen(false);
+  const registerHandleClose = () => {
+    registerSetOpen(false);
+  };
+
+  const alertHandleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    alertSetOpen(false);
   };
 
   const handleAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -177,6 +190,10 @@ export default function Login() {
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
+  };
+
+  const handleClick = () => {
+    alertSetOpen(true);
   };
 
   return (
@@ -192,8 +209,8 @@ export default function Login() {
       </Button>
       <Dialog
         fullScreen={fullScreen}
-        open={open}
-        onClose={handleClose}
+        open={registerOpen}
+        onClose={registerHandleClose}
         onSubmit={Register}
         aria-labelledby="responsive-dialog-title"
       >
@@ -270,7 +287,7 @@ export default function Login() {
           {errorMessage}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={alertHandleClose} color="primary">
             取消
           </Button>
           <Button onClick={Register} color="primary" autoFocus>
@@ -278,6 +295,11 @@ export default function Login() {
           </Button>
         </DialogActions>
       </Dialog>
+      <Snackbar open={alertOpen} autoHideDuration={6000} onClose={alertHandleClose}>
+        <Alert onClose={alertHandleClose} severity="error" sx={{ width: "100%" }}>
+          用戶拒絕了授權!
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

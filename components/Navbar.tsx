@@ -27,7 +27,7 @@ const menuItems = [
 const Navbar = () => {
   const [toggleCollapse, setToggleCollapse] = useState(false);
 
-  const wrapperClasses = classNames("h-screen flex flex-col rounded-lg bg-yellow-50 justify-between px-4 pt-8 pb-4", {
+  const wrapperClasses = classNames("flex flex-col rounded-lg bg-yellow-50 justify-between px-4 pt-8 pb-4", {
     ["w-60"]: !toggleCollapse,
     ["w-20"]: toggleCollapse,
   });
@@ -75,7 +75,7 @@ const Navbar = () => {
               return (
                 <div key={menu.id} className={classes}>
                   <Link href={menu.link}>
-                    <div className="flex h-full w-full items-center py-4 px-3">
+                    <div className="flex w-full items-center py-4 px-3">
                       <div className="w-8">
                         <Icon />
                       </div>
@@ -91,7 +91,7 @@ const Navbar = () => {
               hidden: toggleCollapse,
             })}
           >
-            <div className="mt-5 flex h-full w-full items-center py-4 px-3">
+            <div className="mt-5 flex w-full items-center py-4 px-3">
               <div className="w-8">
                 <AiOutlineUsergroupDelete />
               </div>

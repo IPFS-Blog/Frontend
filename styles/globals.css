@@ -1,3 +1,22 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: "Noto Serif SC", serif;
+}
+
+@font-face {
+  font-family: "Noto Serif SC";
+  font-style: normal;
+  font-weight: 100;
+  font-display: swap;
+  src: url("/fonts/Noto_Serif_SC/NotoSerifSC-Regular.otf") format("opentype"),
+    url("/fonts/Noto_Serif_SC/NotoSerifSC-SemiBold.otf") format("opentype");
+}

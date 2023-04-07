@@ -3,10 +3,10 @@ import { serialize } from "cookie";
 export default async function logout(req: any, res: any) {
   const { cookies } = req;
 
-  const jwt = cookies.UserJWT;
+  const jwt = cookies.UserJWT ?? undefined;
 
   if (!jwt) {
-    return res.json({ message: "你沒有登入 怎麼登出?" });
+    res.status(404);
   } else {
     const serialized = serialize("UserJWT", "", {
       httpOnly: true,

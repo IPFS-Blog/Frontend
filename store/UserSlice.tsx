@@ -21,8 +21,6 @@ const UserSlice = createSlice({
   initialState: initialState,
   reducers: {
     setLogin(state, action) {
-      console.log(action);
-      console.log("成功!!");
       state.profile = action.payload;
     },
     setLogout(state) {

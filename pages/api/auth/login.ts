@@ -1,10 +1,9 @@
 import { serialize } from "cookie";
-// import { sign } from "jsonwebtoken";
 
 export default async function login(req: any, res: any) {
   // TODO: 拿到jwt後 近來這邊設定cookie
   const { JWT } = req.body;
-  console.log("LOGIN內:", req.body.JWT);
+
   const serialized = serialize("UserJWT", JWT, {
     httpOnly: true,
     secure: process.env.NODE_ENV !== "development",

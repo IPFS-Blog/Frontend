@@ -4,14 +4,10 @@ import { NextResponse } from "next/server";
 export default async function middleware(req: any) {
   const token = req.cookies.get("UserJWT")?.value;
 
-  const verifiedToken =
-    token &&
-    (await verifyAuth(token).catch(err => {
-      console.log(err);
-    }));
+  const verifiedToken = token && (await verifyAuth(token));
 
   const url = req.url;
-  // console.log(verifiedToken.address);
+
   if (url.includes("/dashboard") && verifiedToken) {
     return NextResponse.next();
   }

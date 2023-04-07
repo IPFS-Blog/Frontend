@@ -16,12 +16,10 @@ import { useDispatch } from "react-redux";
 import Web3 from "web3";
 
 import { setLogin } from "@/store/UserSlice";
+
+import { _apiAuthLogin, _apiIsUser, apiAuthTakeNonce, apiAuthTakeToken, apiUserRegister } from "../api";
 // TypeScript 中聲明 window.ethereum 這個屬性的類型，讓 TypeScript 知道它的存在。
-declare global {
-  interface Window {
-    ethereum?: any;
-  }
-}
+
 // API Header設定
 const config = { headers: { "Content-Type": "application/json" } };
 //material ui toast
@@ -40,8 +38,9 @@ export default function Login() {
     if (typeof window.ethereum !== "undefined") {
       try {
         // 拿取錢包地址
-        setAddress((await window.ethereum.request({ method: "eth_requestAccounts" }))[0]);
-        CheckCookie();
+        const addresses = await window.ethereum.request({ method: "eth_requestAccounts" });
+        setAddress(addresses[0]);
+        CheckCookie(addresses[0]);
       } catch (error) {
         handleClick();
       }
@@ -51,63 +50,49 @@ export default function Login() {
     }
   }
   async function JwtToCookie(JWT: string) {
-    await axios.post("/api/auth/login", { JWT }).then(response => console.log(response));
+    await _apiAuthLogin({ JWT });
     login();
   }
-  function CheckCookie() {
+  function CheckCookie(address: string) {
     // 從Cookie撈看看有沒有Token
-    axios
-      .get("/api/user")
-      .then(res => CheckToken(res.data.token))
-      .catch(errorMessage => {
-        console.log("CheckCookie failed: 沒有Cookie" + errorMessage);
-        CheckIsUser();
+    _apiIsUser()
+      .then(res => {
+        CheckToken(res.data.token, address);
+      })
+      .catch(() => {
+        CheckIsUser(address);
       });
   }
-  function CheckToken(token: string) {
+  function CheckToken(token: string, address: string) {
     // FIXME: 向後端確認token 是否是正確的
     const data = { token };
     axios
       .post(`http://${process.env.NEXT_PUBLIC_API}/users/register`, data, config)
       .then(res => JwtToCookie(res.data.JWT))
-      .catch(errorMessage => {
-        console.log(errorMessage.message);
-        CheckIsUser();
+      .catch(() => {
+        CheckIsUser(address);
       });
   }
-  function CheckIsUser() {
-    axios
-      .get(`http://192.168.1.88:3000/auth/login/${address}`)
+  function CheckIsUser(address: string) {
+    apiAuthTakeNonce(address)
       .then(res => {
-        console.log("存在用戶 :", res);
-        GetSignature(res.data.nonce);
+        GetSignature(res.data.nonce, address);
       })
-      .catch(err => {
-        // TODO: 未註冊過=>跳轉註冊畫面
-        console.log("滾去註冊:", err);
-        registerSetOpen(true);
-      });
+      .catch(() => registerSetOpen(true));
   }
-  async function GetSignature(nonce: string) {
+  async function GetSignature(nonce: string, address: string) {
     const web3 = new Web3(window.ethereum);
-    const accounts = await web3.eth.getAccounts();
     const signer = web3.eth.personal;
-    GetToken(await signer.sign(nonce, accounts[0], ""));
+    GetToken(await signer.sign(nonce, address, ""), address);
   }
-  function GetToken(signature: string) {
+  function GetToken(signature: string, address: string) {
     const data = { address: address, signature };
-    console.log("Address:", address);
-    console.log("signature:", signature);
-    console.log("DATA:", data);
-    axios
-      .post(`http://${process.env.NEXT_PUBLIC_API}/auth/login/token`, data, config)
+
+    apiAuthTakeToken(data)
       .then(res => {
-        console.log("成功登入並設定cookie", res.data);
         JwtToCookie(res.data);
       })
-      .catch(err => {
-        console.log(err);
-      });
+      .catch();
   }
   function sendVerificationCode() {
     //先檢查信箱
@@ -116,14 +101,9 @@ export default function Login() {
 
   async function Register() {
     const data = { address, username, email };
-    axios
-      .post(`http://${process.env.NEXT_PUBLIC_API}/users/register`, data, config)
-      .then(res => {
-        // const token = res.data.token;
-        // axios.post("/api/auth/login", token);
-        // TODO:註冊成功
-        console.log("正確:", res);
-      })
+    apiUserRegister(data)
+      //FIXME: 新增一個註冊成功的UI
+      .then()
       .catch(error => {
         console.log("data", data);
         console.log(error);
@@ -148,6 +128,7 @@ export default function Login() {
           console.log("錯誤", error.message);
         }
       });
+
     registerSetOpen(false);
   }
   // 登入成功設定

@@ -68,7 +68,7 @@ export default function Editprofile() {
                         className={styles.addresswidth}
                         disabled
                         id="outlined-disabled"
-                        defaultValue="0x123456"
+                        defaultValue="0x12345678"
                       />
                     </Box>
                     <p className="ml-12 text-lg text-gray-300">不可更改</p>

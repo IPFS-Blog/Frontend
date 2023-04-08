@@ -1,3 +1,3 @@
 export default function Home() {
-  return <>首頁</>;
+  return <>首頁(Home)</>;
 }

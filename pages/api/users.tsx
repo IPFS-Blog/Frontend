@@ -12,5 +12,5 @@ const users: User[] = [
 ];
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  res.status(200).json(users);
+  return res.status(200).json(users);
 }

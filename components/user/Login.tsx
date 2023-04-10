@@ -9,19 +9,15 @@ import Snackbar from "@mui/material/Snackbar";
 import { useTheme } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import axios from "axios";
 import Image from "next/image";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import Web3 from "web3";
 
-import { setLogin } from "@/store/UserSlice";
+import { setLogin, setLogout } from "@/store/UserSlice";
 
-import { _apiAuthLogin, _apiIsUser, apiAuthTakeNonce, apiAuthTakeToken, apiUserRegister } from "../api";
-// TypeScript 中聲明 window.ethereum 這個屬性的類型，讓 TypeScript 知道它的存在。
+import { _apiAuthLogin, _apiAuthLogout, apiAuthTakeNonce, apiAuthTakeToken, apiUserRegister } from "../api";
 
-// API Header設定
-const config = { headers: { "Content-Type": "application/json" } };
 //material ui toast
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -40,7 +36,16 @@ export default function Login() {
         // 拿取錢包地址
         const addresses = await window.ethereum.request({ method: "eth_requestAccounts" });
         setAddress(addresses[0]);
-        CheckCookie(addresses[0]);
+        // 是否為會員
+        apiAuthTakeNonce(addresses[0])
+          .then(res => {
+            // 是會員進行認證
+            GetSignature(res.data.nonce, addresses[0]);
+          })
+          .catch(
+            // 不是會員跳轉註冊
+            () => registerSetOpen(true),
+          );
       } catch (error) {
         handleClick();
       }
@@ -49,51 +54,28 @@ export default function Login() {
       window.open("https://metamask.io/download/", "_blank");
     }
   }
-  async function JwtToCookie(JWT: string) {
-    await _apiAuthLogin({ JWT });
-    login();
-  }
-  function CheckCookie(address: string) {
-    // 從Cookie撈看看有沒有Token
-    _apiIsUser()
-      .then(res => {
-        CheckToken(res.data.token, address);
-      })
-      .catch(() => {
-        CheckIsUser(address);
-      });
-  }
-  function CheckToken(token: string, address: string) {
-    // FIXME: 向後端確認token 是否是正確的
-    const data = { token };
-    axios
-      .post(`http://${process.env.NEXT_PUBLIC_API}/users/register`, data, config)
-      .then(res => JwtToCookie(res.data.JWT))
-      .catch(() => {
-        CheckIsUser(address);
-      });
-  }
-  function CheckIsUser(address: string) {
-    apiAuthTakeNonce(address)
-      .then(res => {
-        GetSignature(res.data.nonce, address);
-      })
-      .catch(() => registerSetOpen(true));
-  }
+
   async function GetSignature(nonce: string, address: string) {
+    // 拿Nonce簽名
     const web3 = new Web3(window.ethereum);
     const signer = web3.eth.personal;
-    GetToken(await signer.sign(nonce, address, ""), address);
-  }
-  function GetToken(signature: string, address: string) {
+    const signature = await signer.sign(nonce, address, "");
+    // 索取jwt
     const data = { address: address, signature };
+    apiAuthTakeToken(data).then(res => {
+      const jwt = res.data.access_token;
+      // 將JWT塞入 Cookie中
+      _apiAuthLogin({ jwt });
 
-    apiAuthTakeToken(data)
-      .then(res => {
-        JwtToCookie(res.data);
-      })
-      .catch();
+      // 將傳回來的會員資料轉成json的字串模式
+      const UserData = JSON.stringify(res.data.userData);
+      // 透過redux儲存會員資料
+      dispatch(setLogin(UserData));
+      // 將會員資料存在localStroage
+      localStorage.setItem("UserData", UserData);
+    });
   }
+
   function sendVerificationCode() {
     //先檢查信箱
     //確認無誤後發送信箱
@@ -131,16 +113,7 @@ export default function Login() {
 
     registerSetOpen(false);
   }
-  // 登入成功設定
-  function login() {
-    dispatch(
-      setLogin({
-        address,
-        username,
-        login: true,
-      }),
-    );
-  }
+
   // TODO: UI function
   const [registerOpen, registerSetOpen] = useState(false);
   const [alertOpen, alertSetOpen] = useState(false);
@@ -187,6 +160,16 @@ export default function Login() {
       >
         <Image src="/MetaMask.png" alt="Null" width={35} height={35}></Image>
         Connect
+      </Button>
+      <Button
+        variant="outlined"
+        onClick={() => {
+          _apiAuthLogout();
+          dispatch(setLogout());
+        }}
+      >
+        <Image src="/MetaMask.png" alt="Null" width={35} height={35}></Image>
+        登出
       </Button>
       <Dialog
         fullScreen={fullScreen}

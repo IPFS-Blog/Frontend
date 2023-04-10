@@ -2,16 +2,22 @@ import { createSlice } from "@reduxjs/toolkit";
 
 interface UserState {
   profile: {
+    id: number;
+    name: string;
     address: string;
-    username: string;
+    email: string;
+    photo: string;
     login: boolean;
   };
 }
 
 const initialState: UserState = {
   profile: {
+    id: 0,
+    name: "",
     address: "",
-    username: "",
+    email: "",
+    photo: "",
     login: false,
   },
 };
@@ -21,7 +27,9 @@ const UserSlice = createSlice({
   initialState: initialState,
   reducers: {
     setLogin(state, action) {
-      state.profile = action.payload;
+      const updatedProfile = JSON.parse(action.payload);
+      updatedProfile.login = true;
+      state.profile = updatedProfile;
     },
     setLogout(state) {
       state.profile = initialState.profile;

@@ -1,13 +1,10 @@
 import { serialize } from "cookie";
 
-export default async function logout(req: any, res: any) {
+export default async function logout(req: any, res: any): Promise<void> {
   const { cookies } = req;
 
   const jwt = cookies.UserJWT ?? undefined;
-
-  if (!jwt) {
-    res.status(404);
-  } else {
+  if (jwt != undefined) {
     const serialized = serialize("UserJWT", "", {
       httpOnly: true,
       secure: process.env.NODE_ENV !== "development",
@@ -16,6 +13,6 @@ export default async function logout(req: any, res: any) {
       path: "/",
     });
     res.setHeader("Set-Cookie", serialized);
-    res.status(200).json({ message: "成功登出" });
+    return res.status(200).json("成功刪除cookie");
   }
 }

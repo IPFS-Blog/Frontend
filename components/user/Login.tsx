@@ -86,28 +86,21 @@ export default function Login() {
     apiUserRegister(data)
       //FIXME: 新增一個註冊成功的UI
       .then()
+      //FIXME: 錯誤UI沒有呈現
       .catch(error => {
         console.log("data", data);
-        console.log(error);
-        if (error.response && error.response.data.message) {
-          const StatusCode = error.response.data;
-          console.log("HTTP 回應代碼", StatusCode);
-          console.log("錯誤訊息", error);
-          //查看錯誤來指定欄位上出現錯誤
-          const errorMess = error.respose.data.message;
+        console.log("error:", error.response.data.error);
+        if (error.response && error.response.data.error) {
+          const errorMess = error.response.data.error;
           for (let i = 0; i < errorMess.length; i++) {
-            console.log(i);
             if (errorMess[i].includes("email")) {
               seterrorMessageEmail(JSON.stringify(errorMess[i]));
-            } else if (errorMess[i].includes("name")) {
+            } else if (errorMess[i].includes("username")) {
               seterrorMessageUsername(JSON.stringify(errorMess[i]));
             } else {
               seterrorMessage(JSON.stringify(errorMess[i]));
             }
           }
-        } else {
-          console.log("錯誤!!!!!!!!!!!!!!", error.message);
-          console.log("錯誤", error.message);
         }
       });
 

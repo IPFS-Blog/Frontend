@@ -22,6 +22,7 @@ export default function Home() {
         <title>Home1</title>
       </Head>
       <main>
+        {/* FIXME: 會員資料 假資料改好UI就可刪除*/}
         <p>{User.profile.id}</p>
         <p>{User.profile.name}</p>
         <p>{User.profile.email}</p>

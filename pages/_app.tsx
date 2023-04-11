@@ -1,15 +1,29 @@
 import "@/styles/globals.css";
 
 import * as Sentry from "@sentry/node";
+import type { AppProps } from "next/app";
+import { Provider } from "react-redux";
+
+import { store } from "@/stroe";
 
 Sentry.init({
-  dsn: "http://dc92150ec47041968279837bb4eb872f@192.168.1.83:9000/5",
+  dsn: "http://dc92150ec47041968279837bb4eb872f@process.env.SENTRY_IP/5",
   release: process.env.SENTRY_RELEASE,
   tracesSampleRate: 1.0,
 });
-export default function App({ Component, pageProps, err }: any) {
+
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}
+export default function App({ Component, pageProps }: AppProps, err: any) {
   const modifiedPageProps = { ...pageProps, err };
-  return <Component {...modifiedPageProps} />;
+  return (
+    <Provider store={store}>
+      <Component {...modifiedPageProps} />
+    </Provider>
+  );
 }
 
 App.getInitialProps = async ({ Component, ctx }: any) => {

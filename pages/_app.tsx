@@ -1,4 +1,5 @@
 import "@/styles/globals.css";
+
 import * as Sentry from "@sentry/node";
 import type { AppProps } from "next/app";
 import { Provider } from "react-redux";
@@ -16,7 +17,7 @@ declare global {
     ethereum?: any;
   }
 }
-export default function App({ Component, pageProps }: AppProps , err: any) {
+export default function App({ Component, pageProps }: AppProps, err: any) {
   const modifiedPageProps = { ...pageProps, err };
   return (
     <Provider store={store}>

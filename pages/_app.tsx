@@ -7,7 +7,7 @@ import { Provider } from "react-redux";
 import { store } from "@/stroe";
 
 Sentry.init({
-  dsn: "http://dc92150ec47041968279837bb4eb872f@process.env.SENTRY_IP/5",
+  dsn: `http://dc92150ec47041968279837bb4eb872f@${process.env.SENTRY_IP}/5`,
   release: process.env.SENTRY_RELEASE,
   tracesSampleRate: 1.0,
 });

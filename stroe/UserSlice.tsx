@@ -15,7 +15,7 @@ const initialState: UserState = {
   profile: {
     id: 0,
     name: "",
-    address: "0x0f6844e430e1243a8c014605cd156f7d7f16c640",
+    address: "",
     email: "",
     photo: "",
     login: false,

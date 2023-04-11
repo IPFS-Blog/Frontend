@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { _apiCheckJwt } from "@/components/api";
 import Editprofile from "@/components/users/EditProfile";

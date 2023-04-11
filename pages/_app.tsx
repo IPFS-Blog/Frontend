@@ -3,8 +3,9 @@ import "@/styles/globals.css";
 import * as Sentry from "@sentry/node";
 import type { AppProps } from "next/app";
 import { Provider } from "react-redux";
+import { store } from "store";
 
-import { store } from "@/stroe";
+import Layout from "@/components/Layout";
 
 Sentry.init({
   dsn: `http://dc92150ec47041968279837bb4eb872f@${process.env.SENTRY_IP}/5`,
@@ -17,11 +18,14 @@ declare global {
     ethereum?: any;
   }
 }
+
 export default function App({ Component, pageProps }: AppProps, err: any) {
   const modifiedPageProps = { ...pageProps, err };
   return (
     <Provider store={store}>
-      <Component {...modifiedPageProps} />
+      <Layout>
+        <Component {...modifiedPageProps} />
+      </Layout>
     </Provider>
   );
 }

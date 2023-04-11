@@ -21,6 +21,6 @@
       "@/styles/*": ["styles/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "sentry.edge.config.js", "sentry.client.config.js", "pages/error.tsx"],
   "exclude": ["node_modules"]
 }

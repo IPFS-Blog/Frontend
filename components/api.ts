@@ -39,8 +39,8 @@ export const apiUserGetUserData = (jwt: string) =>
       Authorization: `Bearer ${jwt}`,
     },
   }); // 攜帶jwt拿取使用者資訊
-export const apiEditProfile = (jwt: string, address: any, data: any) =>
-  userRequest.patch(`/${address}`, data, {
+export const apiEditProfile = (jwt: string, data: any) =>
+  userRequest.patch("/", data, {
     headers: {
       Authorization: `Bearer ${jwt}`,
     },

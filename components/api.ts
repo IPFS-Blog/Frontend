@@ -40,6 +40,14 @@ export const apiUserGetUserData = (jwt: string) =>
     },
   }); // 攜帶jwt拿取使用者資訊
 
+export const apiEditProfile = (jwt: string, data: any) =>
+  userRequest.patch("/", data, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  }); // 編輯個人資料
+
 // Auth相關的 api
-export const apiAuthTakeNonce = (address: any) => authRequest.get(`/login/${address}`); // 拿取nonce做身分驗證
+export const apiAuthTakeNonce = (address: any) => authRequest.get(`/login/${address}`, config); // 拿取nonce做身分驗證
+
 export const apiAuthTakeToken = (data: any) => authRequest.post("/login/token", data, config); // 拿取jwt

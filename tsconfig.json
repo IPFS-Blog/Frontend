@@ -21,6 +21,16 @@
       "@/styles/*": ["styles/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "middleware.js", "pages/api/auth/login.ts", "pages/yyaa.jsx"],
+
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "sentry.edge.config.js",
+    "sentry.client.config.js",
+    "middleware.js",
+    "pages/api/auth/login.ts",
+    "pages/error.tsx"
+  ],
   "exclude": ["node_modules"]
 }

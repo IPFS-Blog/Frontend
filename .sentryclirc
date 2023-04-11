@@ -1,0 +1,7 @@
+[defaults]
+url = http://192.168.1.83:9000/
+org = sentry
+project = ipfs-blog-frontend
+
+[auth]
+token = ef5d29090be142c8aeb564c615e29aad666dfb27697141eb82fadfc3c278f8b5

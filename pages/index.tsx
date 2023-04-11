@@ -1,5 +1,3 @@
-import "@/styles/Home.module.css";
-
 import Head from "next/head";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,7 +12,6 @@ export default function Home() {
     const UserData = typeof window !== "undefined" ? localStorage.getItem("UserData") : null;
     _apiCheckJwt().then(res => {
       if (UserData != null && res.data.jwt != null) dispatch(setLogin(UserData));
-      console.log(res);
     });
   }, [dispatch]);
   return (

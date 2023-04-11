@@ -1,5 +1,3 @@
-import "@/styles/Navbar.module.css";
-
 import classNames from "classnames";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -62,7 +60,7 @@ const Navbar = () => {
           />
         </form>
         <div className="m-1">
-          <FiBell className="text-3xl text-black-200 shadow-xl" />
+          <FiBell className="px-1 text-3xl text-black-200" />
         </div>
         <Login />
       </nav>

@@ -1,13 +1,20 @@
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import Snackbar from "@mui/material/Snackbar";
 import { useTheme } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -83,7 +90,6 @@ export default function Login() {
         registerSetOpen(false);
         alertRegisterSetOpen(true);
       })
-      //FIXME: 錯誤UI沒有呈現
       .catch((error: any) => {
         if (error.response && error.response.data.error) {
           const errorMess = error.response.data.error;
@@ -104,6 +110,8 @@ export default function Login() {
   const [alertRegisterOpen, alertRegisterSetOpen] = useState(false);
   const [errorMessageUsername, seterrorMessageUsername] = useState("");
   const [errorMessageEmail, seterrorMessageEmail] = useState("");
+  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("xs"));
   const User = useSelector((state: any) => state.User);
@@ -137,6 +145,12 @@ export default function Login() {
   const handleClick = () => {
     alertRejectSetOpen(true);
   };
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElUser(event.currentTarget);
+  };
 
   return (
     <div>
@@ -148,22 +162,46 @@ export default function Login() {
           }}
         >
           <Image src="/MetaMask.png" alt="Null" width={35} height={35}></Image>
-          Connect
+          連線
         </Button>
       ) : (
-        <h1>123</h1>
+        <Box sx={{ flexGrow: 0 }}>
+          <Tooltip title="Open settings">
+            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+              <Avatar src={`${User.profile.photo}`} alt="haha" />
+            </IconButton>
+          </Tooltip>
+          <Menu
+            sx={{ mt: "45px" }}
+            id="menu-appbar"
+            anchorEl={anchorElUser}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            open={Boolean(anchorElUser)}
+            onClose={handleCloseUserMenu}
+          >
+            <MenuItem onClick={handleCloseUserMenu}>
+              <Typography textAlign="center">
+                <Button
+                  onClick={() => {
+                    _apiAuthLogout();
+                    dispatch(setLogout());
+                  }}
+                >
+                  登出
+                </Button>
+              </Typography>
+            </MenuItem>
+          </Menu>
+        </Box>
       )}
-      {/* // FIXME: 登入過後登出看你們要藏在哪邊 */}
-      <Button
-        variant="outlined"
-        onClick={() => {
-          _apiAuthLogout();
-          dispatch(setLogout());
-        }}
-      >
-        <Image src="/MetaMask.png" alt="Null" width={35} height={35}></Image>
-        登出
-      </Button>
       <Dialog
         fullScreen={fullScreen}
         open={registerOpen}

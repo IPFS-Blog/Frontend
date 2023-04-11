@@ -28,7 +28,7 @@ export default function Editprofile() {
   const address = User.profile.address !== undefined ? User.profile.address : "";
   async function EditProfile() {
     let jwt = "";
-    await _apiCheckJwt().then((res:any) => (jwt = res.data.jwt));
+    await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
     const data = { username, email };
     apiEditProfile(jwt, data)
       .then(() => setalertEditSucess(true))

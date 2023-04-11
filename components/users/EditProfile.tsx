@@ -1,5 +1,6 @@
 import { Edit } from "@mui/icons-material";
-import { Box, IconButton, TextField } from "@mui/material";
+import { AlertProps, Box, IconButton, Snackbar, TextField } from "@mui/material";
+import MuiAlert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import Dialog, { DialogProps } from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -8,14 +9,53 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import * as React from "react";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 
 import styles from "@/styles/EditProfile.module.css";
 
+import { _apiCheckJwt, apiEditProfile } from "../api";
+
 export default function Editprofile() {
-  const [open, setOpen] = React.useState(false);
+  // TODO: Handle funtion
+  const [username, setusername] = useState(""); // 使用者名稱
+  const [email, setemail] = useState(""); // 電子信箱
+  const [Introduction, setIntroduction] = useState(""); // 個人簡介
+  const [Label, setLabel] = useState(""); // 添加標籤
+  const [SocialMedia, setSocialMedia] = useState(""); // 社群關係連結
+
+  const User = useSelector((state: any) => state.User);
+  const address = User.profile.address !== undefined ? User.profile.address : "";
+  async function EditProfile() {
+    let jwt = "";
+    await _apiCheckJwt().then(res => (jwt = res.data.jwt));
+    const data = { username, email };
+    apiEditProfile(jwt, address, data)
+      .then(() => setalertEditSucess(true))
+      .catch(() => setalertEditFail(true));
+    handleClose();
+  }
+
+  // TODO: UI funtion
+  const [open, setOpen] = useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("lg"));
-  const [maxWidth] = React.useState<DialogProps["maxWidth"]>("lg");
+  const [maxWidth] = useState<DialogProps["maxWidth"]>("lg");
+  const [alertEditFail, setalertEditFail] = useState(false);
+  const [alertEditSucess, setalertEditSucess] = useState(false);
+  const alertHandleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setalertEditFail(false);
+    setalertEditSucess(false);
+  };
+
+  //material ui toast
+  const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -40,6 +80,11 @@ export default function Editprofile() {
           <DialogTitle id="responsive-dialog-title">{"EditProfile"}</DialogTitle>
           <DialogContent>
             {/* 彈窗後整個畫面設計 */}
+            {/* FIXME: 記得刪除，因為未使用不能commit */}
+            {Introduction}
+            {Label}
+            {SocialMedia}
+            {/* FIXME: 記得刪除，因為未使用不能commit */}
             <div className={styles.all}>
               <div className="ml-8">
                 <span className="text-2xl font-bold">修改個人資料</span>
@@ -53,15 +98,15 @@ export default function Editprofile() {
                         {/* FIXME:IconButton需要寫功能 */}
                         <IconButton>
                           <Edit />
+                          變更頭像
                         </IconButton>
-                        變更頭像
                       </Box>
                       <Box className={styles.promptbox}>推薦:正方形.JPG.PNG, 至少1,000像素</Box>
                       <Box bgcolor="#F0F0F0" borderRadius={10} width="600px">
                         <IconButton>
                           <Edit />
+                          變更卡片背景
                         </IconButton>
-                        變更卡片背景
                       </Box>
                       <Box className={styles.promptbox}>推薦:長方形.JPG.PNG, 至少1,000像素</Box>
                     </Box>
@@ -73,7 +118,7 @@ export default function Editprofile() {
                         className={styles.addresswidth}
                         disabled
                         id="outlined-disabled"
-                        defaultValue="0x12345678"
+                        defaultValue={address}
                       />
                     </Box>
                     <p className="text-lg text-gray-300">不可更改</p>
@@ -85,26 +130,43 @@ export default function Editprofile() {
                     <div className={styles.wordsizediv}>
                       <div className="flex items-center justify-between">
                         <div className={styles.wordsize}>名稱</div>
-                        {/* FIXME:checkname功能需再加  */}
-                        <button className="h-10 w-10 text-lg">checkname</button>
                       </div>
-                      <TextField fullWidth id="outlined-basic" label="請輸入名稱" variant="outlined" />
+                      <TextField
+                        fullWidth
+                        id="outlined-basic"
+                        label="請輸入名稱"
+                        variant="outlined"
+                        onChange={e => setusername(e.target.value)}
+                      />
                       <span className="text-lg text-gray-300">2-20字元</span>
                     </div>
                     {/* email 部分 */}
                     <div className={styles.wordsizediv}>
                       <div className="flex items-center justify-between">
-                        <div className={styles.wordsize}>Email</div>
-                        {/* FIXME:checkemail功能需再加   */}
-                        <button className="h-10 w-10 text-lg">checkemail</button>
+                        <div className={styles.wordsize}>電子信箱</div>
+                        {/* FIXME: 按下發送驗證碼 要多一格填驗證碼的輸入框 */}
+                        <button className="h-10 w-10 text-lg">發送驗證碼</button>
                       </div>
-                      <TextField fullWidth id="outlined-basic" label="請輸入email" variant="outlined" />
+                      <TextField
+                        fullWidth
+                        id="outlined-basic"
+                        label="請輸入電子信箱"
+                        variant="outlined"
+                        onChange={e => setemail(e.target.value)}
+                      />
                     </div>
                     {/* 個人簡介部分 */}
                     <div className={styles.wordsizediv}>
                       <div className={styles.wordsize}>個人簡介</div>
                       <p></p>
-                      <TextField fullWidth id="outlined-multiline-static" label="請輸入個人簡介" multiline rows={6} />
+                      <TextField
+                        fullWidth
+                        id="outlined-multiline-static"
+                        label="請輸入個人簡介"
+                        multiline
+                        rows={6}
+                        onChange={e => setIntroduction(e.target.value)}
+                      />
                       <span className="text-lg text-gray-300">建議50字以內,最長200字</span>
                       <p></p>
                     </div>
@@ -112,7 +174,13 @@ export default function Editprofile() {
                     <div className={styles.wordsizediv}>
                       <div className={styles.wordsize}>添加標籤</div>
                       <p></p>
-                      <TextField fullWidth id="outlined-basic" label="請輸入標籤" variant="outlined" />
+                      <TextField
+                        fullWidth
+                        id="outlined-basic"
+                        label="請輸入標籤"
+                        variant="outlined"
+                        onChange={e => setLabel(e.target.value)}
+                      />
                       <span className="text-lg text-gray-300">建議至多5個主標籤</span>
                       <p></p>
                     </div>
@@ -120,14 +188,14 @@ export default function Editprofile() {
                     <div className={styles.wordsizediv}>
                       <div className={styles.wordsize}>社群關係連結</div>
                       <p></p>
-                      <TextField fullWidth id="outlined-basic" label="請輸入社群連結" variant="outlined" />
+                      <TextField
+                        fullWidth
+                        id="outlined-basic"
+                        label="請輸入社群連結"
+                        variant="outlined"
+                        onChange={e => setSocialMedia(e.target.value)}
+                      />
                       <p></p>
-                    </div>
-                    {/* 右下角重置與確認按鈕 */}
-                    <div className={styles.buttondiv}>
-                      <button className={styles.resetbutton}>重置</button>
-                      {/* FIXME:API */}
-                      <button className={styles.surebutton}>確認</button>
                     </div>
                   </div>
                 </div>
@@ -138,11 +206,25 @@ export default function Editprofile() {
             <Button autoFocus onClick={handleClose}>
               取消
             </Button>
-            <Button onClick={handleClose} autoFocus>
+            <Button autoFocus onClick={handleClose}>
+              重置
+            </Button>
+            {/* FIXME: API 傳送格式: 名稱、email、驗證碼、個人簡介、添加標籤、社群關係連結*/}
+            <Button onClick={EditProfile} autoFocus>
               確認
             </Button>
           </DialogActions>
         </Dialog>
+        <Snackbar open={alertEditFail} autoHideDuration={6000} onClose={alertHandleClose}>
+          <Alert onClose={alertHandleClose} severity="error" sx={{ width: "100%" }}>
+            用戶拒絕了授權!
+          </Alert>
+        </Snackbar>
+        <Snackbar open={alertEditSucess} autoHideDuration={6000} onClose={alertHandleClose}>
+          <Alert onClose={alertHandleClose} severity="success" sx={{ width: "100%" }}>
+            註冊成功!
+          </Alert>
+        </Snackbar>
       </div>
     </>
   );

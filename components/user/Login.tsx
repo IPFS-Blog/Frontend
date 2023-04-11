@@ -11,17 +11,12 @@ import TextField from "@mui/material/TextField";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Image from "next/image";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Web3 from "web3";
 
 import { setLogin, setLogout } from "@/store/UserSlice";
 
 import { _apiAuthLogin, _apiAuthLogout, apiAuthTakeNonce, apiAuthTakeToken, apiUserRegister } from "../api";
-
-//material ui toast
-const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
 export default function Login() {
   // TODO: Handle funcion
@@ -38,7 +33,7 @@ export default function Login() {
         setAddress(addresses[0]);
         // 是否為會員
         apiAuthTakeNonce(addresses[0])
-          .then(res => {
+          .then((res: any) => {
             // 是會員進行認證
             GetSignature(res.data.nonce, addresses[0]);
           })
@@ -62,7 +57,7 @@ export default function Login() {
     const signature = await signer.sign(nonce, address, "");
     // 索取jwt
     const data = { address: address, signature };
-    apiAuthTakeToken(data).then(res => {
+    apiAuthTakeToken(data).then((res: any) => {
       const jwt = res.data.access_token;
       // 將JWT塞入 Cookie中
       _apiAuthLogin({ jwt });
@@ -84,12 +79,12 @@ export default function Login() {
   async function Register() {
     const data = { address, username, email };
     apiUserRegister(data)
-      //FIXME: 新增一個註冊成功的UI
-      .then()
+      .then(() => {
+        registerSetOpen(false);
+        alertRegisterSetOpen(true);
+      })
       //FIXME: 錯誤UI沒有呈現
-      .catch(error => {
-        console.log("data", data);
-        console.log("error:", error.response.data.error);
+      .catch((error: any) => {
         if (error.response && error.response.data.error) {
           const errorMess = error.response.data.error;
           for (let i = 0; i < errorMess.length; i++) {
@@ -97,25 +92,25 @@ export default function Login() {
               seterrorMessageEmail(JSON.stringify(errorMess[i]));
             } else if (errorMess[i].includes("username")) {
               seterrorMessageUsername(JSON.stringify(errorMess[i]));
-            } else {
-              seterrorMessage(JSON.stringify(errorMess[i]));
             }
           }
         }
       });
-
-    registerSetOpen(false);
   }
 
   // TODO: UI function
   const [registerOpen, registerSetOpen] = useState(false);
-  const [alertOpen, alertSetOpen] = useState(false);
+  const [alertRejectOpen, alertRejectSetOpen] = useState(false);
+  const [alertRegisterOpen, alertRegisterSetOpen] = useState(false);
   const [errorMessageUsername, seterrorMessageUsername] = useState("");
   const [errorMessageEmail, seterrorMessageEmail] = useState("");
-  const [errorMessage, seterrorMessage] = useState("");
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("xs"));
-
+  const User = useSelector((state: any) => state.User);
+  //material ui toast
+  const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
   const registerHandleClose = () => {
     registerSetOpen(false);
   };
@@ -124,7 +119,8 @@ export default function Login() {
     if (reason === "clickaway") {
       return;
     }
-    alertSetOpen(false);
+    alertRejectSetOpen(false);
+    alertRegisterSetOpen(false);
   };
 
   const handleAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -138,22 +134,26 @@ export default function Login() {
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
   };
-
   const handleClick = () => {
-    alertSetOpen(true);
+    alertRejectSetOpen(true);
   };
 
   return (
     <div>
-      <Button
-        variant="outlined"
-        onClick={() => {
-          connectMetaMask();
-        }}
-      >
-        <Image src="/MetaMask.png" alt="Null" width={35} height={35}></Image>
-        Connect
-      </Button>
+      {!User.profile.login ? (
+        <Button
+          variant="outlined"
+          onClick={() => {
+            connectMetaMask();
+          }}
+        >
+          <Image src="/MetaMask.png" alt="Null" width={35} height={35}></Image>
+          Connect
+        </Button>
+      ) : (
+        <h1>123</h1>
+      )}
+      {/* // FIXME: 登入過後登出看你們要藏在哪邊 */}
       <Button
         variant="outlined"
         onClick={() => {
@@ -202,6 +202,7 @@ export default function Login() {
                 defaultValue={email}
                 helperText={errorMessageEmail}
                 variant="standard"
+                onChange={() => seterrorMessageEmail("")}
               />
             )}
             <div className="flex flex-row">
@@ -238,23 +239,26 @@ export default function Login() {
                 defaultValue={username}
                 helperText={errorMessageUsername}
                 variant="standard"
+                onChange={() => seterrorMessageUsername("")}
               />
             )}
           </div>
-          {errorMessage}
         </DialogContent>
         <DialogActions>
-          <Button onClick={alertHandleClose} color="primary">
-            取消
-          </Button>
+          <Button color="primary">取消</Button>
           <Button onClick={Register} color="primary" autoFocus>
             註冊
           </Button>
         </DialogActions>
       </Dialog>
-      <Snackbar open={alertOpen} autoHideDuration={6000} onClose={alertHandleClose}>
+      <Snackbar open={alertRejectOpen} autoHideDuration={6000} onClose={alertHandleClose}>
         <Alert onClose={alertHandleClose} severity="error" sx={{ width: "100%" }}>
           用戶拒絕了授權!
+        </Alert>
+      </Snackbar>
+      <Snackbar open={alertRegisterOpen} autoHideDuration={6000} onClose={alertHandleClose}>
+        <Alert onClose={alertHandleClose} severity="success" sx={{ width: "100%" }}>
+          註冊成功!
         </Alert>
       </Snackbar>
     </div>

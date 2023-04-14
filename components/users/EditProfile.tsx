@@ -68,7 +68,7 @@ export default function Editprofile() {
       <div>
         {/*  dialog部分皆為彈窗*/}
         <Button variant="outlined" onClick={handleClickOpen}>
-          Open responsive dialog
+          編輯個人資料
         </Button>
         <Dialog
           fullScreen={fullScreen}
@@ -77,7 +77,7 @@ export default function Editprofile() {
           onClose={handleClose}
           aria-labelledby="responsive-dialog-title"
         >
-          <DialogTitle id="responsive-dialog-title">{"EditProfile"}</DialogTitle>
+          <DialogTitle id="responsive-dialog-title"> 修改個人資料 </DialogTitle>
           <DialogContent>
             {/* 彈窗後整個畫面設計 */}
             {/* FIXME: 記得刪除，因為未使用不能commit */}
@@ -86,9 +86,8 @@ export default function Editprofile() {
             {SocialMedia}
             {/* FIXME: 記得刪除，因為未使用不能commit */}
             <div className={styles.all}>
-              <div className="ml-8">
-                <span className="text-2xl font-bold">修改個人資料</span>
-                <div className="ml-10 mt-10">
+              <div className="h-auto w-full">
+                <div className="w-full flex-col">
                   {/* 左上角 卡片與大頭貼 */}
                   <div className={styles.roundedcard}>
                     <div className={styles.photostickers}></div>
@@ -123,7 +122,6 @@ export default function Editprofile() {
                     </Box>
                     <p className="text-lg text-gray-300">不可更改</p>
                   </div>
-                  <p></p>
                   {/* 下方5個輸入框 */}
                   <div>
                     {/* 名稱部分 */}
@@ -145,7 +143,7 @@ export default function Editprofile() {
                       <div className="flex items-center justify-between">
                         <div className={styles.wordsize}>電子信箱</div>
                         {/* FIXME: 按下發送驗證碼 要多一格填驗證碼的輸入框 */}
-                        <button className="h-10 w-10 text-lg">發送驗證碼</button>
+                        <button className="text-lg">發送驗證碼</button>
                       </div>
                       <TextField
                         fullWidth
@@ -195,7 +193,6 @@ export default function Editprofile() {
                         variant="outlined"
                         onChange={e => setSocialMedia(e.target.value)}
                       />
-                      <p></p>
                     </div>
                   </div>
                 </div>
@@ -206,7 +203,14 @@ export default function Editprofile() {
             <Button autoFocus onClick={handleClose}>
               取消
             </Button>
-            <Button autoFocus onClick={handleClose}>
+            <Button
+              autoFocus
+              onClick={() => {
+                setSocialMedia("");
+                setLabel("");
+                setIntroduction("");
+              }}
+            >
               重置
             </Button>
             {/* FIXME: API 傳送格式: 名稱、email、驗證碼、個人簡介、添加標籤、社群關係連結*/}
@@ -217,12 +221,12 @@ export default function Editprofile() {
         </Dialog>
         <Snackbar open={alertEditFail} autoHideDuration={6000} onClose={alertHandleClose}>
           <Alert onClose={alertHandleClose} severity="error" sx={{ width: "100%" }}>
-            用戶拒絕了授權!
+            編輯錯誤!
           </Alert>
         </Snackbar>
         <Snackbar open={alertEditSucess} autoHideDuration={6000} onClose={alertHandleClose}>
           <Alert onClose={alertHandleClose} severity="success" sx={{ width: "100%" }}>
-            註冊成功!
+            編輯成功!
           </Alert>
         </Snackbar>
       </div>

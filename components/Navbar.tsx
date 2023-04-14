@@ -11,7 +11,7 @@ import {
 } from "react-icons/ai";
 import { FiBell } from "react-icons/fi";
 
-import Login from "./user/Login";
+import Login from "./users/Login";
 import Users from "./Users";
 
 const menuItems = [

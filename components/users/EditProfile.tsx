@@ -11,7 +11,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import * as React from "react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-        
+
 import styles from "@/styles/EditProfile.module.css";
 
 import { _apiCheckJwt, apiEditProfile } from "../api";
@@ -86,112 +86,117 @@ export default function Editprofile() {
             {SocialMedia}
             {/* FIXME: 記得刪除，因為未使用不能commit */}
             <div className={styles.all}>
-            <div className="h-auto w-full">
-              <div className="w-full flex-col">
-                {/* 左上角 卡片與大頭貼 */}
-                <div className={styles.roundedcard}>
-                  <div className={styles.photostickers}></div>
-                  {/* 右上角 4個長方形提示框 */}
-                  <Box display="flex" flexDirection="column" justifyContent="center" pl={60} pt={1} width="200%">
-                    <Box alignItems="center" bgcolor="#F0F0F0" borderRadius={10} width="600px">
-                      {/* FIXME:IconButton需要寫功能 */}
-                      <IconButton>
-                        <Edit />
-                        變更頭像
-                      </IconButton>
+              <div className="h-auto w-full">
+                <div className="w-full flex-col">
+                  {/* 左上角 卡片與大頭貼 */}
+                  <div className={styles.roundedcard}>
+                    <div className={styles.photostickers}></div>
+                    {/* 右上角 4個長方形提示框 */}
+                    <Box display="flex" flexDirection="column" justifyContent="center" pl={60} pt={1} width="200%">
+                      <Box alignItems="center" bgcolor="#F0F0F0" borderRadius={10} width="600px">
+                        {/* FIXME:IconButton需要寫功能 */}
+                        <IconButton>
+                          <Edit />
+                          變更頭像
+                        </IconButton>
+                      </Box>
+                      <Box className={styles.promptbox}>推薦:正方形.JPG.PNG, 至少1,000像素</Box>
+                      <Box bgcolor="#F0F0F0" borderRadius={10} width="600px">
+                        <IconButton>
+                          <Edit />
+                          變更卡片背景
+                        </IconButton>
+                      </Box>
+                      <Box className={styles.promptbox}>推薦:長方形.JPG.PNG, 至少1,000像素</Box>
                     </Box>
-                    <Box className={styles.promptbox}>推薦:正方形.JPG.PNG, 至少1,000像素</Box>
-                    <Box bgcolor="#F0F0F0" borderRadius={10} width="600px">
-                      <IconButton>
-                        <Edit />
-                        變更卡片背景
-                      </IconButton>
+                  </div>
+                  {/*錢包地址(不可更改) FIXME:後續需要錢包地址*/}
+                  <div className="mt-12">
+                    <Box className={styles.walletaddress}>
+                      <TextField
+                        className={styles.addresswidth}
+                        disabled
+                        id="outlined-disabled"
+                        defaultValue={address}
+                      />
                     </Box>
-                    <Box className={styles.promptbox}>推薦:長方形.JPG.PNG, 至少1,000像素</Box>
-                  </Box>
-                </div>
-                {/*錢包地址(不可更改) FIXME:後續需要錢包地址*/}
-                <div className="mt-12">
-                  <Box className={styles.walletaddress}>
-                    <TextField className={styles.addresswidth} disabled id="outlined-disabled" defaultValue={address} />
-                  </Box>
-                  <p className="text-lg text-gray-300">不可更改</p>
-                </div>
-                {/* 下方5個輸入框 */}
-                <div>
-                  {/* 名稱部分 */}
-                  <div className={styles.wordsizediv}>
-                    <div className="flex items-center justify-between">
-                      <div className={styles.wordsize}>名稱</div>
+                    <p className="text-lg text-gray-300">不可更改</p>
+                  </div>
+                  {/* 下方5個輸入框 */}
+                  <div>
+                    {/* 名稱部分 */}
+                    <div className={styles.wordsizediv}>
+                      <div className="flex items-center justify-between">
+                        <div className={styles.wordsize}>名稱</div>
+                      </div>
+                      <TextField
+                        fullWidth
+                        id="outlined-basic"
+                        label="請輸入名稱"
+                        variant="outlined"
+                        onChange={e => setusername(e.target.value)}
+                      />
+                      <span className="text-lg text-gray-300">2-20字元</span>
                     </div>
-                    <TextField
-                      fullWidth
-                      id="outlined-basic"
-                      label="請輸入名稱"
-                      variant="outlined"
-                      onChange={e => setusername(e.target.value)}
+                    {/* email 部分 */}
+                    <div className={styles.wordsizediv}>
+                      <div className="flex items-center justify-between">
+                        <div className={styles.wordsize}>電子信箱</div>
+                        {/* FIXME: 按下發送驗證碼 要多一格填驗證碼的輸入框 */}
+                        <button className="text-lg">發送驗證碼</button>
+                      </div>
+                      <TextField
+                        fullWidth
+                        id="outlined-basic"
+                        label="請輸入電子信箱"
+                        variant="outlined"
+                        onChange={e => setemail(e.target.value)}
                       />
-                    <span className="text-lg text-gray-300">2-20字元</span>
-                  </div>
-                  {/* email 部分 */}
-                  <div className={styles.wordsizediv}>
-                    <div className="flex items-center justify-between">
-                      <div className={styles.wordsize}>電子信箱</div>
-                      {/* FIXME: 按下發送驗證碼 要多一格填驗證碼的輸入框 */}
-                      <button className="text-lg">發送驗證碼</button>
                     </div>
-                    <TextField
-                      fullWidth
-                      id="outlined-basic"
-                      label="請輸入電子信箱"
-                      variant="outlined"
-                      onChange={e => setemail(e.target.value)}
-                    />
-                  </div>
-                  {/* 個人簡介部分 */}
-                  <div className={styles.wordsizediv}>
-                    <div className={styles.wordsize}>個人簡介</div>
-                    <p></p>
-                    <TextField
-                      fullWidth
-                      id="outlined-multiline-static"
-                      label="請輸入個人簡介"
-                      multiline
-                      rows={6}
-                      onChange={e => setIntroduction(e.target.value)}
-                    />
-                    <span className="text-lg text-gray-300">建議50字以內,最長200字</span>
-                    <p></p>
-                  </div>
-                  {/* 輸入標籤部分 */}
-                  <div className={styles.wordsizediv}>
-                    <div className={styles.wordsize}>添加標籤</div>
-                    <p></p>
-                    <TextField
-                      fullWidth
-                      id="outlined-basic"
-                      label="請輸入標籤"
-                      variant="outlined"
-                      onChange={e => setLabel(e.target.value)}
+                    {/* 個人簡介部分 */}
+                    <div className={styles.wordsizediv}>
+                      <div className={styles.wordsize}>個人簡介</div>
+                      <p></p>
+                      <TextField
+                        fullWidth
+                        id="outlined-multiline-static"
+                        label="請輸入個人簡介"
+                        multiline
+                        rows={6}
+                        onChange={e => setIntroduction(e.target.value)}
                       />
-                    <span className="text-lg text-gray-300">建議至多5個主標籤</span>
-                    <p></p>
-                  </div>
-                  {/* 社群關係連結 */}
-                  <div className={styles.wordsizediv}>
-                    <div className={styles.wordsize}>社群關係連結</div>
-                    <p></p>
-                    <TextField
-                      fullWidth
-                      id="outlined-basic"
-                      label="請輸入社群連結"
-                      variant="outlined"
-                      onChange={e => setSocialMedia(e.target.value)}
+                      <span className="text-lg text-gray-300">建議50字以內,最長200字</span>
+                      <p></p>
+                    </div>
+                    {/* 輸入標籤部分 */}
+                    <div className={styles.wordsizediv}>
+                      <div className={styles.wordsize}>添加標籤</div>
+                      <p></p>
+                      <TextField
+                        fullWidth
+                        id="outlined-basic"
+                        label="請輸入標籤"
+                        variant="outlined"
+                        onChange={e => setLabel(e.target.value)}
                       />
+                      <span className="text-lg text-gray-300">建議至多5個主標籤</span>
+                      <p></p>
+                    </div>
+                    {/* 社群關係連結 */}
+                    <div className={styles.wordsizediv}>
+                      <div className={styles.wordsize}>社群關係連結</div>
+                      <p></p>
+                      <TextField
+                        fullWidth
+                        id="outlined-basic"
+                        label="請輸入社群連結"
+                        variant="outlined"
+                        onChange={e => setSocialMedia(e.target.value)}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
             </div>
           </DialogContent>
           <DialogActions>
@@ -205,7 +210,7 @@ export default function Editprofile() {
                 setLabel("");
                 setIntroduction("");
               }}
-              >
+            >
               重置
             </Button>
             {/* FIXME: API 傳送格式: 名稱、email、驗證碼、個人簡介、添加標籤、社群關係連結*/}

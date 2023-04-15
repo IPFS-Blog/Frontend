@@ -7,11 +7,12 @@ import { store } from "store";
 
 import Layout from "@/components/Layout";
 
-Sentry.init({
-  dsn: `http://dc92150ec47041968279837bb4eb872f@${process.env.SENTRY_IP}/5`,
-  release: process.env.SENTRY_RELEASE,
-  tracesSampleRate: 1.0,
-});
+if (process.env.NODE_ENV !== "development") {
+  Sentry.init({
+    dsn: process.env.NEXT_SENTRY_DSN,
+    environment: process.env.NODE_ENV,
+  });
+}
 
 declare global {
   interface Window {
@@ -30,7 +31,7 @@ export default function App({ Component, pageProps }: AppProps, err: any) {
   );
 }
 
-App.getInitialProps = async ({ Component, ctx }: any) => {
+export async function getStaticProps({ Component, ctx }: any) {
   let pageProps = {};
   try {
     if (Component.getInitialProps) {
@@ -43,4 +44,4 @@ App.getInitialProps = async ({ Component, ctx }: any) => {
     Sentry.captureException(err);
     return { pageProps };
   }
-};
+}

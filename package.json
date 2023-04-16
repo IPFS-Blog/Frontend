@@ -17,6 +17,9 @@
     "pages/**/*.**": "prettier --check --ignore-unknown --write"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
+    "@mui/material": "^5.12.0",
     "@sentry/browser": "^5.11.0",
     "@sentry/cli": "^2.15.2",
     "@sentry/node": "^5.11.0",

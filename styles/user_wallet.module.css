@@ -1,0 +1,69 @@
+.all {
+  background-color: #f0f0f0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.coincolumn {
+  display: flex;
+  align-items: center;
+  border: 1px solid black;
+  border-bottom: 3px solid black;
+  border-bottom-left-radius: 20px;
+  border-left: 3px solid black;
+  border-top: none;
+  border-right: none;
+  width: calc(100% - 60px);
+  height: 150px;
+  margin-left: 30px;
+  flex-shrink: 0;
+  width: 600px;
+}
+
+@media only screen and (max-width: 700px) {
+  .coincolumn {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+.coinword {
+  margin: 0 auto;
+  font-weight: bold;
+  font-size: 25px;
+}
+
+.coinimage {
+  background-color: #ccc;
+  border-radius: 10%;
+  width: 120px;
+  height: 120px;
+  position: relative;
+  left: 15px;
+}
+
+.transrecordbutton {
+  margin-left: 10px;
+  border-radius: 10px;
+  height: 40px;
+  background-color: #ff7575;
+}
+
+.buttondiv {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  margin-right: 40px;
+}
+
+.backbutton {
+  border-radius: 10px;
+  height: 40px;
+  background-color: #ccc;
+}
+
+.surebutton {
+  margin-left: 10px;
+  border-radius: 10px;
+  height: 40px;
+  background-color: #ccc;
+}

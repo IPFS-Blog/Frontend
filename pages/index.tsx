@@ -2,8 +2,8 @@ import { Inter } from "next/font/google";
 import Head from "next/head";
 import Image from "next/image";
 
+import User_wallet from "@/components/users/user_wallet";
 import styles from "@/styles/Home.module.css";
-
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
@@ -96,6 +96,7 @@ export default function Home() {
             <p className={inter.className}>Instantly deploy your Next.js site to a shareable URL with&nbsp;Vercel.</p>
           </a>
         </div>
+        <User_wallet />
       </main>
     </>
   );

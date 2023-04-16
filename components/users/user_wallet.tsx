@@ -45,9 +45,11 @@ export default function ResponsiveDialog() {
                   <span className="text-2xl font-bold">資產總覽</span>
                 </div>
               </div>
+              {/* 交易紀錄按鈕 */}
               <div className="mr-5 flex justify-end">
                 <button className={styles.transrecordbutton}>交易紀錄</button>
               </div>
+              {/* 不同虛擬幣的圖案以及總額 */}
               <div className={styles.coincolumn}>
                 <div className={styles.coinimage}></div>
                 <span className={styles.coinword}>10.2210</span>

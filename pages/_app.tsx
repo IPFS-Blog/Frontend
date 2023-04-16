@@ -1,18 +1,37 @@
 import "@/styles/globals.css";
 
 import * as Sentry from "@sentry/node";
+import type { AppProps } from "next/app";
+import { Provider } from "react-redux";
+import { store } from "store";
 
-Sentry.init({
-  dsn: "http://dc92150ec47041968279837bb4eb872f@192.168.1.83:9000/5",
-  release: process.env.SENTRY_RELEASE,
-  tracesSampleRate: 1.0,
-});
-export default function App({ Component, pageProps, err }: any) {
-  const modifiedPageProps = { ...pageProps, err };
-  return <Component {...modifiedPageProps} />;
+import Layout from "@/components/Layout";
+
+if (process.env.NODE_ENV !== "development") {
+  Sentry.init({
+    dsn: process.env.NEXT_SENTRY_DSN,
+    environment: process.env.NODE_ENV,
+  });
 }
 
-App.getInitialProps = async ({ Component, ctx }: any) => {
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}
+
+export default function App({ Component, pageProps }: AppProps, err: any) {
+  const modifiedPageProps = { ...pageProps, err };
+  return (
+    <Provider store={store}>
+      <Layout>
+        <Component {...modifiedPageProps} />
+      </Layout>
+    </Provider>
+  );
+}
+
+export async function getStaticProps({ Component, ctx }: any) {
   let pageProps = {};
   try {
     if (Component.getInitialProps) {
@@ -25,4 +44,4 @@ App.getInitialProps = async ({ Component, ctx }: any) => {
     Sentry.captureException(err);
     return { pageProps };
   }
-};
+}

@@ -5,11 +5,11 @@ module.exports = {
     extend: {
       colors: {
         primary: "#050816",
-        secondary: "#aaa6c3",
         tertiary: "rgba(253, 247, 247, 0.32)",
         "black-100": "#100d25",
         "black-200": "#090325",
         "bule-100": "rgba(9, 42, 154, 0.63)",
+        "bule-200": "#092CA4",
         "white-100": "#f3f3f3",
         "white-50": "rgba(253, 247, 247, 0.60)",
         "yellow-50": "rgba(253, 246, 231, 0.32)",

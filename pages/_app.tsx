@@ -24,6 +24,7 @@ export default function App({ Component, pageProps }: AppProps, err: any) {
   const modifiedPageProps = { ...pageProps, err };
   return (
     <Provider store={store}>
+      {/* FIXME: 頁面排版調整 */}
       <Layout>
         <Component {...modifiedPageProps} />
       </Layout>

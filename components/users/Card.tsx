@@ -1,8 +1,13 @@
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 
 import styles from "@/styles/users/users.module.css";
 
 const Card = () => {
+  const User = useSelector((state: any) => state.User);
+  const router = useRouter();
+  const [, firstParam] = router.asPath.split("/");
   return (
     <div className="h-full w-full">
       <div className={styles.flip_card}>
@@ -12,6 +17,7 @@ const Card = () => {
             <div className={styles.flip_card_front}>
               <div className="flex h-full flex-row">
                 <div className="flex h-52 w-2/6 flex-col items-center p-2">
+                  {/* FIXME: 烽: 這邊後端給我的照片是http://.....Image不能放這種外部的圖片可能要修改你們改好直接把src帶入 "${User.profile.photo}" */}
                   <Image
                     className="rounded-full p-5"
                     src="/User.png"
@@ -23,8 +29,8 @@ const Card = () => {
                   />
                 </div>
                 <div className="flex h-auto w-4/6 flex-col justify-start p-3">
-                  <h5 className="mb-2 text-3xl font-medium">MEOW</h5>
-                  <p>0x4202043D9ff98a4e8C64b075dBF4Cb3eE5EfF528</p>
+                  <h5 className="mb-2 text-3xl font-medium">{firstParam}</h5>
+                  <p>{User.profile.address}</p>
                   <div className="mb-4 pt-2 text-base">
                     <p>我喜歡貓咪</p>
                     <p>3D設計師</p>
@@ -49,7 +55,7 @@ const Card = () => {
                 </div>
 
                 <div className="flex w-4/6 flex-col justify-start p-3">
-                  <h5 className="mb-2 text-3xl font-medium">MEOW</h5>
+                  <h5 className="mb-2 text-3xl font-medium">{firstParam}</h5>
                   <dl className="mx-auto grid grid-cols-3 p-3 text-gray-900 sm:grid-cols-3 sm:p-2 xl:grid-cols-3">
                     <div className="flex flex-col p-2 text-center">
                       <dt className="text-base">所有文章</dt>

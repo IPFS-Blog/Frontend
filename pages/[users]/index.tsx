@@ -18,7 +18,7 @@ export default function Users({ userData, IsUser }: any) {
   const dispatch = useDispatch();
   useEffect(() => {
     if (IsUser) dispatch(setLogin(JSON.stringify(userData)));
-  }, [dispatch]);
+  }, [IsUser, dispatch, userData]);
   const User = useSelector((state: any) => state.User);
   // TODO: UI function
   const { copy } = useClipboard();

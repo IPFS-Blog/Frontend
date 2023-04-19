@@ -1,12 +1,12 @@
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useClipboard } from "use-clipboard-copy";
 
-import { apiUserGetUserData } from "@/components/api";
+import { apiUserGetCreaterData, apiUserGetUserData } from "@/components/api";
 import Card from "@/components/users/Card";
-import { setLogin } from "@/store/UserSlice";
+import { setCreater, setLogin } from "@/store/UserSlice";
 
 export default function Users({ userData, IsUser }: any) {
   // TODO: API function
@@ -14,12 +14,25 @@ export default function Users({ userData, IsUser }: any) {
   // 取路由名稱 用來判別是不是本人
   const router = useRouter();
   const [, route] = router.asPath.split("/");
-
-  const dispatch = useDispatch();
-  useEffect(() => {
-    if (IsUser) dispatch(setLogin(JSON.stringify(userData)));
-  }, [IsUser, dispatch, userData]);
   const User = useSelector((state: any) => state.User);
+  const dispatch = useDispatch();
+  const createrData = useRef({ id: 0, name: "", address: "", email: "", photo: "" });
+  useEffect(() => {
+    async function CreaterOrUser() {
+      if (IsUser) dispatch(setLogin(JSON.stringify(userData)));
+      else {
+        await apiUserGetCreaterData(route)
+          .then(res => {
+            createrData.current = res.data.userData;
+          })
+          .catch(() => {
+            // FIXME: 找不到使用者 => 所以無法顯示使用者個人頁面
+          });
+        dispatch(setCreater(JSON.stringify(createrData.current)));
+      }
+    }
+    CreaterOrUser();
+  }, [IsUser, dispatch, route, userData]);
   // TODO: UI function
   const { copy } = useClipboard();
 
@@ -28,7 +41,7 @@ export default function Users({ userData, IsUser }: any) {
       <div className="flex h-auto w-full">
         {/* FIXME:要 Card 縮小後要變另外一種*/}
         <div className="w-64 flex-auto lg:w-3/4">
-          <Card />
+          <Card CreaterAddress={createrData.current.address} />
         </div>
         <div>
           <dl className="mx-auto grid grid-cols-3 p-3 text-gray-900 sm:grid-cols-3 sm:p-2 xl:grid-cols-3">
@@ -53,11 +66,11 @@ export default function Users({ userData, IsUser }: any) {
                 }}
                 className="inline-flex w-full justify-between rounded-lg bg-gray-300 py-2 px-5 text-black-100 hover:bg-gray-400"
               >
-                <p className="pl-2">{userData.address}</p>
+                <p className="pl-2">{User.profile.login ? userData.address : createrData.current.address}</p>
                 <ContentCopyRoundedIcon />
               </button>
 
-              {User.profile.name === route ? (
+              {User.profile.login === true ? (
                 // TODO:私人:編輯個人資料、個人錢包
                 <div>
                   <p className="text-gray-600">編輯個人資料</p>
@@ -80,7 +93,7 @@ export default function Users({ userData, IsUser }: any) {
         </div>
       </div>
 
-      {User.profile.name == route ? (
+      {User.profile.login == true ? (
         // TODO:私人:所有、收藏、瀏覽紀錄、按讚紀錄
         <nav className="my-5 mx-2 flex justify-between bg-bule-200 py-3">
           <ul className="flex h-full items-center">

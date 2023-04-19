@@ -4,10 +4,11 @@ import { useSelector } from "react-redux";
 
 import styles from "@/styles/users/users.module.css";
 
-const Card = () => {
+const Card = ({ CreaterAddress }: any) => {
   const User = useSelector((state: any) => state.User);
   const router = useRouter();
   const [, firstParam] = router.asPath.split("/");
+
   return (
     <div className="h-full w-full">
       <div className={styles.flip_card}>
@@ -30,7 +31,7 @@ const Card = () => {
                 </div>
                 <div className="flex h-auto w-4/6 flex-col justify-start p-3">
                   <h5 className="mb-2 text-3xl font-medium">{firstParam}</h5>
-                  <p>{User.profile.address}</p>
+                  <p>{User.profile.login ? User.profile.address : CreaterAddress}</p>
                   <div className="mb-4 pt-2 text-base">
                     <p>我喜歡貓咪</p>
                     <p>3D設計師</p>

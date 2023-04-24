@@ -32,7 +32,7 @@ const authRequest = axios.create({
 });
 
 // User 相關的 api
-export const apiUserRegister = (data: any) => userRequest.post("/register", data, config); // 註冊
+export const apiUserRegister = (data: any) => userRequest.post("/", data, config); // 註冊
 export const apiUserGetUserData = (jwt: string) =>
   userRequest.get("/", {
     headers: {
@@ -50,4 +50,4 @@ export const apiEditProfile = (jwt: string, data: any) =>
 // Auth相關的 api
 export const apiAuthTakeNonce = (address: any) => authRequest.get(`/login/${address}`, config); // 拿取nonce做身分驗證
 
-export const apiAuthTakeToken = (data: any) => authRequest.post("/login/token", data, config); // 拿取jwt
+export const apiAuthTakeToken = (data: any) => authRequest.post("/login", data, config); // 拿取jwt

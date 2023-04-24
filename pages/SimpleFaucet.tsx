@@ -11,7 +11,7 @@ declare global {
 
 export default function SimpleFaucet() {
   const [account, setAccount] = useState("");
-
+  const [transfermoney, settransfermoney] = useState(true);
   useEffect(() => {
     const connect = async () => {
       try {
@@ -19,9 +19,8 @@ export default function SimpleFaucet() {
         await window.ethereum.request({ method: "eth_requestAccounts" });
         const accounts = await web3.eth.getAccounts();
         setAccount(accounts[0]);
-      } catch (error: any) {
+      } catch {
         // FIXME: 登入失敗UI
-        console.log(error);
       }
     };
     connect();
@@ -41,29 +40,32 @@ export default function SimpleFaucet() {
         type: item.type,
       };
     });
+    if (web3) {
+      const FaucetContract = new web3.eth.Contract(abi, process.env.NEXT_PUBLIC_FaucetContractAddress);
+      await window.ethereum.request({ method: "eth_requestAccounts" });
+      const accounts = await web3.eth.accounts.privateKeyToAccount(`${process.env.NEXT_PUBLIC_UserKey}`);
+      web3.eth.accounts.wallet.add(accounts);
 
-    const FaucetContract = new web3.eth.Contract(abi, process.env.NEXT_PUBLIC_FaucetContractAddress);
-    const accounts = await web3.eth.accounts.privateKeyToAccount(`${process.env.NEXT_PUBLIC_UserKey}`);
-    web3.eth.accounts.wallet.add(accounts);
-    const gasPrice = await web3.eth.getGasPrice();
-    const gasLimit = 3000000;
-    await FaucetContract.methods
-      .requestTokens(account)
-      .send({
-        from: accounts.address,
-        gasPrice,
-        gas: gasLimit,
-      })
-      .then((res: any) => {
-        // FIXME:領錢成功UI
-        window.alert("領錢成功");
-        console.log("成功", res);
-      })
-      .catch((error: any) => {
-        // FIXME:領錢失敗UI
-        window.alert("領錢失敗");
-        console.log(error);
-      });
+      const gasPrice = await web3.eth.getGasPrice();
+      const gasLimit = 3000000;
+
+      await FaucetContract.methods
+        .requestTokens(account)
+        .send({
+          from: accounts.address,
+          gasPrice,
+          gas: gasLimit,
+        })
+        .then(() => {
+          // FIXME:領錢成功UI
+          window.alert("領錢成功");
+          settransfermoney(false);
+        })
+        .catch(() => {
+          // FIXME:領錢失敗UI
+          window.alert("領錢失敗");
+        });
+    }
   };
   return (
     <div>
@@ -71,6 +73,7 @@ export default function SimpleFaucet() {
       <p>帳號: {account}</p>
       <br></br>
       {account !== "" ? <button onClick={takemoney}>領取10個ETHER</button> : null}
+      {transfermoney ? null : <h1>轉帳成功</h1>}
     </div>
   );
 }

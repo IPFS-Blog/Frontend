@@ -1,18 +1,16 @@
 import classNames from "classnames";
 import Link from "next/link";
 import React, { useState } from "react";
+import { AiOutlineDoubleLeft } from "react-icons/ai";
 import {
-  AiOutlineDoubleLeft,
   AiOutlineFileText,
   AiOutlineForm,
   AiOutlineHome,
   AiOutlineLayout,
   AiOutlineUsergroupDelete,
 } from "react-icons/ai";
-import { FiBell } from "react-icons/fi";
 
-import Users from "./Users";
-import Login from "./users/Login";
+import Users from "../Users";
 
 const menuItems = [
   { id: 1, label: "首頁", icon: AiOutlineHome, link: "/" },
@@ -21,16 +19,10 @@ const menuItems = [
   { id: 4, label: "創作", icon: AiOutlineForm, link: "/create" },
 ];
 
-//TODO: 更改登入照片、響應式
-const Navbar = () => {
+const Sidebar = () => {
   const [toggleCollapse, setToggleCollapse] = useState(false);
-
-  const wrapperClasses = classNames("flex flex-col rounded-lg bg-yellow-50 justify-between px-4 pt-8 pb-4", {
-    ["w-60"]: !toggleCollapse,
-    ["w-20"]: toggleCollapse,
-  });
   const collapseIconClasses = classNames({
-    "rotate-180": toggleCollapse,
+    // "rotate-180": toggleCollapse,
   });
   function getNavItemClasses(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -43,31 +35,13 @@ const Navbar = () => {
   };
   return (
     <div>
-      <nav className="flex flex-row items-center bg-tertiary p-2">
-        <div className="flex items-center p-1">
+      {/* //sidebar */}
+      <div className="flex w-auto flex-col justify-between rounded-lg bg-yellow-50 px-4 pt-8 pb-4">
+        <div className="flex flex-col">
           <button className={collapseIconClasses} onClick={handleSidebarToggle}>
             <AiOutlineDoubleLeft />
           </button>
-        </div>
-        <div className="mr-6 flex shrink-0 items-center p-1 text-white">
-          <span className="text-xl font-semibold tracking-tight text-blue-100">BrandName</span>
-        </div>
-        <form className="w-64 flex-auto">
-          <input
-            type="text"
-            className="items-center rounded-md bg-white-50  px-3 py-2 text-gray-500 shadow-xl focus:border-blue-100 focus:outline-none focus:ring-2"
-            placeholder="搜尋..."
-          />
-        </form>
-        <div className="m-1">
-          <FiBell className="px-1 text-3xl text-black-200" />
-        </div>
-        <Login />
-      </nav>
-      {/* //sidebar */}
-      <div className={wrapperClasses}>
-        <div className="flex flex-col">
-          <div className="mt-10 flex flex-col items-start">
+          <div className="mt-2 flex flex-col items-start">
             {menuItems.map(({ icon: Icon, ...menu }) => {
               const classes = getNavItemClasses(menu);
               return (
@@ -77,7 +51,7 @@ const Navbar = () => {
                       <div className="w-8">
                         <Icon />
                       </div>
-                      {!toggleCollapse && <div className={classNames("font-medium text-dark")}>{menu.label}</div>}
+                      {!toggleCollapse && <div className={classNames("font-medium text-dark w-20")}>{menu.label}</div>}
                     </div>
                   </Link>
                 </div>
@@ -105,4 +79,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default Sidebar;

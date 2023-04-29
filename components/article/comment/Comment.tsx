@@ -1,11 +1,17 @@
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
+import Avatar from "@mui/material/Avatar";
+import { useState } from "react";
 
 const Comment = () => {
+  // TODO: Handle funtion
+  const [username] = useState(""); // 使用者名稱
   return (
     <div>
       <div className="flex items-center bg-gray-50 px-3 py-1 dark:bg-gray-700">
-        <img className="h-auto w-10 rounded-full" src="/avater.jpg" alt=""></img>
-        <p className="mx-2">name</p>
+        {/* FIXME:更改資料:頭貼、名稱 */}
+        <Avatar className="h-auto w-10 rounded-full" src="/avater.jpg" alt="" />
+        {/* <Avatar className="h-auto w-10 rounded-full" src={`${User.profile.photo}`} alt="" /> */}
+        <p className="mx-2">{username}</p>
         <span className="mx-4 block w-full rounded-lg border border-gray-300 bg-gray-200 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
           顯示留言
         </span>

@@ -4,8 +4,8 @@ import "@/styles/NprogressCustom.css";
 
 import * as Sentry from "@sentry/node";
 import type { AppProps } from "next/app";
-import { ThemeProvider } from "next-themes";
 import { useRouter } from "next/router";
+import { ThemeProvider } from "next-themes";
 import NProgress from "nprogress";
 import { useEffect } from "react";
 import { Provider } from "react-redux";

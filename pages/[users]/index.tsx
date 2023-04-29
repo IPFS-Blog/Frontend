@@ -1,7 +1,8 @@
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 import { useClipboard } from "use-clipboard-copy";
-import Editprofile from "@/components/users/EditProfile";
+
 import Card from "@/components/users/Card";
+import Editprofile from "@/components/users/EditProfile";
 
 export default function Users() {
   const { copy } = useClipboard();
@@ -42,7 +43,9 @@ export default function Users() {
                 <ContentCopyRoundedIcon />
               </button>
               {/* TODO:私人:編輯個人資料、個人錢包 */}
-              <p className="text-gray-600"><Editprofile /></p>
+              <p className="text-gray-600">
+                <Editprofile />
+              </p>
               <p className="text-gray-600">個人錢包</p>
               {/* TODO:公開:追蹤按鈕以及打賞 */}
               <div className="flex flex-row justify-center p-2 text-center">

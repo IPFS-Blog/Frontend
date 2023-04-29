@@ -47,11 +47,11 @@ export default function Users() {
               <p className="text-gray-600">個人錢包</p>
               {/* TODO:公開:追蹤按鈕以及打賞 */}
               <div className="flex flex-row justify-center p-2 text-center">
-                <button className="hover: ml-2 rounded border border-red-500 py-2 px-20 font-semibold text-red-500 hover:bg-red-500 hover:text-white">
+                <button className="ml-2 rounded border border-red-500 py-2 px-20 font-semibold text-red-500 hover:bg-red-500 hover:text-white">
                   追蹤
                 </button>
 
-                <button className="hover: rounded border border-green-500 py-2 px-20 font-semibold text-green-500 hover:bg-green-500 hover:text-white">
+                <button className="rounded border border-green-500 py-2 px-20 font-semibold text-green-500 hover:bg-green-500 hover:text-white">
                   打賞
                 </button>
               </div>
@@ -61,7 +61,7 @@ export default function Users() {
       </div>
       {/* sub-nav */}
       {/* FIXME:如果是公開導覽列(目前公開導覽列沒有項目)就換過來 */}
-      <nav className="my-5 mx-2 flex justify-between bg-bule-200 py-3">
+      <nav className="my-5 mx-2 flex justify-between bg-blue-200 py-3">
         {/* TODO:私人:所有、收藏、瀏覽紀錄、按讚紀錄 */}
         <ul className="flex h-full items-center">
           <li>

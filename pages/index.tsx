@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Link from "next/link";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
@@ -22,6 +23,9 @@ export default function Home() {
       </Head>
       <main>
         <Editprofile />
+        <Link href="./Uniii">Uniii</Link>
+        <br />
+        <Link href="./articles/my-first-post">my-first-post</Link>
       </main>
     </>
   );

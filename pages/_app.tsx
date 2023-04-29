@@ -5,6 +5,7 @@ import "@/styles/NprogressCustom.css";
 import * as Sentry from "@sentry/node";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
+import { ThemeProvider } from "next-themes";
 import NProgress from "nprogress";
 import { useEffect } from "react";
 import { Provider } from "react-redux";
@@ -40,9 +41,11 @@ export default function App({ Component, pageProps }: AppProps, err: any) {
 
   return (
     <Provider store={store}>
-      <Layout>
-        <Component {...modifiedPageProps} />
-      </Layout>
+      <ThemeProvider attribute="class">
+        <Layout>
+          <Component {...modifiedPageProps} />
+        </Layout>
+      </ThemeProvider>
     </Provider>
   );
 }
@@ -61,3 +64,5 @@ export async function getStaticProps({ Component, ctx }: any) {
     return { pageProps };
   }
 }
+
+export default App;

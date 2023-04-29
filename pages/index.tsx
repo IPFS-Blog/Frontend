@@ -20,9 +20,8 @@ export default function Home() {
       <Head>
         <title>Create Next App</title>
       </Head>
-      <main>
-        <Link href="./Uniii">Uniii</Link>
-      </main>
+      <h1>home</h1>
+      <Link href="./Uni0155/Sunday">我的文章</Link>
     </>
   );
 }

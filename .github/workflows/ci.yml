@@ -1,0 +1,71 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches: "**"
+
+jobs:
+  # build:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3  # 拿取工作目錄
+  #     - name: Get yarn cache directory path # 設定yarn cache的目錄位置
+  #       id: yarn-cache-dir-path
+  #       run: echo "::set-output name=dir::$(yarn cache dir)" # yarn的cache目錄位置
+  #     - uses: actions/cache@v3     # 去cache找 減少build時間
+  #       id: yarn-cache
+  #       with: # 找不到就到剛剛上面的yarn cache目錄新增
+  #         path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+  #         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-yarn-
+  #     - uses: actions/cache@v3 # 存./node/modules & ./.next.cache
+  #       with:
+  #         path: |
+  #           ./node_modules
+  #           ${{ github.workspace }}/.next/cache
+  #         # Generate a new cache whenever packages or source files change.
+  #         key: ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+  #         # If source files changed but packages didn't, rebuild from a prior cache.
+  #         restore-keys: |
+  #           ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}-
+  #     - run: yarn install --frozen-lockfile --check-files # --frozen-lockfile鎖定package.lock.json文件=>版本穩定性
+  #     - run: yarn build
+
+  lint:
+    runs-on: ubuntu-latest
+    # needs: build
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        id: restore-build
+        with:
+          path: |
+            ./node_modules
+            ${{ github.workspace }}/.next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}-
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: ESLint Check
+        run: yarn lint:check
+
+      - name: Prettier Check
+        run: yarn prettier --check pages/**/*.**
+  # unit-test:
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/cache@v3
+  #       id: restore-build
+  #       with:
+  #         path: |
+  #           ./node_modules
+  #           ${{ github.workspace }}/.next/cache
+  #         key: ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}-
+  #     - name: Run Tests
+  #       run: yarn test --ci --maxWorkers=2

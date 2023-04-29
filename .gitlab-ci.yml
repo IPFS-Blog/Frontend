@@ -18,4 +18,4 @@ eslint:
     - yarn install
     # Configure ESLint (will read your .eslintrc.ts file)
     # Run ESLint
-    - yarn lint
+    - yarn lint:check

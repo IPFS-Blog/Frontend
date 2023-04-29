@@ -20,8 +20,8 @@ export default function Article() {
         <div className="my-2 flex flex-row items-center justify-between rounded border border-blue-200 p-2">
           {/* FIXME:文章擁有者資料 頭貼、名稱 */}
           <div className="flex flex-row items-center">
-            <Avatar className="h-auto w-10 rounded-full" src="/black.png" alt="" />
-            {/* <Avatar className="h-auto w-10 rounded-full" src={`${User.profile.photo}`} alt="" /> */}
+            <Avatar className="h-auto w-10 rounded-full" src="" alt="not find Avatar" />
+            {/* <Avatar className="h-auto w-10 rounded-full" src={`${User.profile.photo}`} alt="not find Avatar" /> */}
             <div className="px-2">
               <div>{username}</div>
             </div>
@@ -71,8 +71,8 @@ export default function Article() {
           {/* 輸入留言 */}
           <form>
             <div className="flex items-center bg-gray-50 px-3 py-1 dark:bg-gray-700">
-              <Avatar className="h-auto w-10 rounded-full" src="/avater.jpg" alt="" />
-              {/* <Avatar className="h-auto w-10 rounded-full" src={`${User.profile.photo}`} alt="" /> */}
+              <Avatar className="h-auto w-10 rounded-full" src="" alt="not find Avatar" />
+              {/* <Avatar className="h-auto w-10 rounded-full" src={`${User.profile.photo}`} alt="not find Avatar" /> */}
               <p className="mx-2">{username}</p>
               <textarea
                 id="chat"
@@ -99,8 +99,8 @@ export default function Article() {
       <div className="col-span-4">
         {/* FIXME:個人資料(頭像、名稱、標籤) */}
         <div className="col-span-2 flex justify-center">
-          <Avatar className="h-auto w-1/2 rounded-full" src="/black.png" alt="" />
-          {/* <Avatar className="h-auto w-1/2 rounded-full" src={`${User.profile.photo}`} alt="" /> */}
+          <Avatar className="h-auto w-1/2 rounded-full" src="" alt="not find Avatar" />
+          {/* <Avatar className="h-auto w-1/2 rounded-full" src={`${User.profile.photo}`} alt="not find Avatar" /> */}
         </div>
         <div className="text-center">
           {/* ${Username} */}

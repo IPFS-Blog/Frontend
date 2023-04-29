@@ -6,8 +6,8 @@ import { useClipboard } from "use-clipboard-copy";
 
 import { apiUserGetCreaterData, apiUserGetUserData } from "@/components/api";
 import Card from "@/components/users/Card";
-import { setCreater, setLogin } from "@/store/UserSlice";
 import Editprofile from "@/components/users/EditProfile";
+import { setCreater, setLogin } from "@/store/UserSlice";
 
 export default function Users({ userData, IsUser }: any) {
   // TODO: API function

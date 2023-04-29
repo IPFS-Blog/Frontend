@@ -1,6 +1,6 @@
+import { Avatar } from "@mui/material";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
-import { Avatar } from "@mui/material";
 
 import styles from "@/styles/users/users.module.css";
 

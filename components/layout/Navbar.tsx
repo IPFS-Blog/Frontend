@@ -1,6 +1,7 @@
 import React from "react";
 import { FiBell } from "react-icons/fi";
 
+import ThemeSwitch from "../ThemeSwitch";
 import Login from "../users/Login";
 
 const Navbar = () => {
@@ -20,6 +21,9 @@ const Navbar = () => {
         </form>
         <div className="m-1">
           <FiBell className="px-1 text-3xl text-black-200" />
+        </div>
+        <div className="m-1">
+          <ThemeSwitch />
         </div>
         <Login />
       </nav>

@@ -41,7 +41,7 @@ export default function Article() {
           {/* 文章內覽列 */}
           {/* FIXME:針對文章喜歡、讚賞、分享、收藏 */}
           {/* FIXME:響應式 table: phone: */}
-          <div className="grid grid-cols items-center gap-2 border border-blue-200 p-2">
+          <div className="grid items-center gap-2 border border-blue-200 p-2">
             <div className="col-start-1 col-end-3 tablet:col-span-1 tablet:col-start-1">
               {/* 喜歡 */}
               <button className="rounded border border-red-500 py-2 px-10 font-semibold text-red-500 hover:bg-red-500 hover:text-white tablet:mx-2 tablet:px-5">

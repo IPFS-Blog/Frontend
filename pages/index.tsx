@@ -1,9 +1,9 @@
 import Head from "next/head";
+import Link from "next/link";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import { _apiCheckJwt } from "@/components/api";
-import Editprofile from "@/components/users/EditProfile";
 import { setLogin } from "@/store/UserSlice";
 
 export default function Home() {
@@ -21,7 +21,7 @@ export default function Home() {
         <title>Create Next App</title>
       </Head>
       <main>
-        <Editprofile />
+        <Link href="./Uniii">Uniii</Link>
       </main>
     </>
   );

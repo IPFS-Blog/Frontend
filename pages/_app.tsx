@@ -1,11 +1,16 @@
 import "@/styles/globals.css";
+import "nprogress/nprogress.css";
+import "@/styles/NprogressCustom.css";
 
 import * as Sentry from "@sentry/node";
 import type { AppProps } from "next/app";
+import { useRouter } from "next/router";
+import NProgress from "nprogress";
+import { useEffect } from "react";
 import { Provider } from "react-redux";
 import { store } from "store";
 
-import Layout from "@/components/Layout";
+import Layout from "@/components/layout/Layout";
 
 if (process.env.NODE_ENV !== "development") {
   Sentry.init({
@@ -20,8 +25,19 @@ declare global {
   }
 }
 
+NProgress.configure({ showSpinner: false });
+
 export default function App({ Component, pageProps }: AppProps, err: any) {
   const modifiedPageProps = { ...pageProps, err };
+
+  const router = useRouter();
+
+  useEffect(() => {
+    router.events.on("routeChangeStart", () => NProgress.start());
+    router.events.on("routeChangeComplete", () => NProgress.done());
+    router.events.on("routeChangeError", () => NProgress.done());
+  });
+
   return (
     <Provider store={store}>
       <Layout>

@@ -1,0 +1,9 @@
+ /* 更改進度條顏色 */
+ #nprogress .bar {
+  background: #092CA4;
+}
+
+/* 更改進度條高度 */
+#nprogress .bar {
+  height: 5px;
+}

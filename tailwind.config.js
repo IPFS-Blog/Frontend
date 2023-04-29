@@ -1,6 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./pages/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}", "./app/**/*.{js,ts,jsx,tsx}"],
+  // 深色模式
+  darkMode: "class",
   theme: {
     extend: {
       colors: {
@@ -8,8 +10,8 @@ module.exports = {
         tertiary: "rgba(253, 247, 247, 0.32)",
         "black-100": "#100d25",
         "black-200": "#090325",
-        "bule-100": "rgba(9, 42, 154, 0.63)",
-        "bule-200": "#092CA4",
+        "blue-100": "rgba(9, 42, 154, 0.63)",
+        "blue-200": "#092CA4",
         "white-100": "#f3f3f3",
         "white-50": "rgba(253, 247, 247, 0.60)",
         "yellow-50": "rgba(253, 246, 231, 0.32)",

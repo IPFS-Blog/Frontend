@@ -1,4 +1,5 @@
 import styles from "@/styles/users/users.module.css";
+import { Avatar } from "@mui/material";
 
 const Card = () => {
   return (
@@ -9,8 +10,8 @@ const Card = () => {
             {/* FIXME:更改上傳圖片後的背景 */}
             <div className={styles.flip_card_front}>
               <div className="flex h-full flex-row">
-                <div className="flex h-52 w-2/6 flex-col items-center p-3">
-                  <img src="/User.png" className="h-auto w-full rounded-full" alt="Picture of the author" />
+                <div className="flex h-48 w-2/6 flex-col items-center p-3">
+                <Avatar src="" className="h-auto w-full rounded-full" alt="Picture of the author" />
                 </div>
                 <div className="flex h-auto w-4/6 flex-col justify-start p-3">
                   <h5 className="mb-2 text-3xl font-medium">MEOW</h5>
@@ -26,8 +27,8 @@ const Card = () => {
             {/* FIXME:更改上傳圖片後的背景 */}
             <div className={styles.flip_card_back}>
               <div className="flex h-full flex-row">
-                <div className="flex h-48 w-2/6 flex-col items-center p-2">
-                  <img src="/User.png" className="h-auto w-full rounded-full" alt="Picture of the author" />
+                <div className="flex h-48 w-2/6 flex-col items-center p-3">
+                  <Avatar src="" className="h-auto w-full rounded-full" alt="Picture of the author" />
                 </div>
 
                 <div className="flex w-4/6 flex-col justify-start p-3">

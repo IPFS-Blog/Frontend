@@ -60,6 +60,20 @@ export default function ResponsiveDialog() {
                   <p>ETH</p>
                 </div>
               </div>
+              {/* 交換幣值 */}
+              <div className="flex w-full items-center rounded border-b-2 border-l-2 border-gray-600 py-2 text-base font-semibold hover:text-lg">
+                <div className="mx-2 h-9 w-9 border-r-2 bg-gray-300"></div>
+                <div className="flex w-full justify-between">
+                  <p>10.2210</p>
+                  <p>ETH</p>
+                  <div className="flex items-center">
+                    <p className="mr-2">交換</p>
+                    <input type="number" className="rounded border border-gray-400 px-2 py-1" />
+                    <p className="ml-2">AC</p>
+                    <button className="ml-2 rounded bg-blue-500 py-1 px-3 text-white hover:bg-blue-600">交換</button>
+                  </div>
+                </div>
+              </div>
             </div>
           </DialogContent>
           <DialogActions className="bg-gray-200">

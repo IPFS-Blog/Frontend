@@ -3,7 +3,9 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import { _apiCheckJwt } from "@/components/api";
+import DonationForm from "@/components/users/DonateButton";
 import Editprofile from "@/components/users/EditProfile";
+import User_wallet from "@/components/users/user_wallet";
 import { setLogin } from "@/store/UserSlice";
 
 export default function Home() {
@@ -22,6 +24,8 @@ export default function Home() {
       </Head>
       <main>
         <Editprofile />
+        <User_wallet />
+        <DonationForm />
       </main>
     </>
   );

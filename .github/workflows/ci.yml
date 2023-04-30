@@ -9,49 +9,50 @@ on:
   #   branches: "**"
 
 jobs:
-  # build:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout Code
-  #     - uses: actions/checkout@v3
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-  #     # can see here
-  #     # https://github.com/actions/cache/blob/main/examples.md#node---yarn
-  #     - name: Get yarn cache directory path
-  #       id: yarn-cache-dir-path
-  #       run: echo "::set-output name=dir::$(yarn cache dir)" # yarn的cache目錄位置
+      # can see here
+      # https://github.com/actions/cache/blob/main/examples.md#node---yarn
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v3 # 去cache找 減少build時間
+        id: yarn-cache
+        with: # 找不到就到剛剛上面的yarn cache目錄新增
+          # path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          path: |
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+            ${{ github.workspace }}/.next/cache
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
-  #     - uses: actions/cache@v3 # 去cache找 減少build時間
-  #       id: yarn-cache
-  #       with: # 找不到就到剛剛上面的yarn cache目錄新增
-  #         # path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-  #         path: |
-  #           ${{ steps.yarn-cache-dir-path.outputs.dir }}
-  #           ${{ github.workspace }}/.next/cache
-  #         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-  #         restore-keys: |
-  #           ${{ runner.os }}-yarn-
+      - name: Setup node and cache dependencies
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "yarn"
 
-  #     - name: Setup node and cache dependencies
-  #     - uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 16
-  #         cache: "yarn"
-
-  #     - name: Install Dependencies
-  #     # --frozen-lockfile鎖定package.lock.json文件=>版本穩定性
-  #     - run: yarn install --frozen-lockfile --check-files
-  #     - run: yarn build
+      - name: Install Dependencies
+      # --frozen-lockfile鎖定package.lock.json文件=>版本穩定性
+        run: yarn install --frozen-lockfile --check-files
+        # 編譯測試
+      - name: Build
+        run: yarn build
 
   lint:
     runs-on: ubuntu-latest
-    # needs: build
+    needs: build
     steps:
       - name: Checkout Code
-      - uses: actions/checkout@v3
+        uses: actions/checkout@v3
 
       - name: Get nextjs cache directory path
-      - uses: actions/cache@v3
+        uses: actions/cache@v3
         id: restore-build
         with:
           path: |

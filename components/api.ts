@@ -31,7 +31,7 @@ const authRequest = axios.create({
   baseURL: `http://${process.env.NEXT_PUBLIC_API}/auth`,
 });
 
-// User 相關的 api
+// TODO: User 相關的 api
 export const apiUserRegister = (data: any) => userRequest.post("/", data, config); // 註冊
 export const apiUserGetUserData = (jwt: string) =>
   userRequest.get("/", {
@@ -47,7 +47,9 @@ export const apiEditProfile = (jwt: string, data: any) =>
     },
   }); // 編輯個人資料
 
-// Auth相關的 api
+export const apiUserGetCreaterData = (username: any) => userRequest.get(`/${username}`, config); // 註冊
+
+// TODO: Auth相關的 api
 export const apiAuthTakeNonce = (address: any) => authRequest.get(`/login/${address}`, config); // 拿取nonce做身分驗證
 
 export const apiAuthTakeToken = (data: any) => authRequest.post("/login", data, config); // 拿取jwt

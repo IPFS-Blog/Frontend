@@ -27,14 +27,15 @@ export default function Users({ userData, IsUser }: any) {
             createrData.current = res.data.userData;
           })
           .catch(() => {
-            // FIXME: 找不到使用者 => 所以無法顯示使用者個人頁面
+            router.replace("/404");
           });
         dispatch(setCreater(JSON.stringify(createrData.current)));
       }
     }
     CreaterOrUser();
-  }, [IsUser, dispatch, route, userData]);
-  // TODO: UI function
+  }, [IsUser, dispatch, route, router, userData]);
+
+  //TODO: UI function
   const { copy } = useClipboard();
 
   return (

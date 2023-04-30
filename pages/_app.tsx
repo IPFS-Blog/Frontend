@@ -39,6 +39,11 @@ function App({ Component, pageProps }: AppProps, err: any) {
     router.events.on("routeChangeError", () => NProgress.done());
   });
 
+  // 判斷當前頁面是否為 404 頁面
+  if (router.isFallback || router.pathname === "/404") {
+    return <Component {...pageProps} />;
+  }
+
   return (
     <Provider store={store}>
       <ThemeProvider attribute="class">

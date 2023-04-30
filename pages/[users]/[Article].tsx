@@ -18,7 +18,7 @@ export default function Article() {
       {/* 單一文章 */}
       <div className="col-span-8 text-base">
         <div className="my-2 flex flex-row items-center justify-between rounded border border-blue-200 p-2">
-          {/* FIXME:文章擁有者資料 頭貼、名稱 */}
+          {/* FIXME: Andy 文章擁有者資料 頭貼、名稱 */}
           <div className="flex flex-row items-center">
             <Avatar className="h-auto w-10 rounded-full" src="" alt="not find Avatar" />
             {/* <Avatar className="h-auto w-10 rounded-full" src={`${User.profile.photo}`} alt="not find Avatar" /> */}
@@ -31,7 +31,7 @@ export default function Article() {
           </button>
         </div>
         <div className="my-2 rounded border border-blue-200">
-          {/* FIXME:文章資料 */}
+          {/* FIXME:Andy 文章資料 */}
           <div className="p-2">
             <h1 className="text-3xl font-semibold">title</h1>
             <h3 className="text-lg">subtitle</h3>
@@ -67,7 +67,7 @@ export default function Article() {
             </div>
           </div>
 
-          {/* FIXME:輸入留言、顯示留言 */}
+          {/* FIXME: Andy 使用者頭向、名稱 */}
           {/* 輸入留言 */}
           <form>
             <div className="flex items-center bg-gray-50 px-3 py-1 dark:bg-gray-700">
@@ -97,7 +97,7 @@ export default function Article() {
 
       {/* 右側欄 */}
       <div className="col-span-4">
-        {/* FIXME:個人資料(頭像、名稱、標籤) */}
+        {/* FIXME: Andy 文章擁有者資料 頭貼、名稱 */}
         <div className="col-span-2 flex justify-center">
           <Avatar className="h-auto w-1/2 rounded-full" src="" alt="not find Avatar" />
           {/* <Avatar className="h-auto w-1/2 rounded-full" src={`${User.profile.photo}`} alt="not find Avatar" /> */}
@@ -105,6 +105,7 @@ export default function Article() {
         <div className="text-center">
           {/* ${Username} */}
           <div className="my-2 px-2">{username}</div>
+          {/* FIXME: 標籤 */}
           {/*Label*/}
           <span className="inline-grid grid-cols-3 gap-1">{Label}</span>
           <button className="my-2 rounded border border-red-500 py-2 px-20 font-semibold text-red-500 hover:bg-red-500 hover:text-white">

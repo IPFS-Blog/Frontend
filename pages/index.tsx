@@ -11,12 +11,9 @@ export default function Home() {
 
   useEffect(() => {
     async function login() {
-      // const UserData = typeof window !== "undefined" ? localStorage.getItem("UserData") : null;
       let jwt = "";
       const res_CheckJwt = await _apiCheckJwt();
-      // if (UserData != null && res.data.jwt != null) dispatch(setLogin(UserData));
       jwt = res_CheckJwt.data.jwt;
-
       const res_GetUserData = await apiUserGetUserData(jwt);
       dispatch(setLogin(JSON.stringify(res_GetUserData.data.userData)));
     }

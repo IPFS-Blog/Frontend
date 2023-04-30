@@ -2,8 +2,8 @@ name: Continuous Integration
 
 on:
   push:
-    branches:
-      - ci/setup-buld-test
+    # branches:
+    #   - ci/setup-buld-test
   #     - main
   # pull_request:
   #   branches: "**"

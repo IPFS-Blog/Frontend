@@ -31,22 +31,23 @@ const authRequest = axios.create({
   baseURL: `http://${process.env.NEXT_PUBLIC_API}/auth`,
 });
 
-export const apiUserRegister = (data: any) => userRequest.post("/register", data, config); // 註冊
+// User 相關的 api
+export const apiUserRegister = (data: any) => userRequest.post("/", data, config); // 註冊
 export const apiUserGetUserData = (jwt: string) =>
   userRequest.get("/", {
     headers: {
       Authorization: `Bearer ${jwt}`,
     },
   }); // 攜帶jwt拿取使用者資訊
+
 export const apiEditProfile = (jwt: string, data: any) =>
   userRequest.patch("/", data, {
     headers: {
       Authorization: `Bearer ${jwt}`,
     },
   }); // 編輯個人資料
-export const apiUserGetCreaterData = (username: any) => userRequest.get(`/${username}`, config); // 註冊
 
-// TODO: Auth相關的 api
+// Auth相關的 api
 export const apiAuthTakeNonce = (address: any) => authRequest.get(`/login/${address}`, config); // 拿取nonce做身分驗證
 
 export const apiAuthTakeToken = (data: any) => authRequest.post("/login", data, config); // 拿取jwt

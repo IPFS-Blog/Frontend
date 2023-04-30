@@ -18,11 +18,7 @@ const Card = ({ CreaterAddress }: any) => {
             <div className={styles.flip_card_front}>
               <div className="flex h-full flex-row">
                 <div className="flex h-48 w-2/6 flex-col items-center p-3">
-                  <Avatar
-                    src="${User.profile.photo}"
-                    className="h-auto w-full rounded-full"
-                    alt="Picture of the author"
-                  />
+                  <Avatar src={User.profile.photo} className="h-auto w-full rounded-full" alt="Picture of the author" />
                 </div>
                 <div className="flex h-auto w-4/6 flex-col justify-start p-3">
                   <h5 className="mb-2 text-3xl font-medium">{firstParam}</h5>
@@ -39,7 +35,7 @@ const Card = ({ CreaterAddress }: any) => {
             <div className={styles.flip_card_back}>
               <div className="flex h-full flex-row">
                 <div className="flex h-48 w-2/6 flex-col items-center p-3">
-                  <Avatar src="" className="h-auto w-full rounded-full" alt="Picture of the author" />
+                  <Avatar src={User.profile.photo} className="h-auto w-full rounded-full" alt="Picture of the author" />
                 </div>
 
                 <div className="flex w-4/6 flex-col justify-start p-3">

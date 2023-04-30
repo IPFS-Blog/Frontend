@@ -84,7 +84,6 @@ export default function Editprofile() {
             {Introduction}
             {Label}
             {SocialMedia}
-            {/* FIXME: 記得刪除，因為未使用不能commit */}
             <div className={styles.all}>
               <div className="h-auto w-full">
                 <div className="w-full flex-col">

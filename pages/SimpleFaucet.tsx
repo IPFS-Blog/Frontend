@@ -20,7 +20,7 @@ export default function SimpleFaucet() {
         const accounts = await web3.eth.getAccounts();
         setAccount(accounts[0]);
       } catch {
-        // FIXME: 登入失敗UI
+        // FIXME: Lin 登入失敗UI
       }
     };
     connect();
@@ -57,12 +57,12 @@ export default function SimpleFaucet() {
           gas: gasLimit,
         })
         .then(() => {
-          // FIXME:領錢成功UI
+          // FIXME: Lin 領錢成功UI
           window.alert("領錢成功");
           settransfermoney(false);
         })
         .catch(() => {
-          // FIXME:領錢失敗UI
+          // FIXME: Lin 領錢失敗UI
           window.alert("領錢失敗");
         });
     }

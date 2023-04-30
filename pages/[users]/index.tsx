@@ -4,10 +4,10 @@ import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useClipboard } from "use-clipboard-copy";
 
-// import { apiUserGetCreaterData, apiUserGetUserData } from "@/components/api";
+import { apiUserGetCreaterData, apiUserGetUserData } from "@/components/api";
 import Card from "@/components/users/Card";
 import Editprofile from "@/components/users/EditProfile";
-// import { setCreater, setLogin } from "@/store/UserSlice";
+import { setCreater, setLogin } from "@/store/UserSlice";
 
 export default function Users({ userData, IsUser }: any) {
   // TODO: API function
@@ -20,17 +20,17 @@ export default function Users({ userData, IsUser }: any) {
   const createrData = useRef({ id: 0, name: "", address: "", email: "", photo: "" });
   useEffect(() => {
     async function CreaterOrUser() {
-      // if (IsUser) dispatch(setLogin(JSON.stringify(userData)));
-      // else {
-      //   await apiUserGetCreaterData(route)
-      //     .then(res => {
-      //       createrData.current = res.data.userData;
-      //     })
-      //     .catch(() => {
-      //       // FIXME: 找不到使用者 => 所以無法顯示使用者個人頁面
-      //     });
-      //   dispatch(setCreater(JSON.stringify(createrData.current)));
-      // }
+      if (IsUser) dispatch(setLogin(JSON.stringify(userData)));
+      else {
+        await apiUserGetCreaterData(route)
+          .then(res => {
+            createrData.current = res.data.userData;
+          })
+          .catch(() => {
+            // FIXME: 找不到使用者 => 所以無法顯示使用者個人頁面
+          });
+        dispatch(setCreater(JSON.stringify(createrData.current)));
+      }
     }
     CreaterOrUser();
   }, [IsUser, dispatch, route, userData]);
@@ -135,17 +135,17 @@ export default function Users({ userData, IsUser }: any) {
 export const getServerSideProps = async (context: any) => {
   const match = context.req.headers.cookie.match(/UserJWT=([^;]+)/);
   const jwt = match ? match[1] : null;
-  // let userData = { id: 0, name: "", address: "", email: "", photo: "" };
+  let userData = { id: 0, name: "", address: "", email: "", photo: "" };
   let IsUser = true;
   if (jwt) {
     try {
-      // const res = await apiUserGetUserData(jwt);
-      // userData = res.data.userData;
+      const res = await apiUserGetUserData(jwt);
+      userData = res.data.userData;
       IsUser = true;
     } catch (error: any) {
       IsUser = false;
     }
   } else IsUser = false;
   // 返回 jwt 值
-  return { props: { IsUser } };
+  return { props: { userData, IsUser } };
 };

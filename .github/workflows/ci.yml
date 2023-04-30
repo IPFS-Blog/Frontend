@@ -2,11 +2,11 @@ name: Continuous Integration
 
 on:
   push:
-    # branches:
-    #   - ci/setup-buld-test
-  #     - main
-  # pull_request:
-  #   branches: "**"
+    branches:
+      - main
+      - developer
+  pull_request:
+    branches: "**"
 
 jobs:
   build:

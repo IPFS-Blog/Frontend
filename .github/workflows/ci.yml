@@ -22,8 +22,7 @@ jobs:
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
       - uses: actions/cache@v3 # 去cache找 減少build時間
         id: yarn-cache
-        with: # 找不到就到剛剛上面的yarn cache目錄新增
-          # path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+        with:
           path: |
             ${{ steps.yarn-cache-dir-path.outputs.dir }}
             ${{ github.workspace }}/.next/cache

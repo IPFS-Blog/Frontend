@@ -92,8 +92,16 @@ export default function Editprofile() {
                   <div className={styles.roundedcard}>
                     <div className={styles.photostickers}></div>
                     {/* 右上角 4個長方形提示框 */}
-                    <Box display="flex" flexDirection="column" justifyContent="center" pl={60} pt={1} width="200%">
-                      <Box alignItems="center" bgcolor="#F0F0F0" borderRadius={10} width="600px">
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      justifyContent="center"
+                      pl={60}
+                      pt={1}
+                      mt={1}
+                      width="100%"
+                    >
+                      <Box alignItems="center" bgcolor="#F0F0F0" borderRadius={5} mt={1} width="600px">
                         {/* FIXME:IconButton需要寫功能 */}
                         <IconButton>
                           <Edit />
@@ -101,7 +109,7 @@ export default function Editprofile() {
                         </IconButton>
                       </Box>
                       <Box className={styles.promptbox}>推薦:正方形.JPG.PNG, 至少1,000像素</Box>
-                      <Box bgcolor="#F0F0F0" borderRadius={10} width="600px">
+                      <Box bgcolor="#F0F0F0" borderRadius={5} width="600px" mt={1}>
                         <IconButton>
                           <Edit />
                           變更卡片背景
@@ -136,7 +144,7 @@ export default function Editprofile() {
                         variant="outlined"
                         onChange={e => setusername(e.target.value)}
                       />
-                      <span className="text-lg text-gray-300">2-20字元</span>
+                      <span className="p-2 text-base text-gray-300">2-20字元</span>
                     </div>
                     {/* email 部分 */}
                     <div className={styles.wordsizediv}>
@@ -165,7 +173,7 @@ export default function Editprofile() {
                         rows={6}
                         onChange={e => setIntroduction(e.target.value)}
                       />
-                      <span className="text-lg text-gray-300">建議50字以內,最長200字</span>
+                      <span className="p-2 text-base text-gray-300">建議50字以內,最長200字</span>
                       <p></p>
                     </div>
                     {/* 輸入標籤部分 */}
@@ -179,7 +187,7 @@ export default function Editprofile() {
                         variant="outlined"
                         onChange={e => setLabel(e.target.value)}
                       />
-                      <span className="text-lg text-gray-300">建議至多5個主標籤</span>
+                      <span className="p-2 text-base text-gray-300">建議至多5個主標籤</span>
                       <p></p>
                     </div>
                     {/* 社群關係連結 */}

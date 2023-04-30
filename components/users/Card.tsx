@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { Avatar } from "@mui/material";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 
@@ -17,16 +17,11 @@ const Card = ({ CreaterAddress }: any) => {
             {/* FIXME:更改上傳圖片後的背景 */}
             <div className={styles.flip_card_front}>
               <div className="flex h-full flex-row">
-                <div className="flex h-52 w-2/6 flex-col items-center p-2">
-                  {/* FIXME: 烽: 這邊後端給我的照片是http://.....Image不能放這種外部的圖片可能要修改你們改好直接把src帶入 "${User.profile.photo}" */}
-                  <Image
-                    className="rounded-full p-5"
-                    src="/User.png"
+                <div className="flex h-48 w-2/6 flex-col items-center p-3">
+                  <Avatar
+                    src="${User.profile.photo}"
+                    className="h-auto w-full rounded-full"
                     alt="Picture of the author"
-                    width={0}
-                    height={0}
-                    sizes="100vw"
-                    style={{ width: "100%", height: "100%" }}
                   />
                 </div>
                 <div className="flex h-auto w-4/6 flex-col justify-start p-3">
@@ -43,16 +38,8 @@ const Card = ({ CreaterAddress }: any) => {
             {/* FIXME:更改上傳圖片後的背景 */}
             <div className={styles.flip_card_back}>
               <div className="flex h-full flex-row">
-                <div className="flex h-48 w-2/6 flex-col items-center p-2">
-                  <Image
-                    className="rounded-full p-5"
-                    src="/User.png"
-                    alt="Picture of the author"
-                    width={0}
-                    height={0}
-                    sizes="100vw"
-                    style={{ width: "100%", height: "100%" }}
-                  />
+                <div className="flex h-48 w-2/6 flex-col items-center p-3">
+                  <Avatar src="" className="h-auto w-full rounded-full" alt="Picture of the author" />
                 </div>
 
                 <div className="flex w-4/6 flex-col justify-start p-3">

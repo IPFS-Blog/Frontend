@@ -1,39 +1,20 @@
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
-import { useRouter } from "next/router";
-import { useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { useClipboard } from "use-clipboard-copy";
 
 import { apiUserGetCreaterData, apiUserGetUserData } from "@/components/api";
 import Card from "@/components/users/Card";
 import Editprofile from "@/components/users/EditProfile";
-import { setCreater, setLogin } from "@/store/UserSlice";
+import { setLogin } from "@/store/UserSlice";
 
-export default function Users({ userData, IsUser }: any) {
+export default function Users({ userData, IsUser, IsCreater }: any) {
   // TODO: API function
-
-  // 取路由名稱 用來判別是不是本人
-  const router = useRouter();
-  const [, route] = router.asPath.split("/");
-  const User = useSelector((state: any) => state.User);
   const dispatch = useDispatch();
-  const createrData = useRef({ id: 0, name: "", address: "", email: "", photo: "" });
   useEffect(() => {
-    async function CreaterOrUser() {
-      if (IsUser) dispatch(setLogin(JSON.stringify(userData)));
-      else {
-        await apiUserGetCreaterData(route)
-          .then(res => {
-            createrData.current = res.data.userData;
-          })
-          .catch(() => {
-            router.replace("/404");
-          });
-        dispatch(setCreater(JSON.stringify(createrData.current)));
-      }
-    }
-    CreaterOrUser();
-  }, [IsUser, dispatch, route, router, userData]);
+    // 登入狀態
+    if (IsUser) dispatch(setLogin(JSON.stringify(userData)));
+  }, [IsUser, dispatch, userData]);
 
   //TODO: UI function
   const { copy } = useClipboard();
@@ -43,7 +24,7 @@ export default function Users({ userData, IsUser }: any) {
       <div className="flex h-auto w-full justify-around">
         {/* FIXME:要 Card 縮小後要變另外一種*/}
         <div className="px-5">
-          <Card CreaterAddress={createrData.current.address} />
+          <Card CreaterAddress={userData.address} />
         </div>
         <div className="w-auto flex-auto">
           <dl className="mx-auto grid grid-cols-3 p-3 text-gray-900 sm:grid-cols-3 sm:px-1 xl:grid-cols-3">
@@ -69,12 +50,12 @@ export default function Users({ userData, IsUser }: any) {
                 className="inline-flex w-full justify-center py-2 px-5"
               >
                 <p className="px-2 underline decoration-blue-500 hover:underline hover:decoration-blue-200">
-                  {User.profile.login ? userData.address : createrData.current.address}
+                  {userData.address}
                 </p>
                 <ContentCopyRoundedIcon />
               </button>
 
-              {User.profile.login === true ? (
+              {!IsCreater ? (
                 // TODO:私人:編輯個人資料、個人錢包
                 <div>
                   <div className="text-gray-600">
@@ -99,7 +80,7 @@ export default function Users({ userData, IsUser }: any) {
         </div>
       </div>
 
-      {User.profile.login == true ? (
+      {!IsCreater ? (
         // TODO:私人:所有、收藏、瀏覽紀錄、按讚紀錄
         <nav className="my-5 mx-2 flex justify-between bg-blue-200 py-3">
           <ul className="flex h-full items-center">
@@ -136,17 +117,37 @@ export default function Users({ userData, IsUser }: any) {
 export const getServerSideProps = async (context: any) => {
   const match = context.req.headers.cookie.match(/UserJWT=([^;]+)/);
   const jwt = match ? match[1] : null;
+  const url = context.req.url.substring(1);
   let userData = { id: 0, name: "", address: "", email: "", photo: "" };
   let IsUser = true;
+  let IsCreater = true;
+  let NotFound = false;
+  // 判斷是否登入狀態
   if (jwt) {
     try {
       const res = await apiUserGetUserData(jwt);
       userData = res.data.userData;
-      IsUser = true;
+      IsCreater = url != userData.name ? true : false;
     } catch (error: any) {
       IsUser = false;
     }
   } else IsUser = false;
-  // 返回 jwt 值
-  return { props: { userData, IsUser } };
+
+  // 查詢創作者資料
+  if (IsCreater) {
+    await apiUserGetCreaterData(url)
+      .then(res => {
+        userData = res.data.userData;
+      })
+      .catch(() => {
+        console.log("山小");
+        NotFound = true;
+      });
+  }
+  // 找不到使用者
+  if (NotFound)
+    return {
+      notFound: true,
+    };
+  else return { props: { userData, IsUser, IsCreater } };
 };

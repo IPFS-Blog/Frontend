@@ -140,7 +140,6 @@ export const getServerSideProps = async (context: any) => {
         userData = res.data.userData;
       })
       .catch(() => {
-        console.log("山小");
         NotFound = true;
       });
   }

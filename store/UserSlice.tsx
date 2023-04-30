@@ -34,8 +34,13 @@ const UserSlice = createSlice({
     setLogout(state) {
       state.profile = initialState.profile;
     },
+    setCreater(state, action) {
+      const updatedProfile = JSON.parse(action.payload);
+      updatedProfile.login = false;
+      state.profile = updatedProfile;
+    },
   },
 });
 
-export const { setLogin, setLogout } = UserSlice.actions;
+export const { setLogin, setLogout, setCreater } = UserSlice.actions;
 export default UserSlice.reducer;

@@ -30,6 +30,10 @@ const userRequest = axios.create({
 const authRequest = axios.create({
   baseURL: `http://${process.env.NEXT_PUBLIC_API}/auth`,
 });
+// Article相關的 api
+const articleRequest = axios.create({
+  baseURL: `http://${process.env.NEXT_PUBLIC_API}/articles`,
+});
 
 // TODO: User 相關的 api
 export const apiUserRegister = (data: any) => userRequest.post("/", data, config); // 註冊
@@ -38,18 +42,53 @@ export const apiUserGetUserData = (jwt: string) =>
     headers: {
       Authorization: `Bearer ${jwt}`,
     },
-  }); // 攜帶jwt拿取使用者資訊
+  }); // 獲取自身資料
 
-export const apiEditProfile = (jwt: string, data: any) =>
+export const apiUserEditProfile = (jwt: string, data: any) =>
   userRequest.patch("/", data, {
     headers: {
       Authorization: `Bearer ${jwt}`,
     },
-  }); // 編輯個人資料
+  }); // 更改自身使用者資料
 
-export const apiUserGetCreaterData = (username: any) => userRequest.get(`/${username}`, config); // 註冊
+export const apiUserGetCreaterData = (username: any) => userRequest.get(`/${username}`, config); // 搜尋特定使用者
+
+export const apiUserGetCreaterArticle = (username: any) => userRequest.get(`/${username}/articles`, config); // 搜尋特定使用者的文章
 
 // TODO: Auth相關的 api
-export const apiAuthTakeNonce = (address: any) => authRequest.get(`/login/${address}`, config); // 拿取nonce做身分驗證
+export const apiAuthTakeNonce = (address: any) => authRequest.get(`/login/${address}`, config); // 確認使用者
 
-export const apiAuthTakeToken = (data: any) => authRequest.post("/login", data, config); // 拿取jwt
+export const apiAuthTakeToken = (data: any) => authRequest.post("/login", data, config); // 登入驗證
+
+// TODO: Article相關的 api
+export const apiArticleCreate = (jwt: string, data: any) =>
+  articleRequest.post("/", data, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  }); // 創建文章
+
+export const apiArticleTakeAllArticle = () => authRequest.post("/", config); // 查詢所有文章
+
+export const apiArticleTakeArticle = (id: number) => authRequest.get(`/${id}`, config); // 搜尋指定文章
+
+export const apiArticleEditArticle = (jwt: string, id: number, data: any) =>
+  authRequest.patch(`/${id}`, data, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  }); // 修改指定文章
+
+export const apiArticleDeleteArticle = (jwt: string, id: number) =>
+  authRequest.delete(`/${id}`, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  }); // 刪除指定文章
+
+export const apiArticleReleaseArticle = (jwt: string, id: number) =>
+  authRequest.patch(`/${id}/release`, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  }); // 發布指定文章

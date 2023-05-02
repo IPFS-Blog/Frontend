@@ -68,26 +68,26 @@ export const apiArticleCreate = (jwt: string, data: any) =>
     },
   }); // 創建文章
 
-export const apiArticleTakeAllArticle = () => authRequest.post("/", config); // 查詢所有文章
+export const apiArticleTakeAllArticle = () => articleRequest.post("/", config); // 查詢所有文章
 
-export const apiArticleTakeArticle = (id: number) => authRequest.get(`/${id}`, config); // 搜尋指定文章
+export const apiArticleTakeArticle = (id: string) => articleRequest.get(`/${id}`, config); // 搜尋指定文章
 
-export const apiArticleEditArticle = (jwt: string, id: number, data: any) =>
-  authRequest.patch(`/${id}`, data, {
+export const apiArticleEditArticle = (jwt: string, id: string, data: any) =>
+  articleRequest.patch(`/${id}`, data, {
     headers: {
       Authorization: `Bearer ${jwt}`,
     },
   }); // 修改指定文章
 
-export const apiArticleDeleteArticle = (jwt: string, id: number) =>
-  authRequest.delete(`/${id}`, {
+export const apiArticleDeleteArticle = (jwt: string, id: string) =>
+  articleRequest.delete(`/${id}`, {
     headers: {
       Authorization: `Bearer ${jwt}`,
     },
   }); // 刪除指定文章
 
-export const apiArticleReleaseArticle = (jwt: string, id: number) =>
-  authRequest.patch(`/${id}/release`, {
+export const apiArticleReleaseArticle = (jwt: string, id: string) =>
+  articleRequest.patch(`/${id}/release`, {
     headers: {
       Authorization: `Bearer ${jwt}`,
     },

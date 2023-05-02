@@ -14,7 +14,7 @@ import { useSelector } from "react-redux";
 
 import styles from "@/styles/EditProfile.module.css";
 
-import { _apiCheckJwt, apiEditProfile } from "../api";
+import { _apiCheckJwt, apiUserEditProfile } from "../api";
 
 export default function Editprofile() {
   // TODO: Handle funtion
@@ -30,7 +30,7 @@ export default function Editprofile() {
     let jwt = "";
     await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
     const data = { username, email };
-    apiEditProfile(jwt, data)
+    apiUserEditProfile(jwt, data)
       .then(() => setalertEditSucess(true))
       .catch(() => setalertEditFail(true));
     handleClose();

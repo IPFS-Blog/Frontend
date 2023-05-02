@@ -7,7 +7,7 @@ import styles from "@/styles/users/users.module.css";
 const Card = ({ CreaterAddress }: any) => {
   const User = useSelector((state: any) => state.User);
   const router = useRouter();
-  const [, firstParam] = router.asPath.split("/");
+  const [, route] = router.asPath.split("/");
 
   return (
     <div className="h-full w-full">
@@ -21,7 +21,7 @@ const Card = ({ CreaterAddress }: any) => {
                   <Avatar src={User.profile.photo} className="h-auto w-full rounded-full" alt="Picture of the author" />
                 </div>
                 <div className="flex h-auto w-4/6 flex-col justify-start p-3">
-                  <h5 className="mb-2 text-3xl font-medium">{firstParam}</h5>
+                  <h5 className="mb-2 text-3xl font-medium">{route}</h5>
                   <p>{User.profile.login ? User.profile.address : CreaterAddress}</p>
                   <div className="mb-4 pt-2 text-base">
                     <p>我喜歡貓咪</p>
@@ -39,7 +39,7 @@ const Card = ({ CreaterAddress }: any) => {
                 </div>
 
                 <div className="flex w-4/6 flex-col justify-start p-3">
-                  <h5 className="mb-2 text-3xl font-medium">{firstParam}</h5>
+                  <h5 className="mb-2 text-3xl font-medium">{route}</h5>
                   <dl className="mx-auto grid grid-cols-3 p-3 text-gray-900 sm:grid-cols-3 sm:p-2 xl:grid-cols-3">
                     <div className="flex flex-col p-2 text-center">
                       <dt className="text-base">所有文章</dt>

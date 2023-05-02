@@ -41,7 +41,7 @@ export default function Article({ userData, IsUser, article, createrData }: any)
           {/* TODO: 文章資料 */}
           <div className="p-2">
             <h1 className="text-3xl font-semibold">{article.title}</h1>
-            <h3 className="text-lg">{article.overview}</h3>
+            <h3 className="text-lg">{article.subtitile}</h3>
             <div>{article.contents}</div>
           </div>
           {/* 文章內覽列 */}
@@ -69,7 +69,7 @@ export default function Article({ userData, IsUser, article, createrData }: any)
               <button className="mx-1 h-10 w-10 rounded-lg text-yellow-500 hover:bg-yellow-300 hover:text-white dark:text-yellow-300">
                 <BookmarkAddOutlinedIcon />
               </button>
-              <p className="mx-1 font-mono">2022-04-27</p>
+              <p className="mx-1 font-mono">{article.updateAt.substr(0, 10)}</p>
             </div>
           </div>
           {/* TODO: 使用者頭向、名稱 */}
@@ -149,15 +149,17 @@ export const getServerSideProps = async (context: any) => {
 
   // 查詢文章
   const ArticleUrl = context.req.url.split("/")[2];
-  let createrData = { id: 0, username: "", address: "", email: "", photo: "" };
-  let article = { title: "", overview: "", contents: "" };
+  let createrData = { id: 0, username: "", address: "", email: "", photo: "", updateAt: "" };
+  let article = { title: "", subtitile: "", contents: "" };
+
   await apiArticleTakeArticle(ArticleUrl)
     .then(res => {
       createrData = res.data.user;
       const resarticle = {
         title: res.data.title,
-        overview: res.data.overview,
+        subtitile: res.data.subtitile,
         contents: res.data.contents,
+        updateAt: res.data.updateAt,
       };
       article = resarticle;
     })
@@ -167,5 +169,9 @@ export const getServerSideProps = async (context: any) => {
       };
     });
 
+  if (createrData.username != context.req.url.split("/")[1])
+    return {
+      notFound: true,
+    };
   return { props: { userData, IsUser, article, createrData } };
 };

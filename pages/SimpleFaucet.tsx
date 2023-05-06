@@ -158,15 +158,44 @@ export default function SimpleFaucet() {
           window.alert("AC轉ETH成功");
           setACTOETHUI(false);
         })
-        .catch((res: any) => {
+        .catch(() => {
           // FIXME: Lin Ac換Eth失敗UI
-          console.log(res);
           window.alert("AC轉ETH失敗");
         });
     }
   }
+  // TODO: 加入錢幣到metamask
+  async function AddCoinToMetaMask() {
+    const tokenAddress = `${process.env.NEXT_PUBLIC_MyTokenContractAddress}`;
+    const tokenSymbol = "AC";
+    const tokenDecimals = 0;
+    const tokenImage = "http://placekitten.com/200/300";
+    await window.ethereum
+      .request({
+        method: "wallet_watchAsset",
+        params: {
+          type: "ERC20", // Initially only supports ERC20, but eventually more!
+          options: {
+            address: tokenAddress, // The address that the token is at.
+            symbol: tokenSymbol, // A ticker symbol or shorthand, up to 5 chars.
+            decimals: tokenDecimals, // The number of decimals in the token
+            image: tokenImage, // A string url of the token logo
+          },
+        },
+      })
+      .then(() => {
+        // FIXME: Lin 加入成功UI
+        window.alert("加入成功");
+      })
+      .catch(() => {
+        // FIXME: Lin 加入失敗UI
+        window.alert("加入失敗");
+      });
+  }
   return (
     <div>
+      {/* TODO: 加入錢幣到metamask */}
+      {AC === "0" ? <button onClick={AddCoinToMetaMask}>加入錢幣到metamask</button> : null}
       {/* TODO: 領錢 */}
       <h1>簡易水龍頭</h1>
       <p>帳號: {account}</p>

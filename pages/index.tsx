@@ -3,7 +3,8 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import { _apiCheckJwt } from "@/components/api";
-import DonationForm from "@/components/users/DonateButton";
+import ArticleItem from "@/components/article/ArticleItem";
+import DonateButton from "@/components/users/DonateButton";
 import Editprofile from "@/components/users/EditProfile";
 import User_wallet from "@/components/users/user_wallet";
 import { setLogin } from "@/store/UserSlice";
@@ -25,7 +26,12 @@ export default function Home() {
       <main>
         <Editprofile />
         <User_wallet />
-        <DonationForm />
+        <DonateButton
+          onDonate={function (): void {
+            throw new Error("Function not implemented.");
+          }}
+        />
+        <ArticleItem />
       </main>
     </>
   );

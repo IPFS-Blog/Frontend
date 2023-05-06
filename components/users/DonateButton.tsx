@@ -1,3 +1,4 @@
+import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Dialog, { DialogProps } from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
@@ -46,30 +47,36 @@ export default function DonationForm({ onDonate }: DonationFormProps) {
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title" className="bg-gray-200 font-semibold">
+        <DialogTitle id="responsive-dialog-title" className="flex justify-center bg-gray-200 font-semibold">
           打賞
         </DialogTitle>
         <DialogContent className="bg-gray-200 md:w-full lg:w-96">
-          <div className="flex flex-row justify-between">
-            <p className="text-xl font-semibold">名稱</p>
+          {/* 創作者名稱 FIXME:創作者名稱需要作者username */}
+          <div className="flex flex-row items-center">
+            <Avatar className="h-10 w-10 rounded-full" src="" alt="not find Avatar" />
+            <div className="ml-2 flex items-center">
+              <p className="text-xl font-semibold ">創作者名稱:</p>
+            </div>
           </div>
-          {/* 創作者名稱 */}
-          <p>創作者名稱</p>
+          {/* 支付金額 FIXME:支付金額不得超過本身擁有的AC  */}
           <div className="mb-4">
             <p className="text-xl font-semibold">金額(AC)</p>
             <input
               type="number"
               id="price"
               name="price"
-              className="mt-2 w-full rounded-md border-gray-300 px-4 py-2 focus:border-indigo-500 focus:ring-indigo-500"
+              className="mt-2 w-full rounded-md border-gray-300 px-4 py-2"
               placeholder="請輸入價格"
               value={price}
               onChange={handlePriceChange}
             />
           </div>
+          {/* 支付按鈕 FIXME:需要連結Matamask!? */}
           <button
-            className="mx-auto mt-4 flex items-center justify-center rounded-md bg-indigo-500 py-2 px-4 text-white hover:bg-indigo-600"
-            onClick={handleDonate}
+            className="mx-auto mt-4 flex items-center justify-center rounded-md bg-gray-400 py-2 px-4 text-black hover:bg-gray-500"
+            onClick={() => {
+              handleDonate();
+            }}
           >
             <Image src="/MetaMask.png" alt="Null" width={30} height={30}></Image>
             確定支付

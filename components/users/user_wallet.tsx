@@ -37,7 +37,7 @@ export default function ResponsiveDialog() {
           <DialogTitle id="responsive-dialog-title" className="bg-gray-200 font-semibold">
             個人錢包
           </DialogTitle>
-          <DialogContent className="bg-gray-200 md:w-full lg:w-96">
+          <DialogContent className="bg-gray-200 md:w-full ">
             <div>
               <div className="flex flex-row justify-between">
                 <p className="mx-2 text-xl font-semibold">資產總覽</p>
@@ -60,30 +60,21 @@ export default function ResponsiveDialog() {
                   <p>ETH</p>
                 </div>
               </div>
-              {/* 交換幣值 */}
-              <div className="flex w-full items-center rounded border-b-2 border-l-2 border-gray-600 py-2 text-base font-semibold hover:text-lg">
-                <div className="mx-2 h-9 w-9 border-r-2 bg-gray-300"></div>
+              {/* 交換幣值 FIXME:需要個人ETH的金額(超出交換金額)*/}
+              <div className="flex w-full items-center rounded border-b-2 border-l-2 border-gray-600 py-2 text-base font-semibold  ">
                 <div className="flex w-full justify-between">
-                  <p>10.2210</p>
-                  <p>ETH</p>
+                  <p className="mx-2 py-1">ETH</p>
                   <div className="flex items-center">
                     <p className="mr-2">交換</p>
                     <input type="number" className="rounded border border-gray-400 px-2 py-1" />
                     <p className="ml-2">AC</p>
-                    <button className="ml-2 rounded bg-blue-500 py-1 px-3 text-white hover:bg-blue-600">交換</button>
+                    <button className="ml-2 rounded bg-gray-400 py-1 px-3 text-black hover:bg-gray-500">交換</button>
                   </div>
                 </div>
               </div>
             </div>
           </DialogContent>
           <DialogActions className="bg-gray-200">
-            <Button
-              className="rounded border bg-gray-300 py-2 px-4 font-semibold text-gray-800 shadow hover:bg-gray-100"
-              autoFocus
-              onClick={handleClose}
-            >
-              返回
-            </Button>
             <Button
               className="rounded border bg-gray-300 py-2 px-4 font-semibold text-gray-800 shadow hover:bg-gray-100"
               onClick={handleClose}

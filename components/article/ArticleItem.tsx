@@ -2,6 +2,7 @@ import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import BookmarkAddOutlinedIcon from "@mui/icons-material/BookmarkAddOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import StarsOutlinedIcon from "@mui/icons-material/StarsOutlined";
+import { IconButton } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Image from "next/image";
 export default function ArticleItem() {
@@ -30,14 +31,23 @@ export default function ArticleItem() {
       <div className="col-span-12  flex items-center justify-between">
         <div className="flex items-center">
           <p className="ml-2">2023/05/06</p>
-          <FavoriteBorderOutlinedIcon className="ml-6" />
+          <IconButton className="ml-6">
+            <FavoriteBorderOutlinedIcon className="text-black" />
+          </IconButton>
           <span className="ml-2">100</span>
-          <StarsOutlinedIcon className="ml-6" />
+          <IconButton className="ml-6">
+            <StarsOutlinedIcon className="text-black" />
+          </IconButton>
+
           <span className="ml-2">10</span>
         </div>
         <div className="flex items-center justify-end">
-          <BookmarkAddOutlinedIcon className="mr-4" />
-          <ArrowForwardOutlinedIcon className="mr-4" />
+          <IconButton className="mr-4">
+            <BookmarkAddOutlinedIcon className="text-black" />
+          </IconButton>
+          <IconButton className="mr-4">
+            <ArrowForwardOutlinedIcon className="text-black" />
+          </IconButton>
         </div>
       </div>
     </div>

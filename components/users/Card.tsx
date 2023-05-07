@@ -3,12 +3,27 @@ import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 
 import styles from "@/styles/users/users.module.css";
+import { useEffect, useState } from "react";
+import { apiUserGetCreaterData } from "../api";
 
-const Card = ({ CreaterAddress }: any) => {
+const Card = ({ CreaterAddress,IsCreater }: any) => {
   const User = useSelector((state: any) => state.User);
   const router = useRouter();
   const [, route] = router.asPath.split("/");
+  const [createrData,setCreaterData] = useState({ id: 0, username: "", address: "", email: "", photo: "", updateAt: "" });
 
+  useEffect(()=>{
+    async function Creater(){
+      if(IsCreater){
+        await apiUserGetCreaterData(route).then((res) => setCreaterData(res.data.userData));
+        setCreaterData((prev: any) => ({
+          ...prev,
+          photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxKUS14KQ9G2z6Rd-WSMF32W3Mn---zaHQT-PoTkXeRw&s",
+        }));
+      }
+    }
+    Creater();
+  },[])
   return (
     <div className="h-full w-full">
       <div className={styles.flip_card}>
@@ -18,7 +33,9 @@ const Card = ({ CreaterAddress }: any) => {
             <div className={styles.flip_card_front}>
               <div className="flex h-full flex-row">
                 <div className="flex h-48 w-2/6 flex-col items-center p-3">
-                  <Avatar src={User.profile.photo} className="h-auto w-full rounded-full" alt="Picture of the author" />
+                  {!IsCreater ? 
+                  <Avatar src={User.profile.photo} className="h-auto w-full rounded-full" alt="Picture of the author" />:
+                  <Avatar src={createrData.photo} className="h-auto w-full rounded-full" alt="Picture of the author" />}
                 </div>
                 <div className="flex h-auto w-4/6 flex-col justify-start p-3">
                   <h5 className="mb-2 text-3xl font-medium">{route}</h5>
@@ -35,7 +52,10 @@ const Card = ({ CreaterAddress }: any) => {
             <div className={styles.flip_card_back}>
               <div className="flex h-full flex-row">
                 <div className="flex h-48 w-2/6 flex-col items-center p-3">
-                  <Avatar src={User.profile.photo} className="h-auto w-full rounded-full" alt="Picture of the author" />
+                  {!IsCreater ? 
+                  <Avatar src={User.profile.photo} className="h-auto w-full rounded-full" alt="Picture of the author" />:
+                  <Avatar src={createrData.photo} className="h-auto w-full rounded-full" alt="Picture of the author" />}
+                  
                 </div>
 
                 <div className="flex w-4/6 flex-col justify-start p-3">

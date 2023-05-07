@@ -11,10 +11,11 @@ import { apiArticleTakeArticle, apiUserGetUserData } from "@/components/api";
 import Comment from "@/components/article/comment/Comment";
 import { setLogin } from "@/store/UserSlice";
 
-export default function Article({ userfakeData, IsUser, article, createrData }: any) {
+export default function Article({ userfakeData, IsUser, article, createrFakeData }: any) {
   // TODO: Handle funtion
   const dispatch = useDispatch();
   const [userData, setUserData] = useState(userfakeData);
+  const [createrData, setcreaterData] = useState(createrFakeData);
   useEffect(() => {
     // 登入狀態
     async function login() {
@@ -24,6 +25,18 @@ export default function Article({ userfakeData, IsUser, article, createrData }: 
           photo: "/pg.png",
         }));
         dispatch(setLogin(JSON.stringify(userData)));
+      }
+      if(createrData.username === "Lin"){
+        setcreaterData((prevUserData: any) => ({
+          ...prevUserData,
+          photo: "/pg.png",
+        }));
+      }
+      else{
+        setcreaterData((prevUserData: any) => ({
+          ...prevUserData,
+          photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxKUS14KQ9G2z6Rd-WSMF32W3Mn---zaHQT-PoTkXeRw&s",
+        }));
       }
     }
     login();
@@ -160,12 +173,12 @@ export const getServerSideProps = async (context: any) => {
 
   // 查詢文章
   const ArticleUrl = context.req.url.split("/")[2];
-  let createrData = { id: 0, username: "", address: "", email: "", photo: "", updateAt: "" };
+  let createrFakeData = { id: 0, username: "", address: "", email: "", photo: "", updateAt: "" };
   let article = { title: "", subtitle: "", contents: "" };
 
   await apiArticleTakeArticle(ArticleUrl)
     .then(res => {
-      createrData = res.data.user;
+      createrFakeData = res.data.user;
       const resarticle = {
         title: res.data.title,
         subtitle: res.data.subtitle==undefined?"":res.data.subtitle,
@@ -179,9 +192,9 @@ export const getServerSideProps = async (context: any) => {
         notFound: true,
       };
     });
-  if (createrData.username != context.req.url.split("/")[1])
+  if (createrFakeData.username != context.req.url.split("/")[1])
     return {
       notFound: true,
     };
-  return { props: { userfakeData, IsUser, article, createrData } };
+  return { props: { userfakeData, IsUser, article, createrFakeData } };
 };

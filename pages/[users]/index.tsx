@@ -17,6 +17,10 @@ export default function Users({ userData, IsUser, IsCreater }: any) {
       userData.photo="./pg.png";
       dispatch(setLogin(JSON.stringify(userData)));
     }
+    // if (IsCreater){
+    //   userData.photo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxKUS14KQ9G2z6Rd-WSMF32W3Mn---zaHQT-PoTkXeRw&s";
+    //   dispatch(setLogin(JSON.stringify(userData)));
+    // }
   }, [IsUser, dispatch, userData]);
 
   //TODO: UI function
@@ -27,7 +31,7 @@ export default function Users({ userData, IsUser, IsCreater }: any) {
       <div className="flex h-auto w-full justify-around">
         {/* FIXME:要 Card 縮小後要變另外一種*/}
         <div className="px-5">
-          <Card CreaterAddress={userData.address} />
+          <Card CreaterAddress={userData.address} IsCreater={IsCreater} />
         </div>
         <div className="w-auto flex-auto">
           <dl className="mx-auto grid grid-cols-3 p-3 text-gray-900 sm:grid-cols-3 sm:px-1 xl:grid-cols-3">
@@ -67,7 +71,7 @@ export default function Users({ userData, IsUser, IsCreater }: any) {
                   <p className="text-gray-600">個人錢包</p>
                 </div>
               ) : (
-                // TODO:公開:追蹤按鈕以及打賞
+                // TODO:公開:追蹤按鈕、打賞
                 <div className="flex flex-row justify-center p-2 text-center">
                   <button className="mx-2 rounded border border-red-500 py-2 px-20 font-semibold text-red-500 hover:bg-red-500 hover:text-white">
                     追蹤
@@ -110,8 +114,10 @@ export default function Users({ userData, IsUser, IsCreater }: any) {
           </ul>
         </nav>
       ) : (
-        // FIXME: 公開內導覽列
-        <h1>公開公開公開公開公開公開公開公開公開公開公開公開公開公開公開公開公開公開</h1>
+        // TODO:公開
+        <nav className="my-5 mx-2 flex justify-between bg-blue-200 h-4 py-3">
+          <ul className="flex h-full items-center"></ul>
+        </nav>
       )}
     </div>
   );

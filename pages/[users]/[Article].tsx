@@ -223,7 +223,6 @@ export const getServerSideProps = async (context: any) => {
         notFound: true,
       };
     });
-
   if (createrData.username != context.req.url.split("/")[1])
     return {
       notFound: true,

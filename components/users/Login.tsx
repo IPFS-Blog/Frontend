@@ -68,7 +68,7 @@ export default function Login() {
       const jwt = res.data.access_token;
       // 將JWT塞入 Cookie中
       _apiAuthLogin({ jwt });
-
+      res.data.userData.photo="./pg.png";
       // 將傳回來的會員資料轉成json的字串模式
       const UserData = JSON.stringify(res.data.userData);
       // 透過redux儲存會員資料

@@ -4,19 +4,29 @@ import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlin
 import SendIcon from "@mui/icons-material/Send";
 import StarsOutlinedIcon from "@mui/icons-material/StarsOutlined";
 import Avatar from "@mui/material/Avatar";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
 import { apiArticleTakeArticle, apiUserGetUserData } from "@/components/api";
 import Comment from "@/components/article/comment/Comment";
 import { setLogin } from "@/store/UserSlice";
 
-export default function Article({ userData, IsUser, article, createrData }: any) {
+export default function Article({ userfakeData, IsUser, article, createrData }: any) {
   // TODO: Handle funtion
   const dispatch = useDispatch();
+  const [userData, setUserData] = useState(userfakeData);
   useEffect(() => {
     // 登入狀態
-    if (IsUser) dispatch(setLogin(JSON.stringify(userData)));
+    async function login() {
+      if (IsUser) {
+        setUserData((prevUserData: any) => ({
+          ...prevUserData,
+          photo: "/pg.png",
+        }));
+        dispatch(setLogin(JSON.stringify(userData)));
+      }
+    }
+    login();
   }, [IsUser, dispatch, userData]);
   // const [label, setLabel] = useState(""); // 添加標籤
 
@@ -41,7 +51,7 @@ export default function Article({ userData, IsUser, article, createrData }: any)
           {/* TODO: 文章資料 */}
           <div className="p-2">
             <h1 className="text-3xl font-semibold">{article.title}</h1>
-            <h3 className="text-lg">{article.subtitile}</h3>
+            <h3 className="text-lg">{article.subtitle}</h3>
             <div>{article.contents}</div>
           </div>
           {/* 文章內覽列 */}
@@ -77,6 +87,7 @@ export default function Article({ userData, IsUser, article, createrData }: any)
           <form>
             <div className="flex items-center bg-gray-50 px-3 py-1 dark:bg-gray-700">
               <Avatar className="h-auto w-10 rounded-full" src={userData.photo} alt="not find Avatar" />
+              {/* {userData.current.photo} */}
               <p className="mx-2">{userData.name}</p>
               <textarea
                 id="chat"
@@ -135,13 +146,13 @@ export const getServerSideProps = async (context: any) => {
   // 查看是否登入狀態
   const match = context.req.headers.cookie.match(/UserJWT=([^;]+)/);
   const jwt = match ? match[1] : null;
-  let userData = { id: 0, name: "", address: "", email: "", photo: "" };
+  let userfakeData = { id: 0, name: "", address: "", email: "", photo: "" };
   let IsUser = true;
   // 判斷是否登入狀態
   if (jwt) {
     try {
       const res = await apiUserGetUserData(jwt);
-      userData = res.data.userData;
+      userfakeData = res.data.userData;
     } catch (error: any) {
       IsUser = false;
     }
@@ -150,14 +161,14 @@ export const getServerSideProps = async (context: any) => {
   // 查詢文章
   const ArticleUrl = context.req.url.split("/")[2];
   let createrData = { id: 0, username: "", address: "", email: "", photo: "", updateAt: "" };
-  let article = { title: "", subtitile: "", contents: "" };
+  let article = { title: "", subtitle: "", contents: "" };
 
   await apiArticleTakeArticle(ArticleUrl)
     .then(res => {
       createrData = res.data.user;
       const resarticle = {
         title: res.data.title,
-        subtitile: res.data.subtitile,
+        subtitle: res.data.subtitle==undefined?"":res.data.subtitle,
         contents: res.data.contents,
         updateAt: res.data.updateAt,
       };
@@ -168,10 +179,9 @@ export const getServerSideProps = async (context: any) => {
         notFound: true,
       };
     });
-
   if (createrData.username != context.req.url.split("/")[1])
     return {
       notFound: true,
     };
-  return { props: { userData, IsUser, article, createrData } };
+  return { props: { userfakeData, IsUser, article, createrData } };
 };

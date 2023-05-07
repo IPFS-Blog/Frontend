@@ -13,7 +13,10 @@ export default function Users({ userData, IsUser, IsCreater }: any) {
   const dispatch = useDispatch();
   useEffect(() => {
     // 登入狀態
-    if (IsUser) dispatch(setLogin(JSON.stringify(userData)));
+    if (IsUser) {
+      userData.photo="./pg.png";
+      dispatch(setLogin(JSON.stringify(userData)));
+    }
   }, [IsUser, dispatch, userData]);
 
   //TODO: UI function

@@ -6,6 +6,7 @@ import { useClipboard } from "use-clipboard-copy";
 import { apiUserGetCreaterData, apiUserGetUserData } from "@/components/api";
 import Card from "@/components/users/Card";
 import Editprofile from "@/components/users/EditProfile";
+import UserWallet from "@/components/users/UserWallet";
 import { setLogin } from "@/store/UserSlice";
 
 export default function Users({ userData, IsUser, IsCreater }: any) {
@@ -61,7 +62,7 @@ export default function Users({ userData, IsUser, IsCreater }: any) {
                   <div className="text-gray-600">
                     <Editprofile />
                   </div>
-                  <p className="text-gray-600">個人錢包</p>
+                  <UserWallet />
                 </div>
               ) : (
                 // TODO:公開:追蹤按鈕以及打賞

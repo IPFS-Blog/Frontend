@@ -71,7 +71,7 @@ export default function Users(props: any) {
                   </div>
                 </div>
               ) : (
-                // TODO:公開:追蹤按鈕以及打賞
+                // TODO:公開:追蹤按鈕、打賞
                 <div className="flex flex-row justify-center p-2 text-center">
                   <button className="mx-2 rounded border border-red-500 py-2 px-20 font-semibold text-red-500 hover:bg-red-500 hover:text-white">
                     追蹤

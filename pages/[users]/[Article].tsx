@@ -209,7 +209,7 @@ export const getServerSideProps = async (context: any) => {
 
   await apiArticleTakeArticle(ArticleUrl)
     .then(res => {
-      createrData = res.data.user;
+      createrFakeData = res.data.user;
       const resarticle = {
         title: res.data.title,
         subtitle: res.data.subtitle,
@@ -223,7 +223,7 @@ export const getServerSideProps = async (context: any) => {
         notFound: true,
       };
     });
-  if (createrData.username != context.req.url.split("/")[1])
+  if (createrFakeData.username != context.req.url.split("/")[1])
     return {
       notFound: true,
     };

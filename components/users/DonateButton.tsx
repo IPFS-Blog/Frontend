@@ -1,5 +1,5 @@
+import StarsOutlinedIcon from "@mui/icons-material/StarsOutlined";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import Dialog, { DialogProps } from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -37,9 +37,13 @@ export default function DonationForm({ onDonate }: DonationFormProps) {
 
   return (
     <>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        打賞
-      </Button>
+      <button
+        onClick={handleClickOpen}
+        className="mx-5 rounded border border-blue-500 py-2 px-10 font-semibold text-blue-500 hover:bg-blue-500 hover:text-white tablet:mx-2 tablet:px-5"
+      >
+        <StarsOutlinedIcon />
+        <span>打賞</span>
+      </button>
       <Dialog
         fullScreen={fullScreen}
         maxWidth={maxWidth}

@@ -194,10 +194,10 @@ export default function ResponsiveDialog() {
                     onChange={handleNumberChange}
                     className="ml-2 rounded border border-gray-400 px-2 py-1"
                   />
-                  <p className="mx-2 py-1">
-                    ETH換AC
-                  </p>
-                  <button onClick={EthToAc} className="ml-2 rounded bg-gray-400 py-1 px-3 text-black hover:bg-gray-500">交換</button>
+                  <p className="mx-2 py-1">ETH換AC</p>
+                  <button onClick={EthToAc} className="ml-2 rounded bg-gray-400 py-1 px-3 text-black hover:bg-gray-500">
+                    交換
+                  </button>
                 </div>
               </div>
               <div className="flex w-full items-center rounded border-b-2 border-l-2 border-gray-600 py-2 text-base font-semibold  ">
@@ -212,10 +212,10 @@ export default function ResponsiveDialog() {
                     onChange={handleNumberChange1}
                     className="ml-2 rounded border border-gray-400 px-2 py-1"
                   />
-                  <p className="mx-2 py-1">
-                    AC換ETH
-                  </p>
-                  <button onClick={AcToEth} className="ml-2 rounded bg-gray-400 py-1 px-3 text-black hover:bg-gray-500">交換</button>
+                  <p className="mx-2 py-1">AC換ETH</p>
+                  <button onClick={AcToEth} className="ml-2 rounded bg-gray-400 py-1 px-3 text-black hover:bg-gray-500">
+                    交換
+                  </button>
                 </div>
               </div>
             </div>

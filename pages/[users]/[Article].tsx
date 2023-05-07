@@ -2,13 +2,13 @@ import ArrowOutwardOutlinedIcon from "@mui/icons-material/ArrowOutwardOutlined";
 import BookmarkAddOutlinedIcon from "@mui/icons-material/BookmarkAddOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import SendIcon from "@mui/icons-material/Send";
-import StarsOutlinedIcon from "@mui/icons-material/StarsOutlined";
 import Avatar from "@mui/material/Avatar";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import { apiArticleTakeArticle, apiUserGetUserData } from "@/components/api";
 import Comment from "@/components/article/comment/Comment";
+import DonateButton from "@/components/users/DonateButton";
 import { setLogin } from "@/store/UserSlice";
 
 export default function Article({ userData, IsUser, article, createrData }: any) {
@@ -41,7 +41,7 @@ export default function Article({ userData, IsUser, article, createrData }: any)
           {/* TODO: 文章資料 */}
           <div className="p-2">
             <h1 className="text-3xl font-semibold">{article.title}</h1>
-            <h3 className="text-lg">{article.subtitile}</h3>
+            <h3 className="text-lg">{article.subtitle}</h3>
             <div>{article.contents}</div>
           </div>
           {/* 文章內覽列 */}
@@ -54,11 +54,12 @@ export default function Article({ userData, IsUser, article, createrData }: any)
                 <FavoriteBorderOutlinedIcon />
                 <span>like</span>
               </button>
-              {/* 讚賞 */}
-              <button className="mx-5 rounded border border-blue-500 py-2 px-10 font-semibold text-blue-500 hover:bg-blue-500 hover:text-white tablet:mx-2 tablet:px-5">
-                <StarsOutlinedIcon />
-                <span>appreciate</span>
-              </button>
+              {/* 打賞 */}
+              <DonateButton
+                onDonate={function (): void {
+                  throw new Error("Function not implemented.");
+                }}
+              />
             </div>
             <div className="col-span-1 col-end-7 flex flex-row items-center">
               {/* 分享 */}
@@ -72,7 +73,7 @@ export default function Article({ userData, IsUser, article, createrData }: any)
               <p className="mx-1 font-mono">{article.updateAt.substr(0, 10)}</p>
             </div>
           </div>
-          {/* TODO: 使用者頭向、名稱 */}
+          {/* TODO: 使用者頭像、名稱 */}
           {/* 輸入留言 */}
           <form>
             <div className="flex items-center bg-gray-50 px-3 py-1 dark:bg-gray-700">
@@ -150,14 +151,14 @@ export const getServerSideProps = async (context: any) => {
   // 查詢文章
   const ArticleUrl = context.req.url.split("/")[2];
   let createrData = { id: 0, username: "", address: "", email: "", photo: "", updateAt: "" };
-  let article = { title: "", subtitile: "", contents: "" };
+  let article = { title: "", subtitle: "", contents: "" };
 
   await apiArticleTakeArticle(ArticleUrl)
     .then(res => {
       createrData = res.data.user;
       const resarticle = {
         title: res.data.title,
-        subtitile: res.data.subtitile,
+        subtitle: res.data.subtitle,
         contents: res.data.contents,
         updateAt: res.data.updateAt,
       };

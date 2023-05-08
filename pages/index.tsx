@@ -25,7 +25,6 @@ export default function Home() {
         <title>Create Next App</title>
       </Head>
       <h1>home</h1>
-      <h1>文章: </h1>
       <Link href="./Uni0155/Sunday">我的文章</Link>
       <h1>區塊鏈錢幣: </h1>
       <Link href="./SimpleFaucet">領取區塊鏈錢幣</Link>

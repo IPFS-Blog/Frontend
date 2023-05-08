@@ -76,7 +76,7 @@ export default function SimpleFaucet() {
       web3.eth.accounts.wallet.add(accounts);
 
       const gasPrice = await web3.eth.getGasPrice();
-
+      //FIXME: Lin 等待畫面
       await FaucetContract.methods
         .requestTokens(account)
         .send({

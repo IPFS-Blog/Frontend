@@ -31,7 +31,7 @@ const Card = ({ CreaterAddress, IsCreater }: any) => {
       }
     }
     Creater();
-  }, []);
+  }, [IsCreater, route]);
   return (
     <div className="h-full w-full">
       <div className={styles.flip_card}>

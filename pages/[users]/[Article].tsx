@@ -39,7 +39,7 @@ export default function Article({ userfakeData, IsUser, article, createrFakeData
       }
     }
     login();
-  }, [IsUser, dispatch, userData]);
+  }, [IsUser, dispatch, userData, createrData.username]);
   // const [label, setLabel] = useState(""); // 添加標籤
 
   // TODO: UI funtion

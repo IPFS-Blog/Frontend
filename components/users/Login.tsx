@@ -283,7 +283,9 @@ export default function Login() {
           </div>
         </DialogContent>
         <DialogActions>
-          <Button color="primary">取消</Button>
+          <Button color="primary" onClick={registerHandleClose}>
+            取消
+          </Button>
           <Button onClick={Register} color="primary" autoFocus>
             註冊
           </Button>

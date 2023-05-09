@@ -7,7 +7,7 @@ import Avatar from "@mui/material/Avatar";
 import Image from "next/image";
 export default function ArticleItem() {
   return (
-    <div className="grid h-auto w-full grid-cols-12 gap-x-16 rounded-lg border-2 border-blue-600 bg-white p-2">
+    <div className="grid h-auto w-full grid-cols-12 gap-x-16 rounded-lg border-2 border-blue-600 bg-white p-2 my-1">
       <div className="col-span-8">
         {/* FIXME:標題要改為文章標題 */}
         <p className="mb-2 text-xl font-bold">標題</p>
@@ -15,11 +15,11 @@ export default function ArticleItem() {
           <Avatar className="h-10 w-10 rounded-full" src="" alt="not find Avatar" />
           <div className="ml-2 flex items-center">
             {/* FIXME:創作者名稱要改為文章創作者 */}
-            <p className="text-base font-semibold ">創作者名稱:</p>
+            <p className="text-base   "> 創作者名稱:</p>
           </div>
         </div>
         {/* FIXME:文章中的字(可能顯示2行後面以...取代) */}
-        <p className="mb-2 text-base font-semibold">
+        <p className="mb-2 text-base      ">
           副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標
         </p>
       </div>

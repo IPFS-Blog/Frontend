@@ -25,7 +25,7 @@ export default function Article({ userData, IsUser, article, createrData }: any)
     <div className="my-2 grid w-full grid-cols-12 gap-x-16 px-2">
       {/* 單一文章 */}
       <div className="col-span-8 text-base">
-        <div className="my-2 flex flex-row items-center justify-between rounded border border-blue-200 p-2 bg-gray-50 dark:bg-gray-700">
+        <div className="my-2 flex flex-row items-center justify-between rounded border border-blue-200 bg-gray-50 p-2 dark:bg-gray-700">
           {/* TODO: 文章擁有者資料 頭貼、名稱 */}
           <div className="flex flex-row items-center">
             <Avatar className="h-auto w-10 rounded-full" src={createrData.photo} alt="not find Avatar" />
@@ -47,7 +47,7 @@ export default function Article({ userData, IsUser, article, createrData }: any)
           {/* 文章內覽列 */}
           {/* FIXME:針對文章喜歡、讚賞、分享、收藏 */}
           {/* FIXME:響應式 table: phone: */}
-          <div className="grid items-center gap-2 p-2 bg-gray-100 dark:bg-gray-800">
+          <div className="grid items-center gap-2 bg-gray-100 p-2 dark:bg-gray-800">
             <div className="col-start-1 col-end-3 tablet:col-span-1 tablet:col-start-1">
               {/* 喜歡 */}
               <button className="rounded border border-red-500 py-2 px-10 font-semibold text-red-500 hover:bg-red-500 hover:text-white tablet:mx-2 tablet:px-5">
@@ -108,7 +108,7 @@ export default function Article({ userData, IsUser, article, createrData }: any)
         <div className="text-center">
           {/* ${Username} */}
           <div className="my-2 px-2">{createrData.username}</div>
-          {/* FIXME: 標籤 */}
+          {/* FIXME: Andy 標籤 */}
           {/*Label*/}
           {/* <span className="inline-grid grid-cols-3 gap-1">{label}</span> */}
           <button className="my-2 rounded border border-red-500 py-2 px-20 font-semibold text-red-500 hover:bg-red-500 hover:text-white">

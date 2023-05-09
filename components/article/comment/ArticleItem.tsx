@@ -7,7 +7,8 @@ import Avatar from "@mui/material/Avatar";
 import Image from "next/image";
 export default function ArticleItem() {
   return (
-    <div className="my-1 grid h-auto w-full grid-cols-12 gap-x-16 rounded-lg border-2 border-blue-600 bg-white p-2 dark:text-white">
+    // FIXME: Andy 接文章 api 顯示文章Item 抱歉了這邊全是假資料你要對一下
+    <div className="my-1 grid h-auto w-full grid-cols-12 gap-x-16 rounded-lg border-2 border-blue-600 bg-white p-2 dark:text-white dark:bg-gray-500">
       <div className="col-span-8">
         {/* FIXME:標題要改為文章標題 */}
         <p className="mb-2 text-xl">標題</p>
@@ -15,7 +16,7 @@ export default function ArticleItem() {
           <Avatar src="" alt="not find Avatar" />
           <div className="ml-2 flex items-center">
             {/* FIXME:創作者名稱要改為文章創作者 */}
-            <p className="text-base   "> 創作者名稱:</p>
+            <p className="text-base"> 創作者名稱</p>
           </div>
         </div>
         <p className="mb-2 text-base line-clamp-2">
@@ -30,17 +31,19 @@ export default function ArticleItem() {
       <div className="col-span-12  flex items-center justify-between">
         <div className="flex items-center">
           <p className="ml-2">2023/05/06</p>
+          {/* TODO:喜歡 */}
           <IconButton className="ml-6">
             <FavoriteBorderOutlinedIcon className="text-black" />
           </IconButton>
           <span className="ml-2">100</span>
+          {/* TODO:打賞 */}
           <IconButton className="ml-6">
             <StarsOutlinedIcon className="text-black" />
           </IconButton>
-
           <span className="ml-2">10</span>
         </div>
         <div className="flex items-center justify-end">
+          {/* TODO:收藏 */}
           <IconButton className="mr-4">
             <BookmarkAddOutlinedIcon className="text-black" />
           </IconButton>

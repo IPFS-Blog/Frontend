@@ -35,8 +35,9 @@ module.exports = {
         // => @media (min-width: 1024px) { ... }
       },
       backgroundImage: {
-        //"hero-pattern": "url('/src/assets/herobg.png')",
-      },
+        'light-pattern': "url('/img/light_background.png')",
+        'dark-pattern': "url('/img/dark_background.png')",
+       },
     },
   },
   plugins: [require("@tailwindcss/line-clamp")],

@@ -26,7 +26,7 @@ export default function Home() {
         <title>Create Next App</title>
       </Head>
       {/* FIXME: 要判斷熱門文章、最新文章 顯示 文章項目 */}
-      <menu className="my-5 flex justify-between bg-blue-200 py-3">
+      <menu className="my-5 mx-2 flex justify-between bg-blue-200 py-3">
         <ul className="flex h-full items-center">
           <li>
             <a href="#" className="ml-4 rounded-md px-3 py-2 text-gray-300 hover:bg-gray-700 hover:text-white">
@@ -57,8 +57,8 @@ export default function Home() {
         <div className="col-span-4">
           <div className="my-5 px-2">
             {/* FIXME:推薦使用者資料 */}
-            <div className="text-base">推薦使用者</div>
-            <ul className="my-1 divide-y divide-blue-200">
+            <div className="text-base font-semibold">推薦使用者</div>
+            <ul className="divide-y divide-blue-200">
               <li className="grid w-full grid-cols-4 py-1">
                 <div className="col-span-3 flex">
                   <Avatar></Avatar>
@@ -101,8 +101,8 @@ export default function Home() {
           </div>
           {/* FIXME:熱門標籤資料 10筆 */}
           <div className="my-5 px-2">
-            <div className="text-base">熱門標籤</div>
-            <div className="flex flex-wrap gap-2">
+            <div className="text-base font-semibold">熱門標籤</div>
+            <div className="flex flex-wrap gap-2 py-2">
               <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
                 <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">前端</p>
               </div>

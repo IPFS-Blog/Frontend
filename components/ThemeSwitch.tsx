@@ -21,14 +21,14 @@ const ThemeSwitch = () => {
       {theme == "light" ? (
         <div
           onClick={() => handleThemeChange()}
-          className="cursor-pointer rounded-full border-2 border-gray-400 bg-white px-4 py-2 dark:text-gray-700"
+          className="cursor-pointer rounded-full  mx-2 py-2 dark:text-gray-700"
         >
           <Brightness5Icon />
         </div>
       ) : (
         <div
           onClick={() => handleThemeChange()}
-          className="cursor-pointer rounded-full border-2 border-gray-700 bg-gray-700 px-4 py-2 text-white"
+          className="cursor-pointer rounded-full mx-2 py-2 text-white"
         >
           <DarkModeIcon />
         </div>

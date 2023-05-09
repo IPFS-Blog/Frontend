@@ -156,7 +156,7 @@ export default function Login() {
     <div>
       {!User.profile.login ? (
         <Button
-          variant="outlined"
+          className="text-gray-900 dark:text-gray-100"
           onClick={() => {
             connectMetaMask();
           }}

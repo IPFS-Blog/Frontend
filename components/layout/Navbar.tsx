@@ -19,9 +19,10 @@ const Navbar = () => {
             placeholder="搜尋..."
           />
         </form>
-        <div className="m-1">
+        {/* FIXME: Lin 通知 */}
+        {/* <div className="m-1">
           <FiBell className="px-1 text-3xl text-black-200" />
-        </div>
+        </div> */}
         <div className="m-1">
           <ThemeSwitch />
         </div>

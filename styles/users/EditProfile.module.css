@@ -1,6 +1,6 @@
-.all{
+.all {
   width: 1000px;
-  padding-top:20px;
+  padding-top: 20px;
 }
 .roundedcard {
   background-color: #ffffff;
@@ -24,7 +24,7 @@
 }
 .promptbox {
   background-color: #ccc;
-  margin-top:5px;
+  margin-top: 5px;
   padding: 10px;
   border-radius: 10px;
   width: 600px;

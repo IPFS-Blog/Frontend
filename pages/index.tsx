@@ -1,3 +1,4 @@
+import { Avatar } from "@mui/material";
 import Head from "next/head";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -5,7 +6,6 @@ import { useDispatch } from "react-redux";
 import { _apiCheckJwt, apiUserGetUserData } from "@/components/api";
 import ArticleItem from "@/components/article/comment/ArticleItem";
 import { setLogin } from "@/store/UserSlice";
-import { Avatar } from "@mui/material";
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -58,8 +58,8 @@ export default function Home() {
           <div className="my-5 px-2">
             {/* FIXME:推薦使用者資料 */}
             <div className="text-base">推薦使用者</div>
-            <ul className="divide-y divide-blue-200 my-1">
-              <li className="grid grid-cols-4 w-full py-1">
+            <ul className="my-1 divide-y divide-blue-200">
+              <li className="grid w-full grid-cols-4 py-1">
                 <div className="col-span-3 flex">
                   <Avatar></Avatar>
                   <div className="px-2">
@@ -67,11 +67,11 @@ export default function Home() {
                     <p className="line-clamp-2">Hello</p>
                   </div>
                 </div>
-                <button className="rounded-full border h-8 border-red-500 my-2 px-2 font-semibold text-red-500 hover:bg-red-500 hover:text-white">
+                <button className="my-2 h-8 rounded-full border border-red-500 px-2 font-semibold text-red-500 hover:bg-red-500 hover:text-white">
                   追蹤
                 </button>
               </li>
-              <li className="grid grid-cols-4 w-full py-1">
+              <li className="grid w-full grid-cols-4 py-1">
                 <div className="col-span-3 flex">
                   <Avatar></Avatar>
                   <div className="px-2">
@@ -81,11 +81,11 @@ export default function Home() {
                     </p>
                   </div>
                 </div>
-                <button className="rounded-full border  border-red-500 my-2 h-8 px-2 font-semibold text-red-500 hover:bg-red-500 hover:text-white">
+                <button className="my-2 h-8  rounded-full border border-red-500 px-2 font-semibold text-red-500 hover:bg-red-500 hover:text-white">
                   追蹤
                 </button>
               </li>
-              <li className="grid grid-cols-4 w-full py-1">
+              <li className="grid w-full grid-cols-4 py-1">
                 <div className="col-span-3 flex">
                   <Avatar></Avatar>
                   <div className="px-2">
@@ -93,17 +93,47 @@ export default function Home() {
                     <p className="line-clamp-2">我是一位熱愛設計的設計師</p>
                   </div>
                 </div>
-                <button className="rounded-full border h-8 border-red-500 my-2 px-2 font-semibold text-red-500 hover:bg-red-500 hover:text-white">
+                <button className="my-2 h-8 rounded-full border border-red-500 px-2 font-semibold text-red-500 hover:bg-red-500 hover:text-white">
                   追蹤
                 </button>
               </li>
             </ul>
           </div>
-          {/* FIXME:熱門標籤資料 */}
+          {/* FIXME:熱門標籤資料 10筆 */}
           <div className="my-5 px-2">
             <div className="text-base">熱門標籤</div>
             <div className="flex flex-wrap gap-2">
-              <p className="border rounded-lg border-gray-500 text-slate-900 dark:text-white px-2">ui</p>
+              <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
+                <p className="pr-1 inline-block align-middle">#</p> <p className="inline-block align-middle">前端</p>
+              </div>
+              <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
+                <p className="pr-1 inline-block align-middle">#</p> <p className="inline-block align-middle">狗狗</p>
+              </div>
+              <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
+                <p className="pr-1 inline-block align-middle">#</p>
+                <p className="inline-block align-middle">網頁設計</p>
+              </div>
+              <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
+                <p className="pr-1 inline-block align-middle">#</p> <p className="inline-block align-middle">家庭</p>
+              </div>
+              <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
+                <p className="pr-1 inline-block align-middle">#</p> <p className="inline-block align-middle">家庭旅遊好去處</p>
+              </div>
+              <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
+                <p className="pr-1 inline-block align-middle">#</p> <p className="inline-block align-middle">新生季</p>
+              </div>
+              <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
+                <p className="pr-1 inline-block align-middle">#</p> <p className="inline-block align-middle">Chatgpt</p>
+              </div>
+              <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
+                <p className="pr-1 inline-block align-middle">#</p> <p className="inline-block align-middle">Java</p>
+              </div>
+              <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
+                <p className="pr-1 inline-block align-middle">#</p> <p className="inline-block align-middle">C++</p>
+              </div>
+              <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
+                <p className="pr-1 inline-block align-middle">#</p> <p className="inline-block align-middle">後端</p>
+              </div>
             </div>
           </div>
         </div>

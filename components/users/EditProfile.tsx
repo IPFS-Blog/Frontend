@@ -12,7 +12,7 @@ import * as React from "react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
-import styles from "@/styles/EditProfile.module.css";
+import styles from "@/styles/users/EditProfile.module.css";
 
 import { _apiCheckJwt, apiUserEditProfile } from "../api";
 

@@ -12,7 +12,7 @@ export default function ArticleItem() {
         {/* FIXME:標題要改為文章標題 */}
         <p className="mb-2 text-xl">標題</p>
         <div className="mb-2 flex flex-row items-center">
-          <Avatar className="h-10 w-10 rounded-full" src="" alt="not find Avatar" />
+          <Avatar src="" alt="not find Avatar" />
           <div className="ml-2 flex items-center">
             {/* FIXME:創作者名稱要改為文章創作者 */}
             <p className="text-base   "> 創作者名稱:</p>

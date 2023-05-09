@@ -26,13 +26,12 @@ export default function Article({ userfakeData, IsUser, article, createrFakeData
         }));
         dispatch(setLogin(JSON.stringify(userData)));
       }
-      if(createrData.username === "Lin"){
+      if (createrData.username === "Lin") {
         setcreaterData((prevUserData: any) => ({
           ...prevUserData,
           photo: "/pg.png",
         }));
-      }
-      else{
+      } else {
         setcreaterData((prevUserData: any) => ({
           ...prevUserData,
           photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxKUS14KQ9G2z6Rd-WSMF32W3Mn---zaHQT-PoTkXeRw&s",
@@ -181,7 +180,7 @@ export const getServerSideProps = async (context: any) => {
       createrFakeData = res.data.user;
       const resarticle = {
         title: res.data.title,
-        subtitle: res.data.subtitle==undefined?"":res.data.subtitle,
+        subtitle: res.data.subtitle == undefined ? "" : res.data.subtitle,
         contents: res.data.contents,
         updateAt: res.data.updateAt,
       };

@@ -14,7 +14,7 @@ export default function Users({ userData, IsUser, IsCreater }: any) {
   useEffect(() => {
     // 登入狀態
     if (IsUser) {
-      userData.photo="./pg.png";
+      userData.photo = "./pg.png";
       dispatch(setLogin(JSON.stringify(userData)));
     }
     // if (IsCreater){
@@ -115,7 +115,7 @@ export default function Users({ userData, IsUser, IsCreater }: any) {
         </nav>
       ) : (
         // TODO:公開
-        <nav className="my-5 mx-2 flex justify-between bg-blue-200 h-4 py-3">
+        <nav className="my-5 mx-2 flex h-4 justify-between bg-blue-200 py-3">
           <ul className="flex h-full items-center"></ul>
         </nav>
       )}

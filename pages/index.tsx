@@ -15,7 +15,7 @@ export default function Home() {
       const res_CheckJwt = await _apiCheckJwt();
       jwt = res_CheckJwt.data.jwt;
       const res_GetUserData = await apiUserGetUserData(jwt);
-      res_GetUserData.data.userData.photo="./pg.png";
+      res_GetUserData.data.userData.photo = "./pg.png";
       dispatch(setLogin(JSON.stringify(res_GetUserData.data.userData)));
     }
     login();

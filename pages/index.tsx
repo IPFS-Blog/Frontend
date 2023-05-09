@@ -104,35 +104,36 @@ export default function Home() {
             <div className="text-base">熱門標籤</div>
             <div className="flex flex-wrap gap-2">
               <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-                <p className="pr-1 inline-block align-middle">#</p> <p className="inline-block align-middle">前端</p>
+                <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">前端</p>
               </div>
               <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-                <p className="pr-1 inline-block align-middle">#</p> <p className="inline-block align-middle">狗狗</p>
+                <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">狗狗</p>
               </div>
               <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-                <p className="pr-1 inline-block align-middle">#</p>
+                <p className="inline-block pr-1 align-middle">#</p>
                 <p className="inline-block align-middle">網頁設計</p>
               </div>
               <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-                <p className="pr-1 inline-block align-middle">#</p> <p className="inline-block align-middle">家庭</p>
+                <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">家庭</p>
               </div>
               <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-                <p className="pr-1 inline-block align-middle">#</p> <p className="inline-block align-middle">家庭旅遊好去處</p>
+                <p className="inline-block pr-1 align-middle">#</p>{" "}
+                <p className="inline-block align-middle">家庭旅遊好去處</p>
               </div>
               <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-                <p className="pr-1 inline-block align-middle">#</p> <p className="inline-block align-middle">新生季</p>
+                <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">新生季</p>
               </div>
               <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-                <p className="pr-1 inline-block align-middle">#</p> <p className="inline-block align-middle">Chatgpt</p>
+                <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">Chatgpt</p>
               </div>
               <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-                <p className="pr-1 inline-block align-middle">#</p> <p className="inline-block align-middle">Java</p>
+                <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">Java</p>
               </div>
               <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-                <p className="pr-1 inline-block align-middle">#</p> <p className="inline-block align-middle">C++</p>
+                <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">C++</p>
               </div>
               <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-                <p className="pr-1 inline-block align-middle">#</p> <p className="inline-block align-middle">後端</p>
+                <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">後端</p>
               </div>
             </div>
           </div>

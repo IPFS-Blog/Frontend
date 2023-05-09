@@ -2,16 +2,16 @@ import { Avatar } from "@mui/material";
 import { useSelector } from "react-redux";
 
 import styles from "@/styles/users/users.module.css";
-import { useEffect, useState } from "react";
+
 import { apiUserGetCreaterData } from "../api";
 
 const Card = () => {
   const Creater = useSelector((state: any) => state.Creater);
 
-  useEffect(()=>{
-    async function Creater(){
-      if(IsCreater){
-        await apiUserGetCreaterData(route).then((res) => setCreaterData(res.data.userData));
+  useEffect(() => {
+    async function Creater() {
+      if (IsCreater) {
+        await apiUserGetCreaterData(route).then(res => setCreaterData(res.data.userData));
         setCreaterData((prev: any) => ({
           ...prev,
           photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxKUS14KQ9G2z6Rd-WSMF32W3Mn---zaHQT-PoTkXeRw&s",
@@ -19,7 +19,7 @@ const Card = () => {
       }
     }
     Creater();
-  },[])
+  }, []);
   return (
     <div className="h-full w-full">
       <div className={styles.flip_card}>

@@ -8,7 +8,7 @@ import Image from "next/image";
 export default function ArticleItem() {
   return (
     // FIXME: Andy 接文章 api 顯示文章Item 抱歉了這邊全是假資料你要對一下
-    <div className="my-1 grid h-auto w-full grid-cols-12 gap-x-16 rounded-lg border-2 border-blue-600 bg-white p-2 dark:text-white dark:bg-gray-500">
+    <div className="my-1 grid h-auto w-full grid-cols-12 gap-x-16 rounded-lg border-2 border-blue-600 bg-white p-2 dark:bg-gray-500 dark:text-white">
       <div className="col-span-8">
         {/* FIXME:標題要改為文章標題 */}
         <p className="mb-2 text-xl">標題</p>

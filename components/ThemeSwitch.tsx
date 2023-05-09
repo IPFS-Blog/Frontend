@@ -19,17 +19,11 @@ const ThemeSwitch = () => {
   return (
     <div>
       {theme == "light" ? (
-        <div
-          onClick={() => handleThemeChange()}
-          className="cursor-pointer rounded-full  mx-2 py-2 dark:text-gray-700"
-        >
+        <div onClick={() => handleThemeChange()} className="mx-2 cursor-pointer  rounded-full py-2 dark:text-gray-700">
           <Brightness5Icon />
         </div>
       ) : (
-        <div
-          onClick={() => handleThemeChange()}
-          className="cursor-pointer rounded-full mx-2 py-2 text-white"
-        >
+        <div onClick={() => handleThemeChange()} className="mx-2 cursor-pointer rounded-full py-2 text-white">
           <DarkModeIcon />
         </div>
       )}

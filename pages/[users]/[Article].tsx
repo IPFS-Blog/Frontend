@@ -108,7 +108,7 @@ export default function Article({ userData, IsUser, article, createrData }: any)
         <div className="text-center">
           {/* ${Username} */}
           <div className="my-2 px-2">{createrData.username}</div>
-          {/* FIXME: Andy 標籤 */}
+          {/* FIXME: 標籤 */}
           {/*Label*/}
           {/* <span className="inline-grid grid-cols-3 gap-1">{label}</span> */}
           <button className="my-2 rounded border border-red-500 py-2 px-20 font-semibold text-red-500 hover:bg-red-500 hover:text-white">

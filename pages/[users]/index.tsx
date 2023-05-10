@@ -116,7 +116,7 @@ export default function Users({ userData, IsUser, IsCreater }: any) {
 }
 
 export const getServerSideProps = async (context: any) => {
-  const match = context.req.headers.cookie.match(/UserJWT=([^;]+)/);
+  const match = context.req.headers.cookie?.match(/UserJWT=([^;]+)/);
   const jwt = match ? match[1] : null;
   const url = context.req.url.substring(1);
   let userData = { id: 0, name: "", address: "", email: "", photo: "" };

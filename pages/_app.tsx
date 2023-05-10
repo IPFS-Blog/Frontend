@@ -40,7 +40,7 @@ function App({ Component, pageProps }: AppProps, err: any) {
   });
 
   // 判斷當前頁面是否為 404 頁面
-  if (router.isFallback || router.pathname === "/404") {
+  if (router.isFallback || router.pathname === "/404" || router.pathname === "/loading/mining") {
     return <Component {...pageProps} />;
   }
 

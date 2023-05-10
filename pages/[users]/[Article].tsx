@@ -134,7 +134,7 @@ export default function Article({ userData, IsUser, article, createrData }: any)
 
 export const getServerSideProps = async (context: any) => {
   // 查看是否登入狀態
-  const match = context.req.headers.cookie.match(/UserJWT=([^;]+)/);
+  const match = context.req.headers.cookie?.match(/UserJWT=([^;]+)/);
   const jwt = match ? match[1] : null;
   let userData = { id: 0, name: "", address: "", email: "", photo: "" };
   let IsUser = true;

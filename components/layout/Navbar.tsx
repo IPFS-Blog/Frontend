@@ -12,10 +12,10 @@ const Navbar = () => {
         <div className="mr-6 flex shrink-0 items-center p-1 text-white">
           <span className="text-xl font-semibold tracking-tight text-blue-100">BrandName</span>
         </div>
-        <form className="w-64 flex-auto">
+        <form className="flex-auto px-10">
           <input
             type="text"
-            className="items-center rounded-md bg-white-50  px-3 py-2 text-gray-500 shadow-xl focus:border-blue-100 focus:outline-none focus:ring-2"
+            className="items-center w-full rounded-md bg-white-50  px-3 py-2 text-gray-500 shadow-xl focus:border-blue-100 focus:outline-none focus:ring-2"
             placeholder="搜尋..."
           />
         </form>

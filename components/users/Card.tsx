@@ -22,7 +22,7 @@ const Card = ({ CreaterAddress }: any) => {
                 </div>
                 <div className="flex h-auto w-4/6 flex-col justify-start p-3">
                   <h5 className="mb-2 text-3xl font-medium">{route}</h5>
-                  <p>{User.profile.login ? User.profile.address : CreaterAddress}</p>
+                  <p className="truncate">{User.profile.login ? User.profile.address : CreaterAddress}</p>
                   <div className="mb-4 pt-2 text-base">
                     <p>我喜歡貓咪</p>
                     <p>3D設計師</p>

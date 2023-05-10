@@ -3,11 +3,11 @@ import Head from "next/head";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
-import { _apiCheckJwt, apiUserGetUserData } from "@/components/api";
+import { _apiCheckJwt, apiArticleTakeAllArticle, apiUserGetUserData } from "@/components/api";
 import ArticleItem from "@/components/article/comment/ArticleItem";
 import { setLogin } from "@/store/UserSlice";
 
-export default function Home() {
+export default function Home({ Articles }: any) {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -43,14 +43,21 @@ export default function Home() {
       <main className="my-2 grid w-full grid-cols-12 gap-x-16 px-2">
         <div className="col-span-8">
           <div>
-            {/* FIXME: Andy 接文章 api 顯示文章Item */}
-            {/* {articles.map(article => (
-            <ArticleItem key={article.id} article={article} />
-          ))} */}
-            <ArticleItem />
-            <ArticleItem />
-            <ArticleItem />
-            <ArticleItem />
+            {Articles.articles != null &&
+              Articles.articles.map((item: any) => {
+                const { id, title, subtitle, updateAt } = item;
+                return (
+                  <ArticleItem
+                    // FIXME: Andy 假資料等後端改成抓取全部資料可以拿到使用者名稱
+                    username={"Andya"}
+                    key={id}
+                    id={id}
+                    title={title}
+                    subtitle={subtitle}
+                    updateAt={updateAt}
+                  />
+                );
+              })}
           </div>
         </div>
         {/* FIXME: Lin 右側欄考慮做成 components */}
@@ -142,3 +149,12 @@ export default function Home() {
     </>
   );
 }
+export const getServerSideProps = async () => {
+  try {
+    const Articles = await apiArticleTakeAllArticle();
+    // console.log(Articles.data);
+    return { props: { Articles: Articles.data } };
+  } catch {
+    return { props: { Articles: null } };
+  }
+};

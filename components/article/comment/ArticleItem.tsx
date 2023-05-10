@@ -5,32 +5,28 @@ import StarsOutlinedIcon from "@mui/icons-material/StarsOutlined";
 import { IconButton } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Image from "next/image";
-export default function ArticleItem() {
+export default function ArticleItem({ username, id, title, subtitle, updateAt }: any) {
   return (
     // FIXME: Andy 接文章 api 顯示文章Item 抱歉了這邊全是假資料你要對一下
     <div className="my-1 grid h-auto w-full grid-cols-12 gap-x-16 rounded-lg border-2 border-blue-600 p-2 dark:bg-gray-500 dark:text-white">
       <div className="col-span-8">
-        {/* FIXME:標題要改為文章標題 */}
-        <p className="mb-2 text-xl">標題</p>
+        <p className="mb-2 text-xl">{title}</p>
         <div className="mb-2 flex flex-row items-center">
           <Avatar src="" alt="not find Avatar" />
           <div className="ml-2 flex items-center">
-            {/* FIXME:創作者名稱要改為文章創作者 */}
-            <p className="text-base"> 創作者名稱</p>
+            <p className="text-base"> {username}</p>
           </div>
         </div>
-        <p className="mb-2 text-base line-clamp-2">
-          副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標副標
-        </p>
+        <p className="mb-2 text-base line-clamp-2">{subtitle}</p>
       </div>
       {/* FIXME:灰底要改為圖片 */}
       <div className="col-span-4 bg-gray-400">
         <Image className="rounded-lg" src="/MetaMask.png" alt="Null" width={35} height={35}></Image>
       </div>
-      {/* FIXME:Icon後的數字以及時間 */}
+      {/* FIXME:Icon後的數字 */}
       <div className="col-span-12  flex items-center justify-between">
         <div className="flex items-center">
-          <p className="ml-2">2023/05/06</p>
+          <p className="ml-2">{updateAt.substring(0, 10)}</p>
           {/* TODO:喜歡 */}
           <IconButton className="ml-6">
             <FavoriteBorderOutlinedIcon className="text-black" />
@@ -50,6 +46,8 @@ export default function ArticleItem() {
           <IconButton className="mr-4">
             <ArrowForwardOutlinedIcon className="text-black" />
           </IconButton>
+          {/* FIXME: Lin 新增好連結後把這個id刪掉 */}
+          {id}
         </div>
       </div>
     </div>

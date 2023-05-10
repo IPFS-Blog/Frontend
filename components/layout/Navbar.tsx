@@ -15,7 +15,7 @@ const Navbar = () => {
         <form className="flex-auto px-10">
           <input
             type="text"
-            className="items-center w-full rounded-md bg-white-50  px-3 py-2 text-gray-500 shadow-xl focus:border-blue-100 focus:outline-none focus:ring-2"
+            className="w-full items-center rounded-md bg-white-50  px-3 py-2 text-gray-500 shadow-xl focus:border-blue-100 focus:outline-none focus:ring-2"
             placeholder="搜尋..."
           />
         </form>

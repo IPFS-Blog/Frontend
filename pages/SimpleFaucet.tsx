@@ -7,11 +7,15 @@ import { setLogin } from "@/store/UserSlice";
 
 import Faucet from "../truffle/build/contracts/Faucet.json";
 import MyToken from "../truffle/build/contracts/MyToken.json";
+import Mining from "./loading/mining";
 
 export default function SimpleFaucet() {
   const [account, setAccount] = useState("");
   const gasLimit = 3000000;
   const dispatch = useDispatch();
+  // Loading
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     //TODO: 登入狀態
     const login = async () => {
@@ -59,6 +63,7 @@ export default function SimpleFaucet() {
   // TODO: 領錢
   const [transfermoney, settransfermoney] = useState(true);
   const takemoney = async () => {
+    setIsLoading(true); // 啟用 loading 狀態
     const web3 = new Web3(window && window.ethereum);
     if (web3) {
       const FaucetContractabi = Faucet.abi.map((item: any) => {
@@ -76,7 +81,6 @@ export default function SimpleFaucet() {
       web3.eth.accounts.wallet.add(accounts);
 
       const gasPrice = await web3.eth.getGasPrice();
-      //FIXME: Lin 等待畫面
       await FaucetContract.methods
         .requestTokens(account)
         .send({
@@ -88,10 +92,12 @@ export default function SimpleFaucet() {
           // FIXME: Lin 領錢成功UI
           window.alert("領錢成功");
           settransfermoney(false);
+          setIsLoading(false);
         })
         .catch(() => {
           // FIXME: Lin 領錢失敗UI
           window.alert("領錢失敗");
+          setIsLoading(false);
         });
     }
   };
@@ -200,7 +206,7 @@ export default function SimpleFaucet() {
       <h1>簡易水龍頭</h1>
       <p>帳號: {account}</p>
       <br></br>
-      {account !== "" ? <button onClick={takemoney}>領取10個ETHER</button> : null}
+      {isLoading ? <Mining /> : <button onClick={takemoney}>領取10個ETHER</button>}
       {transfermoney ? null : <h1>轉帳成功</h1>}
       {/* TODO: 換錢 */}
       <h1>Change Money</h1>

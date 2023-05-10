@@ -1,0 +1,15 @@
+.text {
+ 	width: 8.25em;
+    white-space: nowrap;
+	overflow: hidden;
+	border-right: .05em solid;
+	animation: typing 6s steps(15) infinite,
+	           caret 1s steps(1) infinite;
+}
+@keyframes typing {
+	from { width: 0 }
+}
+
+@keyframes caret {
+	50% { border-right-color: transparent; }
+}

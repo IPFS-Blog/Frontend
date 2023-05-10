@@ -41,25 +41,23 @@ export default function Home({ Articles }: any) {
         </ul>
       </menu>
       <main className="my-2 grid w-full grid-cols-12 gap-x-16 px-2">
-        <div className="col-span-8">
-          <div>
-            {Articles.articles != null &&
-              Articles.articles.map((item: any) => {
-                const { id, title, subtitle, updateAt } = item;
-                const { username } = item.user;
-                return (
-                  <ArticleItem
-                    username={username}
-                    key={id}
-                    id={id}
-                    title={title}
-                    subtitle={subtitle}
-                    updateAt={updateAt}
-                  />
-                );
-              })}
-          </div>
-        </div>
+        <ul className="col-span-8">
+          {Articles.articles != null &&
+            Articles.articles.map((item: any) => {
+              const { id, title, subtitle, updateAt } = item;
+              const { username } = item.user;
+              return (
+                <ArticleItem
+                  username={username}
+                  key={id}
+                  id={id}
+                  title={title}
+                  subtitle={subtitle}
+                  updateAt={updateAt}
+                />
+              );
+            })}
+        </ul>
         {/* FIXME: Lin 右側欄考慮做成 components */}
         <div className="col-span-4">
           <div className="my-5 px-2">

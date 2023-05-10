@@ -248,7 +248,7 @@ export default function SimpleFaucet() {
         <button onClick={AcToEth}>AC轉換ETH</button>
       </div>
       <Snackbar open={alertTakeMoneySucess} autoHideDuration={6000} onClose={alertHandleClose}>
-        <Alert onClose={alertHandleClose} severity="error" sx={{ width: "100%" }}>
+        <Alert onClose={alertHandleClose} severity="success" sx={{ width: "100%" }}>
           領錢成功
         </Alert>
       </Snackbar>
@@ -258,12 +258,12 @@ export default function SimpleFaucet() {
         </Alert>
       </Snackbar>
       <Snackbar open={alertTakeMoneyFail} autoHideDuration={6000} onClose={alertHandleClose}>
-        <Alert onClose={alertHandleClose} severity="success" sx={{ width: "100%" }}>
+        <Alert onClose={alertHandleClose} severity="error" sx={{ width: "100%" }}>
           領錢失敗
         </Alert>
       </Snackbar>
       <Snackbar open={alertJoinCoinFail} autoHideDuration={6000} onClose={alertHandleClose}>
-        <Alert onClose={alertHandleClose} severity="success" sx={{ width: "100%" }}>
+        <Alert onClose={alertHandleClose} severity="error" sx={{ width: "100%" }}>
           加入 AC 失敗
         </Alert>
       </Snackbar>

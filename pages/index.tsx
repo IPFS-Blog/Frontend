@@ -46,10 +46,10 @@ export default function Home({ Articles }: any) {
             {Articles.articles != null &&
               Articles.articles.map((item: any) => {
                 const { id, title, subtitle, updateAt } = item;
+                const { username } = item.user;
                 return (
                   <ArticleItem
-                    // FIXME: Andy 假資料等後端改成抓取全部資料可以拿到使用者名稱
-                    username={"Andya"}
+                    username={username}
                     key={id}
                     id={id}
                     title={title}

@@ -16,6 +16,10 @@ export default function SimpleFaucet() {
   // Loading
   const [isLoading, setIsLoading] = useState(false);
 
+  // if (isLoading) {
+  // window.open("", "_blank");
+  // }
+
   useEffect(() => {
     //TODO: 登入狀態
     const login = async () => {

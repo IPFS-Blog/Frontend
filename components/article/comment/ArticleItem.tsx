@@ -6,9 +6,9 @@ import { IconButton, Link } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 export default function ArticleItem({ username, id, title, subtitle, updateAt }: any) {
   return (
-    <li className="group/item my-4 rounded-lg first:mt-0">
+    <li className="group/item my-4 rounded-lg first:mt-0 border-4 border-blue-200">
       <Link className="text no-underline" href={`/${username}/${id}`}>
-        <div className="my-1 grid h-auto w-full grid-cols-12 gap-x-16 rounded-lg p-2 hover:bg-slate-200 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700">
+        <div className="grid h-auto w-full grid-cols-12 gap-x-16 rounded-lg p-2 hover:bg-slate-200 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700">
           <div className="col-span-8">
             <p className="mb-2 text-2xl font-bold tracking-tight text-slate-900 line-clamp-1 dark:text-white">
               {title}

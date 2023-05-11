@@ -6,16 +6,24 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Image from "next/image";
-import React, { useState } from "react";
-interface DonationFormProps {
-  onDonate: (name: string, price: number) => void;
-}
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import Web3 from "web3";
 
-export default function DonationForm({ onDonate }: DonationFormProps) {
-  const [open, setOpen] = React.useState(false);
+import { _apiCheckJwt, apiUserGetUserData } from "@/components/api";
+import { setLogin } from "@/store/UserSlice";
+
+import MyToken from "../../truffle/build/contracts/MyToken.json";
+
+export default function DonationForm() {
+  const [AC, setAC] = useState("");
+  const [open, setOpen] = useState(false);
+  /* Jim account need fix const [account, setAccount] = useState(""); */
+  const [, setAccount] = useState("");
+  const dispatch = useDispatch();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
-  const [maxWidth] = React.useState<DialogProps["maxWidth"]>("md");
+  const [maxWidth] = useState<DialogProps["maxWidth"]>("md");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -24,17 +32,59 @@ export default function DonationForm({ onDonate }: DonationFormProps) {
   const handleClose = () => {
     setOpen(false);
   };
-  const [name /* , setName */] = useState("");
-  const [price, setPrice] = useState(0);
-
-  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPrice(Number(e.target.value));
-  };
-
-  const handleDonate = () => {
+  /* FIXME:handleDonate打賞付款(要怎麼將AC轉給文章作者)*/
+  /* const handleDonate = () => {
     onDonate(name, price);
-  };
+  }; */
+  /* const [name  , setName ] = useState(""); */
+  const [price, setPrice] = useState(1);
 
+  const handlePriceChange = (event: any) => {
+    setPrice(Number(event.target.value));
+  };
+  useEffect(() => {
+    //TODO: 登入狀態
+    const login = async () => {
+      let jwt = "";
+      const res_CheckJwt = await _apiCheckJwt();
+      jwt = res_CheckJwt.data.jwt;
+      const res_GetUserData = await apiUserGetUserData(jwt);
+      dispatch(setLogin(JSON.stringify(res_GetUserData.data.userData)));
+    };
+    const connect = async () => {
+      if (typeof window.ethereum !== "undefined") {
+        try {
+          const web3 = new Web3(window && window.ethereum);
+          if (web3) {
+            // TODO: 拿取address
+            const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+            setAccount(accounts[0]);
+            // TODO: 拿取Eth & AC
+            /* const ethBalance = await web3.eth.getBalance(accounts[0]); */
+            /* setETH(await web3.utils.fromWei(ethBalance)); */
+            const MyTokenabi = MyToken.abi.map((item: any) => {
+              return {
+                inputs: item.inputs,
+                name: item.name,
+                outputs: item.outputs,
+                stateMutability: item.stateMutability,
+                type: item.type,
+              };
+            });
+            const MyTokenContract = new web3.eth.Contract(MyTokenabi, process.env.NEXT_PUBLIC_MyTokenContractAddress);
+            setAC(await MyTokenContract.methods.balanceOf(accounts[0]).call());
+          }
+        } catch {
+          // FIXME: Lin 登入失敗UI
+        }
+      } else {
+        window.alert("Please download MetaMask");
+        window.open("https://metamask.io/download/", "_blank");
+      }
+    };
+    login();
+    connect();
+  }, [dispatch]);
   return (
     <>
       <button
@@ -67,7 +117,7 @@ export default function DonationForm({ onDonate }: DonationFormProps) {
             <p className="text-xl font-semibold">金額(AC)</p>
             <input
               type="number"
-              max=""
+              max={AC}
               min="0"
               id="price"
               name="price"
@@ -81,7 +131,7 @@ export default function DonationForm({ onDonate }: DonationFormProps) {
           <button
             className="mx-auto mt-4 flex items-center justify-center rounded-md bg-gray-400 py-2 px-4 text-black hover:bg-gray-500"
             onClick={() => {
-              handleDonate();
+              /* handleDonate(); */
             }}
           >
             <Image src="/MetaMask.png" alt="Null" width={30} height={30}></Image>

@@ -203,7 +203,7 @@ export default function ResponsiveDialog() {
                   </button>
                 </div>
               </div>
-              <div className="flex w-full items-center rounded border-b-2 border-l-2 border-gray-600 py-2 text-base font-semibold  ">
+              <div className="flex w-full items-center rounded border-b-2 border-l-2 border-gray-600 py-2 text-base font-semibold">
                 <div className="flex w-full justify-between">
                   <input
                     type="number"

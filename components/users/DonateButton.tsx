@@ -62,7 +62,7 @@ export default function DonationForm({ onDonate }: DonationFormProps) {
               <p className="text-xl font-semibold ">創作者名稱:</p>
             </div>
           </div>
-          {/* 支付金額 FIXME: Jim 支付金額不得超過本身擁有的AC  */}
+          {/* 支付金額 FIXME: Jim 支付金額不得超過本身擁有的AC  把0消掉*/}
           <div className="mb-4">
             <p className="text-xl font-semibold">金額(AC)</p>
             <input

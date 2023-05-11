@@ -14,14 +14,10 @@ import { _apiCheckJwt, apiUserGetUserData } from "@/components/api";
 import { setLogin } from "@/store/UserSlice";
 
 import MyToken from "../../truffle/build/contracts/MyToken.json";
-interface DonationFormProps {
-  onDonate: (name: string, price: number) => void;
-}
-export default function DonationForm({ onDonate }: DonationFormProps) {
+
+export default function DonationForm() {
   const [AC, setAC] = useState("");
   const [open, setOpen] = useState(false);
-  /* FIXME: account need fix const [account, setAccount] = useState(""); */
-  const [, setAccount] = useState("");
   const dispatch = useDispatch();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -34,16 +30,13 @@ export default function DonationForm({ onDonate }: DonationFormProps) {
   const handleClose = () => {
     setOpen(false);
   };
-  /* FIXME:handleDonate打賞付款(要怎麼將AC轉給文章作者)*/
-  const handleDonate = () => {
-    onDonate(name, price);
-  };
-  const [name /* , setName */] = useState("");
+  const [name] = useState("");
   const [price, setPrice] = useState(1);
 
   const handlePriceChange = (event: any) => {
     setPrice(parseInt(event.target.value));
   };
+  /* FIXME:Andy  轉帳AC給作者*/
   useEffect(() => {
     //TODO: 登入狀態
     const login = async () => {
@@ -60,10 +53,7 @@ export default function DonationForm({ onDonate }: DonationFormProps) {
           if (web3) {
             // TODO: 拿取address
             const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-            setAccount(accounts[0]);
             // TODO: 拿取Eth & AC
-            /* const ethBalance = await web3.eth.getBalance(accounts[0]); */
-            /* setETH(await web3.utils.fromWei(ethBalance)); */
             const MyTokenabi = MyToken.abi.map((item: any) => {
               return {
                 inputs: item.inputs,
@@ -107,11 +97,11 @@ export default function DonationForm({ onDonate }: DonationFormProps) {
           打賞
         </DialogTitle>
         <DialogContent className="bg-gray-200 md:w-full lg:w-96">
-          {/* 創作者名稱 FIXME:創作者名稱需要作者username */}
+          {/* 創作者名稱 FIXME:Andy 創作者名稱需要作者username&頭像 */}
           <div className="flex flex-row items-center">
             <Avatar className="h-10 w-10 rounded-full" src="" alt="not find Avatar" />
             <div className="ml-2 flex items-center">
-              <p className="text-xl font-semibold ">創作者名稱:</p>
+              <p className="text-xl font-semibold ">{name}</p>
             </div>
           </div>
           <div className="mb-4">
@@ -128,15 +118,9 @@ export default function DonationForm({ onDonate }: DonationFormProps) {
               onChange={handlePriceChange}
             />
           </div>
-          {/* 支付按鈕 FIXME:需要連結Matamask!? */}
+          {/* 支付按鈕 FIXME:Andy button 轉帳AC給作者*/}
 
-          <button
-            className="mx-auto mt-4 flex items-center justify-center rounded-md bg-gray-400 py-2 px-4 text-black hover:bg-gray-500"
-            /* FIXME:需要另寫function連結作者 */
-            onClick={() => {
-              handleDonate();
-            }}
-          >
+          <button className="mx-auto mt-4 flex items-center justify-center rounded-md bg-gray-400 py-2 px-4 text-black hover:bg-gray-500">
             <Image src="/MetaMask.png" alt="Null" width={30} height={30}></Image>
             確定支付
           </button>

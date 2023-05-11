@@ -151,7 +151,7 @@ export default function SimpleFaucet() {
     <div>
       {/* TODO: 加入錢幣到metamask */}
       {AC === "0" ? <button onClick={AddCoinToMetaMask}>加入錢幣到metamask</button> : null}
-      <div className="m-2 text-5xl text-blue-900 dark:text-blue-600">
+      <div className="m-2 text-5xl text-blue-900">
         獲取 <span className="font-semibold">AC</span> 代幣
       </div>
       <div className="my-5 mx-2 text-base ">

@@ -5,7 +5,6 @@ import { IconButton, Link } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 export default function ArticleItem({ username, id, title, subtitle, updateAt }: any) {
   return (
-    // FIXME: Andy 接文章 api 顯示文章Item
     <li className="group/item my-4 rounded-lg first:mt-0">
       <Link className="text no-underline" href={`/${username}/${id}`}>
         <div className="my-1 grid h-auto w-full grid-cols-12 gap-x-16 rounded-lg p-2 hover:bg-slate-200 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700">

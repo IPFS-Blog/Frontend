@@ -156,7 +156,7 @@ export default function Login() {
     <div>
       {!User.profile.login ? (
         <Button
-          variant="outlined"
+          className="text-gray-900 dark:text-gray-100"
           onClick={() => {
             connectMetaMask();
           }}
@@ -283,7 +283,9 @@ export default function Login() {
           </div>
         </DialogContent>
         <DialogActions>
-          <Button color="primary">取消</Button>
+          <Button color="primary" onClick={registerHandleClose}>
+            取消
+          </Button>
           <Button onClick={Register} color="primary" autoFocus>
             註冊
           </Button>

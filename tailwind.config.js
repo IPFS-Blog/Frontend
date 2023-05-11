@@ -1,6 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./pages/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}", "./app/**/*.{js,ts,jsx,tsx}"],
+  //just in time
+  mode: "jit",
   // 深色模式
   darkMode: "class",
   theme: {
@@ -33,9 +35,10 @@ module.exports = {
         // => @media (min-width: 1024px) { ... }
       },
       backgroundImage: {
-        //"hero-pattern": "url('/src/assets/herobg.png')",
+        "light-pattern": "url('/img/light_background.png')",
+        "dark-pattern": "url('/img/dark_background.png')",
       },
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/line-clamp")],
 };

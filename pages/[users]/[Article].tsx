@@ -25,7 +25,7 @@ export default function Article({ userData, IsUser, article, createrData }: any)
     <div className="my-2 grid w-full grid-cols-12 gap-x-16 px-2">
       {/* 單一文章 */}
       <div className="col-span-8 text-base">
-        <div className="my-2 flex flex-row items-center justify-between rounded border border-blue-200 p-2">
+        <div className="my-2 flex flex-row items-center justify-between rounded border border-blue-200 bg-gray-50 p-2 dark:bg-gray-700">
           {/* TODO: 文章擁有者資料 頭貼、名稱 */}
           <div className="flex flex-row items-center">
             <Avatar className="h-auto w-10 rounded-full" src={createrData.photo} alt="not find Avatar" />
@@ -37,17 +37,17 @@ export default function Article({ userData, IsUser, article, createrData }: any)
             <ArrowOutwardOutlinedIcon />
           </button>
         </div>
-        <div className="my-2 rounded border border-blue-200">
+        <div className="my-2 rounded border border-blue-200 bg-gray-50 dark:bg-gray-700">
           {/* TODO: 文章資料 */}
           <div className="p-2">
             <h1 className="text-3xl font-semibold">{article.title}</h1>
-            <h3 className="text-lg">{article.subtitle}</h3>
-            <div>{article.contents}</div>
+            <h3 className="mt-3 mb-4 text-lg">{article.subtitle}</h3>
+            <div className="whitespace-pre-line">{article.contents}</div>
           </div>
           {/* 文章內覽列 */}
           {/* FIXME:針對文章喜歡、讚賞、分享、收藏 */}
           {/* FIXME:響應式 table: phone: */}
-          <div className="grid items-center gap-2 border border-blue-200 p-2">
+          <div className="grid items-center gap-2 bg-gray-100 p-2 dark:bg-gray-800">
             <div className="col-start-1 col-end-3 tablet:col-span-1 tablet:col-start-1">
               {/* 喜歡 */}
               <button className="rounded border border-red-500 py-2 px-10 font-semibold text-red-500 hover:bg-red-500 hover:text-white tablet:mx-2 tablet:px-5">
@@ -67,7 +67,7 @@ export default function Article({ userData, IsUser, article, createrData }: any)
                 <IosShareOutlinedIcon />
               </button> */}
               {/* 收藏 */}
-              <button className="mx-1 h-10 w-10 rounded-lg text-yellow-500 hover:bg-yellow-300 hover:text-white dark:text-yellow-300">
+              <button className="mx-1 h-10 w-10 rounded-lg text-yellow-500 hover:bg-yellow-300 hover:text-white">
                 <BookmarkAddOutlinedIcon />
               </button>
               <p className="mx-1 font-mono">{article.updateAt.substr(0, 10)}</p>
@@ -134,7 +134,7 @@ export default function Article({ userData, IsUser, article, createrData }: any)
 
 export const getServerSideProps = async (context: any) => {
   // 查看是否登入狀態
-  const match = context.req.headers.cookie?.match(/UserJWT=([^;]+)/);
+  const match = context.req.headers.cookie.match(/UserJWT=([^;]+)/);
   const jwt = match ? match[1] : null;
   let userData = { id: 0, name: "", address: "", email: "", photo: "" };
   let IsUser = true;

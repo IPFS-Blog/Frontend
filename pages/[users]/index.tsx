@@ -59,10 +59,12 @@ export default function Users({ userData, IsUser, IsCreater }: any) {
               {!IsCreater ? (
                 // TODO:私人:編輯個人資料、個人錢包
                 <div>
-                  <div className="text-gray-600">
+                  <div className="my-1">
                     <Editprofile />
                   </div>
-                  <UserWallet />
+                  <div className="my-1">
+                    <UserWallet />
+                  </div>
                 </div>
               ) : (
                 // TODO:公開:追蹤按鈕以及打賞
@@ -80,10 +82,10 @@ export default function Users({ userData, IsUser, IsCreater }: any) {
           </dl>
         </div>
       </div>
-
+      {/* //TODO:Menu */}
       {!IsCreater ? (
         // TODO:私人:所有、收藏、瀏覽紀錄、按讚紀錄
-        <nav className="my-5 mx-2 flex justify-between bg-blue-200 py-3">
+        <menu className="my-5 mx-2 flex justify-between bg-blue-200 py-3 px-1">
           <ul className="flex h-full items-center">
             <li>
               <a href="#" className="rounded-md px-3 py-2 text-gray-300 hover:bg-gray-700 hover:text-white">
@@ -106,10 +108,17 @@ export default function Users({ userData, IsUser, IsCreater }: any) {
               </a>
             </li>
           </ul>
-        </nav>
+        </menu>
       ) : (
-        // FIXME: 公開內導覽列
-        <h1>公開公開公開公開公開公開公開公開公開公開公開公開公開公開公開公開公開公開</h1>
+        <menu className="my-5 mx-2 flex justify-between bg-blue-200 py-3 px-1">
+          <ul className="flex h-full items-center">
+            <li>
+              <a href="#" className="ml-4 rounded-md px-3 py-2 text-gray-300 hover:bg-gray-700 hover:text-white">
+                公開瀏覽
+              </a>
+            </li>
+          </ul>
+        </menu>
       )}
     </div>
   );

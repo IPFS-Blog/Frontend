@@ -1,5 +1,3 @@
-import { AlertProps, Snackbar } from "@mui/material";
-import MuiAlert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import Dialog, { DialogProps } from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -13,7 +11,6 @@ import { useDispatch } from "react-redux";
 import Web3 from "web3";
 
 import { _apiCheckJwt, apiUserGetUserData } from "@/components/api";
-import Mining from "@/pages/loading/mining";
 import { setLogin } from "@/store/UserSlice";
 
 import MyToken from "../../truffle/build/contracts/MyToken.json";
@@ -75,21 +72,6 @@ export default function ResponsiveDialog() {
   const [AC, setAC] = useState("");
   const [selectedNumber, setSelectedNumber] = useState(1);
   const [selectedNumber1, setSelectedNumber1] = useState(1);
-  // Loading
-  const [isLoading, setIsLoading] = useState(false);
-  const [changeMoneyFail, setchangeMoneyFail] = useState(false);
-  const [changeMoneySucess, setchangeMoneySucess] = useState(false);
-  const alertHandleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setchangeMoneyFail(false);
-    setchangeMoneySucess(false);
-  };
-  //material ui toast
-  const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-  });
 
   function handleNumberChange(event: any) {
     setSelectedNumber(parseInt(event.target.value));
@@ -109,11 +91,11 @@ export default function ResponsiveDialog() {
   });
 
   async function EthToAc() {
-    setIsLoading(true); // 啟用 loading 狀態
     const web3 = new Web3(window && window.ethereum);
     if (web3) {
       const MyTokenContract = new web3.eth.Contract(MyTokenabi, process.env.NEXT_PUBLIC_MyTokenContractAddress);
       const selectedNumberInWei = web3.utils.toWei(selectedNumber.toString());
+      //FIXME: Lin 等待畫面
       await MyTokenContract.methods
         .buyToken()
         .send({
@@ -122,20 +104,20 @@ export default function ResponsiveDialog() {
           gas: gasLimit,
         })
         .then(() => {
-          setchangeMoneySucess(true);
-          setIsLoading(false);
+          // FIXME: Lin Eth換Ac成功UI
+          window.alert("ETH轉AC成功");
         })
         .catch(() => {
-          setchangeMoneyFail(true);
-          setIsLoading(false);
+          // FIXME: Lin Eth換Ac失敗UI
+          window.alert("ETH轉AC失敗");
         });
     }
   }
   async function AcToEth() {
-    setIsLoading(true); // 啟用 loading 狀態
     const web3 = new Web3(window && window.ethereum);
     if (web3) {
       const MyTokenContract = new web3.eth.Contract(MyTokenabi, process.env.NEXT_PUBLIC_MyTokenContractAddress);
+      //FIXME: Lin 等待畫面
       await MyTokenContract.methods
         .sellToken(selectedNumber1)
         .send({
@@ -143,12 +125,12 @@ export default function ResponsiveDialog() {
           gas: gasLimit,
         })
         .then(() => {
-          setchangeMoneySucess(true);
-          setIsLoading(false);
+          // FIXME: Lin Ac換Eth成功UI
+          window.alert("AC轉ETH成功");
         })
         .catch(() => {
-          setchangeMoneyFail(true);
-          setIsLoading(false);
+          // FIXME: Lin Ac換Eth失敗UI
+          window.alert("AC轉ETH失敗");
         });
     }
   }
@@ -200,7 +182,6 @@ export default function ResponsiveDialog() {
                 </div>
               </div>
               {/* 交換幣值 FIXME:需要個人ETH的金額(超出交換金額)*/}
-              {/* FIXME: jim 1. input 固定寬度 */}
               <div className="flex w-full items-center rounded border-b-2 border-l-2 border-gray-600 py-2 text-base font-semibold  ">
                 <div className="flex w-full justify-between">
                   <input
@@ -214,16 +195,9 @@ export default function ResponsiveDialog() {
                     className="ml-2 rounded border border-gray-400 px-2 py-1"
                   />
                   <p className="mx-2 py-1">ETH換AC</p>
-                  {isLoading ? (
-                    <Mining />
-                  ) : (
-                    <button
-                      onClick={EthToAc}
-                      className="ml-2 rounded bg-gray-400 py-1 px-3 text-black hover:bg-gray-500"
-                    >
-                      交換
-                    </button>
-                  )}
+                  <button onClick={EthToAc} className="ml-2 rounded bg-gray-400 py-1 px-3 text-black hover:bg-gray-500">
+                    交換
+                  </button>
                 </div>
               </div>
               <div className="flex w-full items-center rounded border-b-2 border-l-2 border-gray-600 py-2 text-base font-semibold  ">
@@ -239,16 +213,9 @@ export default function ResponsiveDialog() {
                     className="ml-2 rounded border border-gray-400 px-2 py-1"
                   />
                   <p className="mx-2 py-1">AC換ETH</p>
-                  {isLoading ? (
-                    <Mining />
-                  ) : (
-                    <button
-                      onClick={AcToEth}
-                      className="ml-2 rounded bg-gray-400 py-1 px-3 text-black hover:bg-gray-500"
-                    >
-                      交換
-                    </button>
-                  )}
+                  <button onClick={AcToEth} className="ml-2 rounded bg-gray-400 py-1 px-3 text-black hover:bg-gray-500">
+                    交換
+                  </button>
                 </div>
               </div>
             </div>
@@ -263,16 +230,6 @@ export default function ResponsiveDialog() {
             </Button>
           </DialogActions>
         </Dialog>
-        <Snackbar open={changeMoneyFail} autoHideDuration={6000} onClose={alertHandleClose}>
-          <Alert onClose={alertHandleClose} severity="error" sx={{ width: "100%" }}>
-            交換失敗!
-          </Alert>
-        </Snackbar>
-        <Snackbar open={changeMoneySucess} autoHideDuration={6000} onClose={alertHandleClose}>
-          <Alert onClose={alertHandleClose} severity="success" sx={{ width: "100%" }}>
-            交換成功!
-          </Alert>
-        </Snackbar>
       </div>
     </>
   );

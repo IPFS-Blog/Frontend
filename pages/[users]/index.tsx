@@ -30,31 +30,31 @@ export default function Users({ userData, IsUser, IsCreater }: any) {
         <div className="w-auto flex-auto">
           <dl className="mx-auto grid grid-cols-3 p-3 text-gray-900 sm:grid-cols-3 sm:px-1 xl:grid-cols-3">
             <div className="flex flex-col p-2 text-center">
-              <dt className="text-base">所有文章</dt>
-              <dd className="text-gray-600 ">50</dd>
+              <dt className="select-none text-base dark:text-gray-200">所有文章</dt>
+              <dd className="select-none text-gray-600 dark:text-gray-300">50</dd>
             </div>
             <div className="flex flex-col p-2 text-center">
-              <dt className="text-base">粉絲</dt>
-              <dd className="text-gray-600 ">40</dd>
+              <dt className="select-none text-base dark:text-gray-200">粉絲</dt>
+              <dd className="select-none text-gray-600 dark:text-gray-300">40</dd>
             </div>
             <div className="flex flex-col p-2 text-center">
-              <dt className="text-base">追蹤中</dt>
-              <dd className="text-gray-600 ">20</dd>
+              <dt className="select-none text-base dark:text-gray-200">追蹤中</dt>
+              <dd className="select-none text-gray-600 dark:text-gray-300">20</dd>
             </div>
           </dl>
           <dl>
             <div className="flex flex-col p-2 text-center">
-              <button
-                onClick={() => {
-                  copy(userData.address);
-                }}
-                className="inline-flex w-full justify-center py-2 px-5"
-              >
-                <p className="px-2 underline decoration-blue-500 hover:underline hover:decoration-blue-200">
-                  {userData.address}
-                </p>
-                <ContentCopyRoundedIcon />
-              </button>
+              <div className="mx-10 flex min-w-fit items-center justify-center rounded-lg bg-gray-200 py-2 px-4">
+                <p className="select-all px-2 text">{userData.address}</p>
+                <div
+                  className="h-10 w-10 rounded-lg bg-gray-100 p-1 hover:bg-gray-300 dark:bg-gray-400 dark:text dark:hover:bg-gray-500"
+                  onClick={() => {
+                    copy(userData.address);
+                  }}
+                >
+                  <ContentCopyRoundedIcon />
+                </div>
+              </div>
 
               {!IsCreater ? (
                 // TODO:私人:編輯個人資料、個人錢包
@@ -85,25 +85,37 @@ export default function Users({ userData, IsUser, IsCreater }: any) {
       {/* //TODO:Menu */}
       {!IsCreater ? (
         // TODO:私人:所有、收藏、瀏覽紀錄、按讚紀錄
-        <menu className="my-5 mx-2 flex justify-between bg-blue-200 py-3 px-1">
-          <ul className="flex h-full items-center">
-            <li>
-              <a href="#" className="rounded-md px-3 py-2 text-gray-300 hover:bg-gray-700 hover:text-white">
+        <menu className="my-5 mx-2 flex justify-between bg-blue-200 px-1 text-lg">
+          <ul className="my-2 flex h-full items-center">
+            <li className="w-28 text-center">
+              <a
+                href="#"
+                className="ml-4 select-none rounded-md px-3 py-2 text-gray-300 hover:bg-gray-700 hover:text-white"
+              >
                 所有
               </a>
             </li>
-            <li>
-              <a href="#" className="ml-4 rounded-md px-3 py-2 text-gray-300 hover:bg-gray-700 hover:text-white">
+            <li className="w-28 text-center">
+              <a
+                href="#"
+                className="ml-4 select-none rounded-md px-3 py-2 text-gray-300 hover:bg-gray-700 hover:text-white"
+              >
                 收藏
               </a>
             </li>
-            <li>
-              <a href="#" className="ml-4 rounded-md px-3 py-2 text-gray-300 hover:bg-gray-700 hover:text-white">
+            <li className="w-28 text-center">
+              <a
+                href="#"
+                className="ml-4 select-none rounded-md px-3 py-2 text-gray-300 hover:bg-gray-700 hover:text-white"
+              >
                 瀏覽紀錄
               </a>
             </li>
-            <li>
-              <a href="#" className="ml-4 rounded-md px-3 py-2 text-gray-300 hover:bg-gray-700 hover:text-white">
+            <li className="w-28 text-center">
+              <a
+                href="#"
+                className="ml-4 select-none rounded-md px-3 py-2 text-gray-300 hover:bg-gray-700 hover:text-white"
+              >
                 按讚紀錄
               </a>
             </li>

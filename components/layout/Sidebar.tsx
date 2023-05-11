@@ -36,7 +36,7 @@ const Sidebar = () => {
   return (
     <div>
       {/* //sidebar */}
-      <div className="flex w-auto flex-col justify-between rounded-lg bg-yellow-50 px-4 pt-8 pb-4">
+      <div className="m-2 flex w-auto flex-col justify-between rounded-lg bg-yellow-50 px-4 pt-8 pb-4">
         <div className="flex flex-col">
           <button className={collapseIconClasses} onClick={handleSidebarToggle}>
             <AiOutlineDoubleLeft />
@@ -67,7 +67,7 @@ const Sidebar = () => {
               <div className="w-8">
                 <AiOutlineUsergroupDelete />
               </div>
-              <div className="font-medium">已追蹤</div>
+              <div className="select-none font-medium">已追蹤</div>
             </div>
             <div className="mt-1 flex w-full items-center px-3">
               <Users />

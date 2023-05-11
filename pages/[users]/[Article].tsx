@@ -3,6 +3,7 @@ import BookmarkAddOutlinedIcon from "@mui/icons-material/BookmarkAddOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import SendIcon from "@mui/icons-material/Send";
 import Avatar from "@mui/material/Avatar";
+import Link from "next/link";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
@@ -22,10 +23,14 @@ export default function Article({ userData, IsUser, article, createrData }: any)
 
   // TODO: UI funtion
   return (
+    // 單一文章
     <div className="my-2 grid w-full grid-cols-12 gap-x-16 px-2">
-      {/* 單一文章 */}
       <div className="col-span-8 text-base">
-        <div className="my-2 flex flex-row items-center justify-between rounded border border-blue-200 bg-gray-50 p-2 dark:bg-gray-700">
+        {/* FIXME: Lin 無法立即跳轉到個人頁面*/}
+        <Link
+          href={`/${createrData.username}`}
+          className="my-2 flex flex-row items-center justify-between rounded border border-blue-200 bg-gray-50 p-2 dark:bg-gray-700"
+        >
           {/* TODO: 文章擁有者資料 頭貼、名稱 */}
           <div className="flex flex-row items-center">
             <Avatar className="h-auto w-10 rounded-full" src={createrData.photo} alt="not find Avatar" />
@@ -36,7 +41,7 @@ export default function Article({ userData, IsUser, article, createrData }: any)
           <button>
             <ArrowOutwardOutlinedIcon />
           </button>
-        </div>
+        </Link>
         <div className="my-2 rounded border border-blue-200 bg-gray-50 dark:bg-gray-700">
           {/* TODO: 文章資料 */}
           <div className="p-2">

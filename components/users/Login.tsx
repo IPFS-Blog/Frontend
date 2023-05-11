@@ -189,14 +189,19 @@ export default function Login() {
           >
             <MenuItem onClick={handleCloseUserMenu}>
               <Typography textAlign="center">
-                <Button
-                  onClick={() => {
-                    _apiAuthLogout();
-                    dispatch(setLogout());
-                  }}
-                >
-                  登出
-                </Button>
+                {/* FIXME: Andy 本人名稱 */}
+                <p>\${username}</p>
+              </Typography>
+            </MenuItem>
+            <MenuItem onClick={handleCloseUserMenu}>
+              <Typography
+                textAlign="center"
+                onClick={() => {
+                  _apiAuthLogout();
+                  dispatch(setLogout());
+                }}
+              >
+                登出
               </Typography>
             </MenuItem>
           </Menu>

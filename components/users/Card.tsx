@@ -20,7 +20,7 @@ const Card = ({ CreaterAddress }: any) => {
                 <div className="flex h-48 w-2/6 flex-col items-center p-3">
                   <Avatar src={User.profile.photo} className="h-auto w-full rounded-full" alt="Picture of the author" />
                 </div>
-                <div className="flex h-auto w-4/6 flex-col justify-start p-3">
+                <div className="flex h-auto w-4/6 flex-col justify-start p-3 dark:text">
                   <h5 className="mb-2 text-3xl font-medium">{route}</h5>
                   <p className="truncate">{User.profile.login ? User.profile.address : CreaterAddress}</p>
                   <div className="mb-4 pt-2 text-base">
@@ -39,7 +39,7 @@ const Card = ({ CreaterAddress }: any) => {
                 </div>
 
                 <div className="flex w-4/6 flex-col justify-start p-3">
-                  <h5 className="mb-2 text-3xl font-medium">{route}</h5>
+                  <h5 className="mb-2 text-3xl font-medium dark:text">{route}</h5>
                   <dl className="mx-auto grid grid-cols-3 p-3 text-gray-900 sm:grid-cols-3 sm:p-2 xl:grid-cols-3">
                     <div className="flex flex-col p-2 text-center">
                       <dt className="text-base">所有文章</dt>

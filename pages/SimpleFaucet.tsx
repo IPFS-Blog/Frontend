@@ -81,7 +81,7 @@ export default function SimpleFaucet() {
   }, [dispatch]);
 
   // TODO: 領錢
-  const [transfermoney, settransfermoney] = useState(true);
+  const [transfermoney] = useState(true);
   const takemoney = async () => {
     setIsLoading(true); // 啟用 loading 狀態
     const web3 = new Web3(window && window.ethereum);

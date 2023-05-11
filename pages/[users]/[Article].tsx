@@ -3,9 +3,9 @@ import BookmarkAddOutlinedIcon from "@mui/icons-material/BookmarkAddOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import SendIcon from "@mui/icons-material/Send";
 import Avatar from "@mui/material/Avatar";
+import Link from "next/link";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import Link from "next/link";
 
 import { apiArticleTakeArticle, apiUserGetUserData } from "@/components/api";
 import Comment from "@/components/article/comment/Comment";

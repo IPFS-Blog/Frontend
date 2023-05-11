@@ -41,7 +41,7 @@ export default function Home({ Articles }: any) {
         </ul>
       </menu>
       <main className="my-2 grid w-full grid-cols-12 gap-x-16 px-2">
-        <ul className="col-span-8">
+        <ul className="col-span-8" role="list">
           {Articles.articles != null &&
             Articles.articles.map((item: any) => {
               const { id, title, subtitle, updateAt } = item;

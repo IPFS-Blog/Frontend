@@ -41,8 +41,8 @@ export default function Article({ userData, IsUser, article, createrData }: any)
           {/* TODO: 文章資料 */}
           <div className="p-2">
             <h1 className="text-3xl font-semibold">{article.title}</h1>
-            <h3 className="text-lg">{article.subtitle}</h3>
-            <div>{article.contents}</div>
+            <h3 className="mt-3 mb-4 text-lg">{article.subtitle}</h3>
+            <div className="whitespace-pre-line">{article.contents}</div>
           </div>
           {/* 文章內覽列 */}
           {/* FIXME:針對文章喜歡、讚賞、分享、收藏 */}

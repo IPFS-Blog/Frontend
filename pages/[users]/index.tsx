@@ -132,6 +132,26 @@ export default function Users({ userData, IsUser, IsCreater }: any) {
           </ul>
         </menu>
       )}
+      <main className="my-2 grid w-full grid-cols-12 gap-x-16 px-2">
+        <ul className="col-span-8" role="list">
+          {/* //FIXME: Andy 文章項目 */}
+          {/* {Articles.articles != null &&
+            Articles.articles.map((item: any) => {
+              const { id, title, subtitle, updateAt } = item;
+              const { username } = item.user;
+              return (
+                <ArticleItem
+                  username={username}
+                  key={id}
+                  id={id}
+                  title={title}
+                  subtitle={subtitle}
+                  updateAt={updateAt}
+                />
+              );
+            })} */}
+        </ul>
+      </main>
     </div>
   );
 }

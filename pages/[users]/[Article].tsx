@@ -121,7 +121,7 @@ export default function Article({ userData, IsUser, article, createrData }: any)
           </button>
         </div>
         <div className="my-5 px-2">
-          {/* FIXME:推薦使用者資料 */}
+          {/* FIXME: 推薦使用者資料 */}
           <div className="text-base">推薦使用者</div>
           <ul className="divide-y divide-blue-200">
             <li></li>
@@ -129,7 +129,7 @@ export default function Article({ userData, IsUser, article, createrData }: any)
         </div>
         <div className="my-5 px-2">
           <div className="text-base">熱門標籤</div>
-          {/* FIXME:熱門標籤資料 */}
+          {/* FIXME: 熱門標籤資料 */}
           {/* <span className="flex flex-wrap gap-2">{label}</span> */}
         </div>
       </div>

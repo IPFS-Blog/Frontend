@@ -184,7 +184,7 @@ export default function ResponsiveDialog() {
                   <p>ETH</p>
                 </div>
               </div>
-              {/* 交換幣值 FIXME:需要個人ETH的金額(超出交換金額)*/}
+              {/* 幣值轉換 */}
               <div className="flex w-full items-center rounded border-b-2 border-l-2 border-gray-600 py-2 text-base font-semibold">
                 <div className="flex w-full justify-between">
                   <input

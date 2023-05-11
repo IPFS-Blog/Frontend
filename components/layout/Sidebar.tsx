@@ -1,14 +1,15 @@
 import classNames from "classnames";
 import Link from "next/link";
 import React, { useState } from "react";
-import { AiOutlineDoubleLeft } from "react-icons/ai";
 import {
+  AiOutlineDoubleLeft,
   AiOutlineFileText,
   AiOutlineForm,
   AiOutlineHome,
   AiOutlineLayout,
   AiOutlineUsergroupDelete,
 } from "react-icons/ai";
+import { FaFaucet } from "react-icons/fa";
 
 import Users from "../Users";
 
@@ -17,6 +18,7 @@ const menuItems = [
   { id: 2, label: "我的後台", icon: AiOutlineLayout, link: "/Dashboard" },
   { id: 3, label: "文件", icon: AiOutlineFileText, link: "/docs" },
   { id: 4, label: "創作", icon: AiOutlineForm, link: "/create" },
+  { id: 5, label: "水龍頭", icon: FaFaucet, link: "/SimpleFaucet" },
 ];
 
 const Sidebar = () => {

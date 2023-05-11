@@ -1,3 +1,4 @@
+import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import BookmarkAddOutlinedIcon from "@mui/icons-material/BookmarkAddOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import StarsOutlinedIcon from "@mui/icons-material/StarsOutlined";
@@ -43,6 +44,9 @@ export default function ArticleItem({ username, id, title, subtitle, updateAt }:
               {/* TODO:收藏 */}
               <IconButton className="mr-4">
                 <BookmarkAddOutlinedIcon className="text-black" />
+              </IconButton>
+              <IconButton className="mr-4">
+                <ArrowForwardOutlinedIcon className="text-black" />
               </IconButton>
             </div>
           </div>

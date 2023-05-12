@@ -14,11 +14,13 @@ import { _apiCheckJwt, apiUserGetUserData } from "@/components/api";
 import { setLogin } from "@/store/UserSlice";
 
 import MyToken from "../../truffle/build/contracts/MyToken.json";
-
-export default function DonationForm() {
+interface DonationFormProps {
+  onDonate: (name: string, price: number) => void;
+}
+export default function DonationForm({ onDonate }: DonationFormProps) {
   const [AC, setAC] = useState("");
   const [open, setOpen] = useState(false);
-  /* Jim account need fix const [account, setAccount] = useState(""); */
+  /* FIXME: account need fix const [account, setAccount] = useState(""); */
   const [, setAccount] = useState("");
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -33,14 +35,14 @@ export default function DonationForm() {
     setOpen(false);
   };
   /* FIXME:handleDonate打賞付款(要怎麼將AC轉給文章作者)*/
-  /* const handleDonate = () => {
+  const handleDonate = () => {
     onDonate(name, price);
-  }; */
-  /* const [name  , setName ] = useState(""); */
+  };
+  const [name /* , setName */] = useState("");
   const [price, setPrice] = useState(1);
 
   const handlePriceChange = (event: any) => {
-    setPrice(Number(event.target.value));
+    setPrice(parseInt(event.target.value));
   };
   useEffect(() => {
     //TODO: 登入狀態
@@ -112,7 +114,6 @@ export default function DonationForm() {
               <p className="text-xl font-semibold ">創作者名稱:</p>
             </div>
           </div>
-          {/* 支付金額 FIXME: Jim 支付金額不得超過本身擁有的AC  把0消掉*/}
           <div className="mb-4">
             <p className="text-xl font-semibold">金額(AC)</p>
             <input
@@ -130,8 +131,9 @@ export default function DonationForm() {
           {/* 支付按鈕 FIXME:需要連結Matamask!? */}
           <button
             className="mx-auto mt-4 flex items-center justify-center rounded-md bg-gray-400 py-2 px-4 text-black hover:bg-gray-500"
+            /* FIXME:需要另寫function連結作者 */
             onClick={() => {
-              /* handleDonate(); */
+              handleDonate();
             }}
           >
             <Image src="/MetaMask.png" alt="Null" width={30} height={30}></Image>

@@ -19,10 +19,10 @@ import { setLogin } from "@/store/UserSlice";
 import MyToken from "../../truffle/build/contracts/MyToken.json";
 
 export default function ResponsiveDialog() {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
-  const [maxWidth] = React.useState<DialogProps["maxWidth"]>("md");
+  const [maxWidth] = useState<DialogProps["maxWidth"]>("md");
   const [account, setAccount] = useState("");
   const gasLimit = 3000000;
   const dispatch = useDispatch();
@@ -200,7 +200,6 @@ export default function ResponsiveDialog() {
                 </div>
               </div>
               {/* 交換幣值 FIXME:需要個人ETH的金額(超出交換金額)*/}
-              {/* FIXME: jim 1. input 固定寬度 */}
               <div className="flex w-full items-center rounded border-b-2 border-l-2 border-gray-600 py-2 text-base font-semibold">
                 <div className="flex w-full justify-between">
                   <input
@@ -211,7 +210,7 @@ export default function ResponsiveDialog() {
                     name="number-selector"
                     value={selectedNumber}
                     onChange={handleNumberChange}
-                    className="ml-2 rounded border border-gray-400 px-2 py-1"
+                    className="ml-2 grow rounded border border-gray-400 px-2 py-1"
                   />
                   <p className="mx-2 py-1">ETH換AC</p>
                   {isLoading ? (
@@ -236,7 +235,7 @@ export default function ResponsiveDialog() {
                     name="number-selector1"
                     value={selectedNumber1}
                     onChange={handleNumberChange1}
-                    className="ml-2 rounded border border-gray-400 px-2 py-1"
+                    className="ml-2 grow rounded border border-gray-400 px-2 py-1"
                   />
                   <p className="mx-2 py-1">AC換ETH</p>
                   {isLoading ? (

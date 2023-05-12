@@ -189,14 +189,18 @@ export default function Login() {
           >
             <MenuItem onClick={handleCloseUserMenu}>
               <Typography textAlign="center">
-                <Button
-                  onClick={() => {
-                    _apiAuthLogout();
-                    dispatch(setLogout());
-                  }}
-                >
-                  登出
-                </Button>
+                <p>{User.profile.name}</p>
+              </Typography>
+            </MenuItem>
+            <MenuItem onClick={handleCloseUserMenu}>
+              <Typography
+                textAlign="center"
+                onClick={() => {
+                  _apiAuthLogout();
+                  dispatch(setLogout());
+                }}
+              >
+                登出
               </Typography>
             </MenuItem>
           </Menu>

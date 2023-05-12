@@ -3,6 +3,7 @@ import BookmarkAddOutlinedIcon from "@mui/icons-material/BookmarkAddOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import SendIcon from "@mui/icons-material/Send";
 import Avatar from "@mui/material/Avatar";
+import Link from "next/link";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
@@ -22,10 +23,14 @@ export default function Article({ userData, IsUser, article, createrData }: any)
 
   // TODO: UI funtion
   return (
+    // 單一文章
     <div className="my-2 grid w-full grid-cols-12 gap-x-16 px-2">
-      {/* 單一文章 */}
       <div className="col-span-8 text-base">
-        <div className="my-2 flex flex-row items-center justify-between rounded border border-blue-200 bg-gray-50 p-2 dark:bg-gray-700">
+        {/* FIXME: Lin 無法立即跳轉到個人頁面*/}
+        <Link
+          href={`/${createrData.username}`}
+          className="my-2 flex flex-row items-center justify-between rounded border border-blue-200 bg-gray-50 p-2 dark:bg-gray-700"
+        >
           {/* TODO: 文章擁有者資料 頭貼、名稱 */}
           <div className="flex flex-row items-center">
             <Avatar className="h-auto w-10 rounded-full" src={createrData.photo} alt="not find Avatar" />
@@ -36,7 +41,7 @@ export default function Article({ userData, IsUser, article, createrData }: any)
           <button>
             <ArrowOutwardOutlinedIcon />
           </button>
-        </div>
+        </Link>
         <div className="my-2 rounded border border-blue-200 bg-gray-50 dark:bg-gray-700">
           {/* TODO: 文章資料 */}
           <div className="p-2">
@@ -115,17 +120,87 @@ export default function Article({ userData, IsUser, article, createrData }: any)
             追蹤
           </button>
         </div>
+        {/* FIXME:推薦使用者資料 */}
         <div className="my-5 px-2">
-          {/* FIXME:推薦使用者資料 */}
-          <div className="text-base">推薦使用者</div>
+          <div className="text-base font-semibold">推薦使用者</div>
           <ul className="divide-y divide-blue-200">
-            <li></li>
+            <li className="grid w-full grid-cols-4 py-1">
+              <div className="col-span-3 flex">
+                <Avatar></Avatar>
+                <div className="px-2">
+                  <p>Lin</p>
+                  <p className="line-clamp-2">Hello</p>
+                </div>
+              </div>
+              <button className="my-2 h-8 rounded-full border border-red-500 px-2 font-semibold text-red-500 hover:bg-red-500 hover:text-white">
+                追蹤
+              </button>
+            </li>
+            <li className="grid w-full grid-cols-4 py-1">
+              <div className="col-span-3 flex">
+                <Avatar></Avatar>
+                <div className="px-2">
+                  <p>Rj</p>
+                  <p className="line-clamp-2">
+                    ng duis excepteur esse in duis nostrud occaecat mollit incididunt desaccaecat
+                  </p>
+                </div>
+              </div>
+              <button className="my-2 h-8  rounded-full border border-red-500 px-2 font-semibold text-red-500 hover:bg-red-500 hover:text-white">
+                追蹤
+              </button>
+            </li>
+            <li className="grid w-full grid-cols-4 py-1">
+              <div className="col-span-3 flex">
+                <Avatar></Avatar>
+                <div className="px-2">
+                  <p>Amy</p>
+                  <p className="line-clamp-2">我是一位熱愛設計的設計師</p>
+                </div>
+              </div>
+              <button className="my-2 h-8 rounded-full border border-red-500 px-2 font-semibold text-red-500 hover:bg-red-500 hover:text-white">
+                追蹤
+              </button>
+            </li>
           </ul>
         </div>
+        {/* FIXME:熱門標籤資料 10筆 */}
         <div className="my-5 px-2">
-          <div className="text-base">熱門標籤</div>
-          {/* FIXME:熱門標籤資料 */}
-          {/* <span className="flex flex-wrap gap-2">{label}</span> */}
+          <div className="text-base font-semibold">熱門標籤</div>
+          <div className="flex flex-wrap gap-2 py-2">
+            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
+              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">前端</p>
+            </div>
+            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
+              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">狗狗</p>
+            </div>
+            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
+              <p className="inline-block pr-1 align-middle">#</p>
+              <p className="inline-block align-middle">網頁設計</p>
+            </div>
+            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
+              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">家庭</p>
+            </div>
+            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
+              <p className="inline-block pr-1 align-middle">#</p>{" "}
+              <p className="inline-block align-middle">家庭旅遊好去處</p>
+            </div>
+            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
+              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">新生季</p>
+            </div>
+            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
+              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">Chatgpt</p>
+            </div>
+            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
+              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">Java</p>
+            </div>
+            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
+              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">C++</p>
+            </div>
+            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
+              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">後端</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

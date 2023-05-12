@@ -67,7 +67,10 @@ export default function Editprofile() {
     <>
       <div>
         {/*  dialog部分皆為彈窗*/}
-        <Button variant="outlined" onClick={handleClickOpen}>
+        <Button
+          className="items-center rounded-lg bg-gray-200 py-2 px-20 text hover:bg-gray-300"
+          onClick={handleClickOpen}
+        >
           編輯個人資料
         </Button>
         <Dialog

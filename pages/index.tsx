@@ -60,8 +60,8 @@ export default function Home({ Articles }: any) {
         </ul>
         {/* FIXME: Lin 右側欄考慮做成 components */}
         <div className="col-span-4">
+          {/* FIXME:推薦使用者資料 */}
           <div className="my-5 px-2">
-            {/* FIXME:推薦使用者資料 */}
             <div className="text-base font-semibold">推薦使用者</div>
             <ul className="divide-y divide-blue-200">
               <li className="grid w-full grid-cols-4 py-1">

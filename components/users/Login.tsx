@@ -189,8 +189,7 @@ export default function Login() {
           >
             <MenuItem onClick={handleCloseUserMenu}>
               <Typography textAlign="center">
-                {/* FIXME: Andy 本人名稱 */}
-                <p>\${username}</p>
+                <p>{User.profile.name}</p>
               </Typography>
             </MenuItem>
             <MenuItem onClick={handleCloseUserMenu}>

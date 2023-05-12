@@ -3,13 +3,14 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useClipboard } from "use-clipboard-copy";
 
-import { apiUserGetCreaterData, apiUserGetUserData } from "@/components/api";
+import { apiUserGetCreaterArticle, apiUserGetCreaterData, apiUserGetUserData } from "@/components/api";
+import ArticleItem from "@/components/article/comment/ArticleItem";
 import Card from "@/components/users/Card";
 import Editprofile from "@/components/users/EditProfile";
 import UserWallet from "@/components/users/UserWallet";
 import { setLogin } from "@/store/UserSlice";
 
-export default function Users({ userData, IsUser, IsCreater }: any) {
+export default function Users({ userData, IsUser, IsCreater, Articles }: any) {
   // TODO: API function
   const dispatch = useDispatch();
   useEffect(() => {
@@ -134,14 +135,12 @@ export default function Users({ userData, IsUser, IsCreater }: any) {
       )}
       <main className="my-2 grid w-full grid-cols-12 gap-x-16 px-2">
         <ul className="col-span-8" role="list">
-          {/* //FIXME: Andy 文章項目 */}
-          {/* {Articles.articles != null &&
-            Articles.articles.map((item: any) => {
+          {Articles.length != 0 &&
+            Articles.map((item: any) => {
               const { id, title, subtitle, updateAt } = item;
-              const { username } = item.user;
               return (
                 <ArticleItem
-                  username={username}
+                  username={userData.name}
                   key={id}
                   id={id}
                   title={title}
@@ -149,7 +148,7 @@ export default function Users({ userData, IsUser, IsCreater }: any) {
                   updateAt={updateAt}
                 />
               );
-            })} */}
+            })}
         </ul>
       </main>
     </div>
@@ -185,10 +184,11 @@ export const getServerSideProps = async (context: any) => {
         NotFound = true;
       });
   }
+  const Articles = await apiUserGetCreaterArticle(userData.name);
   // 找不到使用者
   if (NotFound)
     return {
       notFound: true,
     };
-  else return { props: { userData, IsUser, IsCreater } };
+  else return { props: { userData, IsUser, IsCreater, Articles: Articles.data } };
 };

@@ -7,7 +7,7 @@ import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Web3 from "web3";
 
 import { _apiCheckJwt, apiUserGetUserData } from "@/components/api";
@@ -15,14 +15,14 @@ import { setLogin } from "@/store/UserSlice";
 
 import MyToken from "../../truffle/build/contracts/MyToken.json";
 
-export default function DonationForm() {
+export default function DonationForm({ CreaterAddress, CreaterName, CreaterPhoto }: any) {
   const [AC, setAC] = useState("");
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
   const [maxWidth] = useState<DialogProps["maxWidth"]>("md");
-
+  const User = useSelector((state: any) => state.User);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -30,7 +30,6 @@ export default function DonationForm() {
   const handleClose = () => {
     setOpen(false);
   };
-  const [name] = useState("");
   const [price, setPrice] = useState(1);
 
   const handlePriceChange = (event: any) => {
@@ -77,6 +76,36 @@ export default function DonationForm() {
     login();
     connect();
   }, [dispatch]);
+  const TransferAC = async () => {
+    const web3 = new Web3(window && window.ethereum);
+    const MyTokenabi = MyToken.abi.map((item: any) => {
+      return {
+        inputs: item.inputs,
+        name: item.name,
+        outputs: item.outputs,
+        stateMutability: item.stateMutability,
+        type: item.type,
+      };
+    });
+    const MyTokenContract = new web3.eth.Contract(MyTokenabi, process.env.NEXT_PUBLIC_MyTokenContractAddress);
+    const gasLimit = 3000000;
+
+    await MyTokenContract.methods
+      .transfer(CreaterAddress, AC)
+      .send({
+        from: User.profile.address,
+        gas: gasLimit,
+      })
+      // FIXME: Lin 轉帳成功
+      .then(() => {
+        window.alert("轉帳成功");
+      })
+      // FIXME: Lin 轉帳失敗
+      .catch(() => {
+        window.alert("轉帳失敗");
+      });
+  };
+
   return (
     <>
       <button
@@ -97,11 +126,10 @@ export default function DonationForm() {
           打賞
         </DialogTitle>
         <DialogContent className="bg-gray-200 md:w-full lg:w-96">
-          {/* 創作者名稱 FIXME:Andy 創作者名稱需要作者username&頭像 */}
           <div className="flex flex-row items-center">
-            <Avatar className="h-10 w-10 rounded-full" src="" alt="not find Avatar" />
+            <Avatar className="h-10 w-10 rounded-full" src={CreaterPhoto} alt="not find Avatar" />
             <div className="ml-2 flex items-center">
-              <p className="text-xl font-semibold ">{name}</p>
+              <p className="text-xl font-semibold ">{CreaterName}</p>
             </div>
           </div>
           <div className="mb-4">
@@ -119,8 +147,10 @@ export default function DonationForm() {
             />
           </div>
           {/* 支付按鈕 FIXME:Andy button 轉帳AC給作者*/}
-
-          <button className="mx-auto mt-4 flex items-center justify-center rounded-md bg-gray-400 py-2 px-4 text-black hover:bg-gray-500">
+          <button
+            onClick={TransferAC}
+            className="mx-auto mt-4 flex items-center justify-center rounded-md bg-gray-400 py-2 px-4 text-black hover:bg-gray-500"
+          >
             <Image src="/MetaMask.png" alt="Null" width={30} height={30}></Image>
             確定支付
           </button>

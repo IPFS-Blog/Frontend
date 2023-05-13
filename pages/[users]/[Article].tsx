@@ -55,7 +55,11 @@ export default function Article({ userData, IsUser, article, createrData }: any)
                 <span>like</span>
               </button>
               {/* FIXME:Andy 未登入不顯示打賞 */}
-              <DonateButton />
+              <DonateButton
+                CreaterAddress={createrData.address}
+                CreaterName={createrData.username}
+                CreaterPhoto={createrData.photo}
+              />
             </div>
             <div className="col-span-1 col-end-7 flex flex-row items-center">
               {/* 分享 */}

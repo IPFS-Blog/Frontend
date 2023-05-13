@@ -59,11 +59,11 @@ export default function Article({ userData, IsUser, article, createrData }: any)
                 <FavoriteBorderOutlinedIcon />
                 <span>like</span>
               </button>
-              {/* 打賞 */}
+              {/* FIXME:Andy 未登入不顯示打賞 */}
               <DonateButton
-                onDonate={function (): void {
-                  throw new Error("Function not implemented.");
-                }}
+                CreaterAddress={createrData.address}
+                CreaterName={createrData.username}
+                CreaterPhoto={createrData.photo}
               />
             </div>
             <div className="col-span-1 col-end-7 flex flex-row items-center">

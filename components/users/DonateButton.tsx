@@ -6,17 +6,23 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Image from "next/image";
-import React, { useState } from "react";
-interface DonationFormProps {
-  onDonate: (name: string, price: number) => void;
-}
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import Web3 from "web3";
 
-export default function DonationForm({ onDonate }: DonationFormProps) {
-  const [open, setOpen] = React.useState(false);
+import { _apiCheckJwt, apiUserGetUserData } from "@/components/api";
+import { setLogin } from "@/store/UserSlice";
+
+import MyToken from "../../truffle/build/contracts/MyToken.json";
+
+export default function DonationForm({ CreaterAddress, CreaterName, CreaterPhoto }: any) {
+  const [AC, setAC] = useState("");
+  const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
-  const [maxWidth] = React.useState<DialogProps["maxWidth"]>("md");
-
+  const [maxWidth] = useState<DialogProps["maxWidth"]>("md");
+  const User = useSelector((state: any) => state.User);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -24,15 +30,79 @@ export default function DonationForm({ onDonate }: DonationFormProps) {
   const handleClose = () => {
     setOpen(false);
   };
-  const [name /* , setName */] = useState("");
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState(1);
 
-  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPrice(Number(e.target.value));
+  const handlePriceChange = (event: any) => {
+    setPrice(parseInt(event.target.value));
   };
+  useEffect(() => {
+    //TODO: 登入狀態
+    const login = async () => {
+      let jwt = "";
+      const res_CheckJwt = await _apiCheckJwt();
+      jwt = res_CheckJwt.data.jwt;
+      const res_GetUserData = await apiUserGetUserData(jwt);
+      dispatch(setLogin(JSON.stringify(res_GetUserData.data.userData)));
+    };
+    const connect = async () => {
+      if (typeof window.ethereum !== "undefined") {
+        try {
+          const web3 = new Web3(window && window.ethereum);
+          if (web3) {
+            // TODO: 拿取address
+            const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+            // TODO: 拿取Eth & AC
+            const MyTokenabi = MyToken.abi.map((item: any) => {
+              return {
+                inputs: item.inputs,
+                name: item.name,
+                outputs: item.outputs,
+                stateMutability: item.stateMutability,
+                type: item.type,
+              };
+            });
+            const MyTokenContract = new web3.eth.Contract(MyTokenabi, process.env.NEXT_PUBLIC_MyTokenContractAddress);
+            setAC(await MyTokenContract.methods.balanceOf(accounts[0]).call());
+          }
+        } catch {
+          // FIXME: Lin 登入失敗UI
+        }
+      } else {
+        window.alert("Please download MetaMask");
+        window.open("https://metamask.io/download/", "_blank");
+      }
+    };
+    login();
+    connect();
+  }, [dispatch]);
+  const TransferAC = async () => {
+    const web3 = new Web3(window && window.ethereum);
+    const MyTokenabi = MyToken.abi.map((item: any) => {
+      return {
+        inputs: item.inputs,
+        name: item.name,
+        outputs: item.outputs,
+        stateMutability: item.stateMutability,
+        type: item.type,
+      };
+    });
+    const MyTokenContract = new web3.eth.Contract(MyTokenabi, process.env.NEXT_PUBLIC_MyTokenContractAddress);
+    const gasLimit = 3000000;
 
-  const handleDonate = () => {
-    onDonate(name, price);
+    await MyTokenContract.methods
+      .transfer(CreaterAddress, price)
+      .send({
+        from: User.profile.address,
+        gas: gasLimit,
+      })
+      // FIXME: Lin 轉帳成功
+      .then(() => {
+        window.alert("轉帳成功");
+      })
+      // FIXME: Lin 轉帳失敗
+      .catch(() => {
+        window.alert("轉帳失敗");
+      });
   };
 
   return (
@@ -50,24 +120,23 @@ export default function DonationForm({ onDonate }: DonationFormProps) {
         open={open}
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
+        className="fixed h-screen w-screen "
       >
         <DialogTitle id="responsive-dialog-title" className="flex justify-center bg-gray-200 font-semibold">
           打賞
         </DialogTitle>
         <DialogContent className="bg-gray-200 md:w-full lg:w-96">
-          {/* 創作者名稱 FIXME: 創作者名稱需要作者username */}
           <div className="flex flex-row items-center">
-            <Avatar className="h-10 w-10 rounded-full" src="" alt="not find Avatar" />
+            <Avatar className="h-10 w-10 rounded-full" src={CreaterPhoto} alt="not find Avatar" />
             <div className="ml-2 flex items-center">
-              <p className="text-xl font-semibold ">創作者名稱:</p>
+              <p className="text-xl font-semibold ">{CreaterName}</p>
             </div>
           </div>
-          {/* 支付金額 FIXME: Jim 支付金額不得超過本身擁有的AC  把0消掉*/}
           <div className="mb-4">
             <p className="text-xl font-semibold">金額(AC)</p>
             <input
               type="number"
-              max=""
+              max={AC}
               min="0"
               id="price"
               name="price"
@@ -77,12 +146,10 @@ export default function DonationForm({ onDonate }: DonationFormProps) {
               onChange={handlePriceChange}
             />
           </div>
-          {/* 支付按鈕 FIXME:需要連結Matamask!? */}
+          {/* 支付按鈕 FIXME:Andy button 轉帳AC給作者*/}
           <button
+            onClick={TransferAC}
             className="mx-auto mt-4 flex items-center justify-center rounded-md bg-gray-400 py-2 px-4 text-black hover:bg-gray-500"
-            onClick={() => {
-              handleDonate();
-            }}
           >
             <Image src="/MetaMask.png" alt="Null" width={30} height={30}></Image>
             確定支付

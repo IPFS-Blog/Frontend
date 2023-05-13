@@ -213,7 +213,7 @@ export default function ResponsiveDialog() {
                     name="number-selector"
                     value={selectedNumber}
                     onChange={handleNumberChange}
-                    className="ml-2 rounded border border-gray-400 px-2 py-1"
+                    className="ml-2 grow rounded border border-gray-400 px-2 py-1"
                   />
                   <p className="mx-2 py-1">ETH換AC</p>
                   {isLoading ? (
@@ -238,7 +238,7 @@ export default function ResponsiveDialog() {
                     name="number-selector1"
                     value={selectedNumber1}
                     onChange={handleNumberChange1}
-                    className="ml-2 rounded border border-gray-400 px-2 py-1"
+                    className="ml-2 grow rounded border border-gray-400 px-2 py-1"
                   />
                   <p className="mx-2 py-1">AC換ETH</p>
                   {isLoading ? (

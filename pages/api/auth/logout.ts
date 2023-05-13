@@ -7,7 +7,7 @@ export default async function logout(req: any, res: any): Promise<void> {
   if (jwt != undefined) {
     const serialized = serialize("UserJWT", "", {
       httpOnly: true,
-      secure: process.env.NODE_ENV !== "development",
+      secure: false,
       sameSite: "strict",
       maxAge: -1,
       path: "/",

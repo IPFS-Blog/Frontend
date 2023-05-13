@@ -122,6 +122,7 @@ export default function SimpleFaucet() {
   const [AC, setAC] = useState("");
 
   // TODO: 加入錢幣到metamask
+  // FIXME: Lin AC 圖片設計
   async function AddCoinToMetaMask() {
     const tokenAddress = `${process.env.NEXT_PUBLIC_MyTokenContractAddress}`;
     const tokenSymbol = "AC";

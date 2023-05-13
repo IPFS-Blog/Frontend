@@ -5,6 +5,8 @@ import { useDispatch } from "react-redux";
 
 import { _apiCheckJwt, apiArticleTakeAllArticle, apiUserGetUserData } from "@/components/api";
 import ArticleItem from "@/components/article/comment/ArticleItem";
+//測試JoinCoin
+import JoinCoin from "@/components/users/JoinCoin";
 import { setLogin } from "@/store/UserSlice";
 
 export default function Home({ Articles }: any) {
@@ -38,11 +40,16 @@ export default function Home({ Articles }: any) {
               最新文章
             </a>
           </li>
+          {/* //測試JoinCoin  */}
+          <li>
+            <JoinCoin />
+          </li>
         </ul>
       </menu>
       <main className="my-2 grid w-full grid-cols-12 gap-x-16 px-2">
         <ul className="col-span-8" role="list">
-          {Articles.articles != null &&
+          {/* //FIXME: Andy axios 錯誤 */}
+          {Articles != null &&
             Articles.articles.map((item: any) => {
               const { id, title, subtitle, updateAt } = item;
               const { username } = item.user;

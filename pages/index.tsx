@@ -5,6 +5,8 @@ import { useDispatch } from "react-redux";
 
 import { _apiCheckJwt, apiArticleTakeAllArticle, apiUserGetUserData } from "@/components/api";
 import ArticleItem from "@/components/article/comment/ArticleItem";
+//測試JoinCoin
+import JoinCoin from "@/components/users/JoinCoin";
 import { setLogin } from "@/store/UserSlice";
 
 export default function Home({ Articles }: any) {
@@ -37,6 +39,10 @@ export default function Home({ Articles }: any) {
             <a href="#" className="ml-4 rounded-md px-3 py-2 text-gray-300 hover:bg-gray-700 hover:text-white">
               最新文章
             </a>
+          </li>
+          {/* //測試JoinCoin  */}
+          <li>
+            <JoinCoin />
           </li>
         </ul>
       </menu>

@@ -40,10 +40,6 @@ export default function Home({ Articles }: any) {
               最新文章
             </a>
           </li>
-          {/* //測試JoinCoin  */}
-          <li>
-            <JoinCoin />
-          </li>
         </ul>
       </menu>
       <main className="my-2 grid w-full grid-cols-12 gap-x-16 px-2">

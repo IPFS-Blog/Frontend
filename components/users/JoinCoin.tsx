@@ -32,6 +32,7 @@ export default function JoinCoin() {
     setalertJoinCoinSucess(false);
     setalertJoinCoinFail(false);
   };
+  const [AC, setAC] = useState("");
   useEffect(() => {
     //TODO: 登入狀態
     const login = async () => {

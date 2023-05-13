@@ -120,6 +120,7 @@ export default function DonationForm({ CreaterAddress, CreaterName, CreaterPhoto
         open={open}
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
+        className="fixed w-screen h-screen "
       >
         <DialogTitle id="responsive-dialog-title" className="flex justify-center bg-gray-200 font-semibold">
           打賞

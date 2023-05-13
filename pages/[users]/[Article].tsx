@@ -2,8 +2,8 @@ import ArrowOutwardOutlinedIcon from "@mui/icons-material/ArrowOutwardOutlined";
 import BookmarkAddOutlinedIcon from "@mui/icons-material/BookmarkAddOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import SendIcon from "@mui/icons-material/Send";
+import { Button } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
-import Link from "next/link";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
@@ -26,7 +26,8 @@ export default function Article({ userData, IsUser, article, createrData }: any)
     // 單一文章
     <div className="my-2 grid w-full grid-cols-12 gap-x-16 px-2">
       <div className="col-span-8 text-base">
-        <Link
+        {/* FIXME: Lin 因為next/link會導致getServerSideProps異常 我先改成Button */}
+        <Button
           href={"/" + createrData.username}
           className="my-2 flex flex-row items-center justify-between rounded border border-blue-200 bg-gray-50 p-2 dark:bg-gray-700"
         >
@@ -40,7 +41,7 @@ export default function Article({ userData, IsUser, article, createrData }: any)
           <button>
             <ArrowOutwardOutlinedIcon />
           </button>
-        </Link>
+        </Button>
         <div className="my-2 rounded border border-blue-200 bg-gray-50 dark:bg-gray-700">
           {/* TODO: 文章資料 */}
           <div className="p-2">

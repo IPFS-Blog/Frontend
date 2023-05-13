@@ -35,7 +35,6 @@ export default function DonationForm({ CreaterAddress, CreaterName, CreaterPhoto
   const handlePriceChange = (event: any) => {
     setPrice(parseInt(event.target.value));
   };
-  /* FIXME:Andy  轉帳AC給作者*/
   useEffect(() => {
     //TODO: 登入狀態
     const login = async () => {
@@ -91,7 +90,7 @@ export default function DonationForm({ CreaterAddress, CreaterName, CreaterPhoto
     const gasLimit = 3000000;
 
     await MyTokenContract.methods
-      .transfer(CreaterAddress, AC)
+      .transfer(CreaterAddress, price)
       .send({
         from: User.profile.address,
         gas: gasLimit,

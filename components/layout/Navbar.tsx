@@ -2,6 +2,7 @@ import React from "react";
 
 // import { FiBell } from "react-icons/fi";
 import ThemeSwitch from "../ThemeSwitch";
+import JoinCoin from "../users/JoinCoin";
 import Login from "../users/Login";
 
 const Navbar = () => {
@@ -25,6 +26,9 @@ const Navbar = () => {
         </div> */}
         <div className="m-1">
           <ThemeSwitch />
+        </div>
+        <div className="m-1">
+          <JoinCoin />
         </div>
         <Login />
       </nav>

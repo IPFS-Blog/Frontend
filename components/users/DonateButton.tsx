@@ -55,7 +55,7 @@ export default function DonationForm({ onDonate }: DonationFormProps) {
           打賞
         </DialogTitle>
         <DialogContent className="bg-gray-200 md:w-full lg:w-96">
-          {/* 創作者名稱 FIXME:創作者名稱需要作者username */}
+          {/* 創作者名稱 FIXME: 創作者名稱需要作者username */}
           <div className="flex flex-row items-center">
             <Avatar className="h-10 w-10 rounded-full" src="" alt="not find Avatar" />
             <div className="ml-2 flex items-center">

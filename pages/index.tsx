@@ -5,8 +5,6 @@ import { useDispatch } from "react-redux";
 
 import { _apiCheckJwt, apiArticleTakeAllArticle, apiUserGetUserData } from "@/components/api";
 import ArticleItem from "@/components/article/comment/ArticleItem";
-//測試JoinCoin
-import JoinCoin from "@/components/users/JoinCoin";
 import { setLogin } from "@/store/UserSlice";
 
 export default function Home({ Articles }: any) {

@@ -48,7 +48,6 @@ export default function Home({ Articles }: any) {
       </menu>
       <main className="my-2 grid w-full grid-cols-12 gap-x-16 px-2">
         <ul className="col-span-8" role="list">
-          {/* //FIXME: Andy axios 錯誤 */}
           {Articles != null &&
             Articles.articles.map((item: any) => {
               const { id, title, subtitle, updateAt } = item;
@@ -157,7 +156,7 @@ export default function Home({ Articles }: any) {
 export const getServerSideProps = async () => {
   try {
     const Articles = await apiArticleTakeAllArticle();
-    // console.log(Articles.data);
+
     return { props: { Articles: Articles.data } };
   } catch {
     return { props: { Articles: null } };

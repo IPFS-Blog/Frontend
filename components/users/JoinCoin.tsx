@@ -76,7 +76,6 @@ export default function JoinCoin() {
     connect();
   }, [dispatch]);
   const [, setETH] = useState("");
-  const [AC, setAC] = useState("");
   // TODO: 加入錢幣到metamask
   // FIXME: Lin AC 圖片設計
   async function AddCoinToMetaMask() {
@@ -144,7 +143,12 @@ export default function JoinCoin() {
           <DialogContent>
             {/* 彈窗後整個畫面設計 */}
             {/* TODO: 加入錢幣到metamask */}
-              <button className="items-center rounded-lg bg-gray-200 py-2 px-20 text hover:bg-gray-300" onClick={AddCoinToMetaMask}>加入錢幣到metamask</button> 
+            <button
+              className="items-center rounded-lg bg-gray-200 py-2 px-20 text hover:bg-gray-300"
+              onClick={AddCoinToMetaMask}
+            >
+              加入錢幣到metamask
+            </button>
           </DialogContent>
           <DialogActions>
             {/* <Button autoFocus onClick={handleClose}>

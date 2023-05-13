@@ -10,7 +10,7 @@ import Editprofile from "@/components/users/EditProfile";
 import UserWallet from "@/components/users/UserWallet";
 import { setLogin } from "@/store/UserSlice";
 
-export default function Users({ userData, IsUser, IsCreater, Articles }: any) {
+export default function Users({ userData, IsUser, IsCreater, createrData, Articles }: any) {
   // TODO: API function
   const dispatch = useDispatch();
   useEffect(() => {
@@ -26,7 +26,7 @@ export default function Users({ userData, IsUser, IsCreater, Articles }: any) {
       <div className="flex h-auto w-full justify-around">
         {/* FIXME:要 Card 縮小後要變另外一種*/}
         <div className="px-5">
-          <Card CreaterAddress={userData.address} />
+          <Card CreaterAddress={createrData.address} />
         </div>
         <div className="w-auto flex-auto">
           <dl className="mx-auto grid grid-cols-3 p-3 text-gray-900 sm:grid-cols-3 sm:px-1 xl:grid-cols-3">
@@ -46,11 +46,11 @@ export default function Users({ userData, IsUser, IsCreater, Articles }: any) {
           <dl>
             <div className="flex flex-col p-2 text-center">
               <div className="mx-10 flex min-w-fit items-center justify-center rounded-lg bg-gray-200 py-2 px-4">
-                <p className="select-all px-2 text">{userData.address}</p>
+                <p className="select-all px-2 text">{createrData.address}</p>
                 <div
                   className="h-10 w-10 rounded-lg bg-gray-100 p-1 hover:bg-gray-300 dark:bg-gray-400 dark:text dark:hover:bg-gray-500"
                   onClick={() => {
-                    copy(userData.address);
+                    copy(createrData.address);
                   }}
                 >
                   <ContentCopyRoundedIcon />
@@ -140,7 +140,7 @@ export default function Users({ userData, IsUser, IsCreater, Articles }: any) {
               const { id, title, subtitle, updateAt } = item;
               return (
                 <ArticleItem
-                  username={userData.name}
+                  username={createrData.name}
                   key={id}
                   id={id}
                   title={title}
@@ -159,15 +159,17 @@ export const getServerSideProps = async (context: any) => {
   const match = context.req.headers.cookie?.match(/UserJWT=([^;]+)/);
   const jwt = match ? match[1] : null;
   const url = context.req.url.substring(1);
+
   let userData = { id: 0, name: "", address: "", email: "", photo: "" };
+  let createrData = { id: 0, name: "", address: "", email: "", photo: "" };
   let IsUser = true;
   let IsCreater = true;
-  let NotFound = false;
   // 判斷是否登入狀態
   if (jwt) {
     try {
       const res = await apiUserGetUserData(jwt);
       userData = res.data.userData;
+      createrData = res.data.userData;
       IsCreater = url != userData.name ? true : false;
     } catch (error: any) {
       IsUser = false;
@@ -178,17 +180,17 @@ export const getServerSideProps = async (context: any) => {
   if (IsCreater) {
     await apiUserGetCreaterData(url)
       .then(res => {
-        userData = res.data.userData;
+        createrData = res.data.userData;
       })
       .catch(() => {
-        NotFound = true;
+        // 找不到使用者
+        return {
+          notFound: true,
+        };
       });
   }
-  const Articles = await apiUserGetCreaterArticle(userData.name);
-  // 找不到使用者
-  if (NotFound)
-    return {
-      notFound: true,
-    };
-  else return { props: { userData, IsUser, IsCreater, Articles: Articles.data } };
+
+  const Articles = await apiUserGetCreaterArticle(createrData.name);
+
+  return { props: { userData, IsUser, IsCreater, createrData, Articles: Articles.data } };
 };

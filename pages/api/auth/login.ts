@@ -6,7 +6,7 @@ export default async function login(req: any, res: any) {
 
   const serialized = serialize("UserJWT", jwt, {
     httpOnly: true,
-    secure: process.env.NODE_ENV !== "development",
+    secure: false,
     sameSite: "strict",
     maxAge: 60 * 60 * 24,
     path: "/",

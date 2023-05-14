@@ -1,4 +1,7 @@
+import { AlertProps, Snackbar } from "@mui/material";
+import MuiAlert from "@mui/material/Alert";
 import { useEffect, useState } from "react";
+import * as React from "react";
 import { useDispatch } from "react-redux";
 import Web3 from "web3";
 
@@ -7,11 +10,32 @@ import { setLogin } from "@/store/UserSlice";
 
 import Faucet from "../truffle/build/contracts/Faucet.json";
 import MyToken from "../truffle/build/contracts/MyToken.json";
+import Mining from "./loading/mining";
 
 export default function SimpleFaucet() {
   const [account, setAccount] = useState("");
   const gasLimit = 3000000;
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
+  const [alertJoinCoinFail, setalertJoinCoinFail] = useState(false);
+  const [alertTakeMoneyFail, setalertTakeMoneyFail] = useState(false);
+  const [alertJoinCoinSucess, setalertJoinCoinSucess] = useState(false);
+  const [alertTakeMoneySucess, setalertTakeMoneySucess] = useState(false);
+  const alertHandleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setalertTakeMoneySucess(false);
+    setalertJoinCoinSucess(false);
+    setalertTakeMoneyFail(false);
+    setalertJoinCoinFail(false);
+  };
+
+  //material ui toast
+  const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
   useEffect(() => {
     //TODO: 登入狀態
     const login = async () => {
@@ -57,8 +81,9 @@ export default function SimpleFaucet() {
   }, [dispatch]);
 
   // TODO: 領錢
-  const [transfermoney, settransfermoney] = useState(true);
+  const [transfermoney] = useState(true);
   const takemoney = async () => {
+    setIsLoading(true); // 啟用 loading 狀態
     const web3 = new Web3(window && window.ethereum);
     if (web3) {
       const FaucetContractabi = Faucet.abi.map((item: any) => {
@@ -76,7 +101,6 @@ export default function SimpleFaucet() {
       web3.eth.accounts.wallet.add(accounts);
 
       const gasPrice = await web3.eth.getGasPrice();
-      //FIXME: Lin 等待畫面
       await FaucetContract.methods
         .requestTokens(account)
         .send({
@@ -85,86 +109,20 @@ export default function SimpleFaucet() {
           gas: gasLimit,
         })
         .then(() => {
-          // FIXME: Lin 領錢成功UI
-          window.alert("領錢成功");
-          settransfermoney(false);
+          setalertTakeMoneySucess(true);
+          setIsLoading(false);
         })
         .catch(() => {
-          // FIXME: Lin 領錢失敗UI
-          window.alert("領錢失敗");
+          setalertTakeMoneyFail(true);
+          setIsLoading(false);
         });
     }
   };
-  // TODO: 換錢
-  const [ETH, setETH] = useState("");
+  const [, setETH] = useState("");
   const [AC, setAC] = useState("");
-  const [ETHTOACUI, setETHTOACUI] = useState(true);
-  const [ACTOETHUI, setACTOETHUI] = useState(true);
-  const [selectedNumber, setSelectedNumber] = useState(1);
-  const [selectedNumber1, setSelectedNumber1] = useState(1);
 
-  function handleNumberChange(event: any) {
-    setSelectedNumber(parseInt(event.target.value));
-  }
-  function handleNumberChange1(event: any) {
-    setSelectedNumber1(parseInt(event.target.value));
-  }
-
-  const MyTokenabi = MyToken.abi.map((item: any) => {
-    return {
-      inputs: item.inputs,
-      name: item.name,
-      outputs: item.outputs,
-      stateMutability: item.stateMutability,
-      type: item.type,
-    };
-  });
-
-  async function EthToAc() {
-    const web3 = new Web3(window && window.ethereum);
-    if (web3) {
-      const MyTokenContract = new web3.eth.Contract(MyTokenabi, process.env.NEXT_PUBLIC_MyTokenContractAddress);
-      const selectedNumberInWei = web3.utils.toWei(selectedNumber.toString());
-      await MyTokenContract.methods
-        .buyToken()
-        .send({
-          from: account,
-          value: selectedNumberInWei,
-          gas: gasLimit,
-        })
-        .then(() => {
-          // FIXME: Lin Eth換Ac成功UI
-          window.alert("ETH轉AC成功");
-          setETHTOACUI(false);
-        })
-        .catch(() => {
-          // FIXME: Lin Eth換Ac失敗UI
-          window.alert("ETH轉AC失敗");
-        });
-    }
-  }
-  async function AcToEth() {
-    const web3 = new Web3(window && window.ethereum);
-    if (web3) {
-      const MyTokenContract = new web3.eth.Contract(MyTokenabi, process.env.NEXT_PUBLIC_MyTokenContractAddress);
-      await MyTokenContract.methods
-        .sellToken(selectedNumber1)
-        .send({
-          from: account,
-          gas: gasLimit,
-        })
-        .then(() => {
-          // FIXME: Lin Ac換Eth成功UI
-          window.alert("AC轉ETH成功");
-          setACTOETHUI(false);
-        })
-        .catch(() => {
-          // FIXME: Lin Ac換Eth失敗UI
-          window.alert("AC轉ETH失敗");
-        });
-    }
-  }
   // TODO: 加入錢幣到metamask
+  // FIXME: Lin AC 圖片設計
   async function AddCoinToMetaMask() {
     const tokenAddress = `${process.env.NEXT_PUBLIC_MyTokenContractAddress}`;
     const tokenSymbol = "AC";
@@ -184,50 +142,59 @@ export default function SimpleFaucet() {
         },
       })
       .then(() => {
-        // FIXME: Lin 加入成功UI
-        window.alert("加入成功");
+        setalertJoinCoinSucess(true);
       })
       .catch(() => {
-        // FIXME: Lin 加入失敗UI
-        window.alert("加入失敗");
+        setalertJoinCoinFail(true);
       });
   }
   return (
     <div>
       {/* TODO: 加入錢幣到metamask */}
       {AC === "0" ? <button onClick={AddCoinToMetaMask}>加入錢幣到metamask</button> : null}
-      {/* TODO: 領錢 */}
-      <h1>簡易水龍頭</h1>
-      <p>帳號: {account}</p>
-      <br></br>
-      {account !== "" ? <button onClick={takemoney}>領取10個ETHER</button> : null}
-      {transfermoney ? null : <h1>轉帳成功</h1>}
-      {/* TODO: 換錢 */}
-      <h1>Change Money</h1>
-      <div>
-        <h2>有{ETH}ETH</h2>
-        <input
-          type="number"
-          id="number-selector"
-          name="number-selector"
-          value={selectedNumber}
-          onChange={handleNumberChange}
-        />
-        {ETHTOACUI ? null : <h1>ETC轉AC成功</h1>}
-        <button onClick={EthToAc}>ETH轉換AC</button>
+      <div className="m-2 text-5xl text-blue-900 dark:text-blue-600">
+        獲取 <span className="font-semibold">AC</span> 代幣
       </div>
-      <div>
-        <h2>有{AC}AC</h2>
-        <input
-          type="number"
-          id="number-selector1"
-          name="number-selector1"
-          value={selectedNumber1}
-          onChange={handleNumberChange1}
-        />
-        {ACTOETHUI ? null : <h1>AC轉ETC成功</h1>}
-        <button onClick={AcToEth}>AC轉換ETH</button>
+      <div className="my-5 mx-2 text-base ">
+        <div className="my-1">錢包地址</div>
+
+        <div className="my-1 w-24 min-w-fit rounded-md border border-slate-200 bg-gray-200 py-3 px-2 text-slate-600 hover:border-2 hover:border-solid hover:border-blue-300 hover:ring">
+          {account}
+        </div>
+        <br></br>
+        {/* TODO: 領錢 */}
+        {isLoading ? (
+          <Mining />
+        ) : (
+          <button
+            className="rounded-lg bg-blue-900 px-6 py-2 text-sm text-blue-50 shadow-blue-400/30 transition-colors duration-300 hover:bg-blue-500"
+            onClick={takemoney}
+          >
+            領取10個ETHER
+          </button>
+        )}
+        {transfermoney ? null : <h1>轉帳成功</h1>}
       </div>
+      <Snackbar open={alertTakeMoneySucess} autoHideDuration={6000} onClose={alertHandleClose}>
+        <Alert onClose={alertHandleClose} severity="success" sx={{ width: "100%" }}>
+          領錢成功
+        </Alert>
+      </Snackbar>
+      <Snackbar open={alertJoinCoinSucess} autoHideDuration={6000} onClose={alertHandleClose}>
+        <Alert onClose={alertHandleClose} severity="success" sx={{ width: "100%" }}>
+          加入 AC 成功
+        </Alert>
+      </Snackbar>
+      <Snackbar open={alertTakeMoneyFail} autoHideDuration={6000} onClose={alertHandleClose}>
+        <Alert onClose={alertHandleClose} severity="error" sx={{ width: "100%" }}>
+          領錢失敗
+        </Alert>
+      </Snackbar>
+      <Snackbar open={alertJoinCoinFail} autoHideDuration={6000} onClose={alertHandleClose}>
+        <Alert onClose={alertHandleClose} severity="error" sx={{ width: "100%" }}>
+          加入 AC 失敗
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

@@ -189,7 +189,9 @@ export default function Login() {
           >
             <MenuItem onClick={handleCloseUserMenu}>
               <Typography textAlign="center">
-                <p>{User.profile.name}</p>
+                <a href={"/" + User.profile.name} className="no-underline">
+                  {User.profile.name}
+                </a>
               </Typography>
             </MenuItem>
             <MenuItem onClick={handleCloseUserMenu}>

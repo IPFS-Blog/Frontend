@@ -10,6 +10,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Web3 from "web3";
 
+import FailAlert from "@/components/alert/Fail";
+import SucessAlert from "@/components/alert/Sucess";
 import { _apiCheckJwt, apiUserGetUserData } from "@/components/api";
 import { setLogin } from "@/store/UserSlice";
 
@@ -95,15 +97,16 @@ export default function DonationForm({ CreaterAddress, CreaterName, CreaterPhoto
         from: User.profile.address,
         gas: gasLimit,
       })
-      // FIXME: Lin 轉帳成功
       .then(() => {
-        window.alert("轉帳成功");
+        setSuccess(true);
       })
-      // FIXME: Lin 轉帳失敗
       .catch(() => {
-        window.alert("轉帳失敗");
+        setFailure(true);
       });
   };
+  // ui function
+  const [success, setSuccess] = useState(false);
+  const [fail, setFailure] = useState(false);
 
   return (
     <>
@@ -156,6 +159,8 @@ export default function DonationForm({ CreaterAddress, CreaterName, CreaterPhoto
           </button>
         </DialogContent>
       </Dialog>
+      {success && <SucessAlert message="轉錢失敗" />}
+      {fail && <FailAlert message="轉錢失敗" />}
     </>
   );
 }

@@ -12,8 +12,8 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import Web3 from "web3";
-import FailAlert from "@/components/alert/Fail";
 
+import FailAlert from "@/components/alert/Fail";
 import { _apiCheckJwt, apiUserGetUserData } from "@/components/api";
 import { setLogin } from "@/store/UserSlice";
 

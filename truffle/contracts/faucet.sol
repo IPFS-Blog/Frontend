@@ -18,7 +18,7 @@ contract Faucet {
         
         lastAccessTime[user] = block.timestamp;
 
-        payable(user).transfer(0.2 ether);
+        payable(user).transfer(MAX_BALANCE);
     }
     
     receive() external payable {

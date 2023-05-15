@@ -11,6 +11,7 @@ import { setLogin } from "@/store/UserSlice";
 import Faucet from "../truffle/build/contracts/Faucet.json";
 import MyToken from "../truffle/build/contracts/MyToken.json";
 import Mining from "./loading/mining";
+import FailAlert from "@/components/alert/Fail";
 
 export default function SimpleFaucet() {
   const [account, setAccount] = useState("");
@@ -21,6 +22,7 @@ export default function SimpleFaucet() {
   const [alertTakeMoneyFail, setalertTakeMoneyFail] = useState(false);
   const [alertJoinCoinSucess, setalertJoinCoinSucess] = useState(false);
   const [alertTakeMoneySucess, setalertTakeMoneySucess] = useState(false);
+  const [connectfail, setConnectFail] = useState(false);
   const alertHandleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === "clickaway") {
       return;
@@ -69,7 +71,7 @@ export default function SimpleFaucet() {
             setAC(await MyTokenContract.methods.balanceOf(accounts[0]).call());
           }
         } catch {
-          // FIXME: Lin 登入失敗UI
+          setConnectFail(true);
         }
       } else {
         window.alert("Please download MetaMask");
@@ -195,6 +197,7 @@ export default function SimpleFaucet() {
           加入 AC 失敗
         </Alert>
       </Snackbar>
+      {connectfail && <FailAlert message="連線失敗，請切換網路" />}
     </div>
   );
 }

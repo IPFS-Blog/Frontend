@@ -70,7 +70,7 @@ export default function DonationForm({ CreaterAddress, CreaterName, CreaterPhoto
             setAC(await MyTokenContract.methods.balanceOf(accounts[0]).call());
           }
         } catch {
-          setFailure(true);
+          setConnectFail(true);
         }
       } else {
         window.alert("Please download MetaMask");
@@ -114,7 +114,7 @@ export default function DonationForm({ CreaterAddress, CreaterName, CreaterPhoto
   // ui function
   const [success, setSuccess] = useState(false);
   const [fail, setFailure] = useState(false);
-  // const [fail, setFailure] = useState(false);
+  const [connectfail, setConnectFail] = useState(false);
 
   return (
     <>
@@ -174,7 +174,7 @@ export default function DonationForm({ CreaterAddress, CreaterName, CreaterPhoto
       </Dialog>
       {success && <SucessAlert message="轉錢成功" />}
       {fail && <FailAlert message="轉錢失敗" />}
-      {fail && <FailAlert message="轉錢失敗" />}
+      {connectfail && <FailAlert message="連線失敗，請切換網路" />}
     </>
   );
 }

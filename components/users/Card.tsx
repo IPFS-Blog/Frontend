@@ -1,11 +1,9 @@
 import { Avatar } from "@mui/material";
 import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
 
 import styles from "@/styles/users/users.module.css";
 
 const Card = ({ CreaterAddress, CreaterPhoto }: any) => {
-  const User = useSelector((state: any) => state.User);
   const router = useRouter();
   const [, route] = router.asPath.split("/");
 

@@ -13,10 +13,10 @@ import Web3 from "web3";
 import FailAlert from "@/components/alert/Fail";
 import SucessAlert from "@/components/alert/Sucess";
 import { _apiCheckJwt, apiUserGetUserData } from "@/components/api";
+import Mining from "@/pages/loading/mining";
 import { setLogin } from "@/store/UserSlice";
 
 import MyToken from "../../truffle/build/contracts/MyToken.json";
-import Mining from "@/pages/loading/mining";
 
 export default function DonationForm({ CreaterAddress, CreaterName, CreaterPhoto }: any) {
   const [AC, setAC] = useState("");

@@ -2,7 +2,6 @@ import ArrowOutwardOutlinedIcon from "@mui/icons-material/ArrowOutwardOutlined";
 import BookmarkAddOutlinedIcon from "@mui/icons-material/BookmarkAddOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import SendIcon from "@mui/icons-material/Send";
-import { Button } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";

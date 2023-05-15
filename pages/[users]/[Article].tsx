@@ -26,8 +26,8 @@ export default function Article({ userData, IsUser, article, createrData }: any)
     // 單一文章
     <div className="my-2 grid w-full grid-cols-12 gap-x-16 px-2">
       <div className="col-span-8 text-base">
-        {/* FIXME: Lin 因為next/link會導致getServerSideProps異常 我先改成Button */}
-        <Button
+        {/* FIXME: Lin 因為next/link會導致getServerSideProps異常 */}
+        <a
           href={"/" + createrData.username}
           className="my-2 flex flex-row items-center justify-between rounded border border-blue-200 bg-gray-50 p-2 dark:bg-gray-700"
         >
@@ -41,7 +41,7 @@ export default function Article({ userData, IsUser, article, createrData }: any)
           <button>
             <ArrowOutwardOutlinedIcon />
           </button>
-        </Button>
+        </a>
         <div className="my-2 rounded border border-blue-200 bg-gray-50 dark:bg-gray-700">
           {/* TODO: 文章資料 */}
           <div className="p-2">

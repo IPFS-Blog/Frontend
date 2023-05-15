@@ -4,7 +4,7 @@ import { useState } from "react";
 import * as React from "react";
 
 export default function SimpleFaucet(props: any) {
-  const [alertEditFail, setalertEditFail] = useState(false);
+  const [alertEditFail, setalertEditFail] = useState(true);
   const alertHandleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === "clickaway") {
       return;

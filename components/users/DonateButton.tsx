@@ -16,6 +16,7 @@ import { _apiCheckJwt, apiUserGetUserData } from "@/components/api";
 import { setLogin } from "@/store/UserSlice";
 
 import MyToken from "../../truffle/build/contracts/MyToken.json";
+import Mining from "@/pages/loading/mining";
 
 export default function DonationForm({ CreaterAddress, CreaterName, CreaterPhoto }: any) {
   const [AC, setAC] = useState("");
@@ -25,6 +26,8 @@ export default function DonationForm({ CreaterAddress, CreaterName, CreaterPhoto
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
   const [maxWidth] = useState<DialogProps["maxWidth"]>("md");
   const User = useSelector((state: any) => state.User);
+  // Loading
+  const [isLoading, setIsLoading] = useState(false);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -79,6 +82,7 @@ export default function DonationForm({ CreaterAddress, CreaterName, CreaterPhoto
   }, [dispatch]);
   const TransferAC = async () => {
     const web3 = new Web3(window && window.ethereum);
+    setIsLoading(true); // 啟用 loading 狀態
     const MyTokenabi = MyToken.abi.map((item: any) => {
       return {
         inputs: item.inputs,
@@ -92,15 +96,18 @@ export default function DonationForm({ CreaterAddress, CreaterName, CreaterPhoto
     const gasLimit = 3000000;
 
     await MyTokenContract.methods
+
       .transfer(CreaterAddress, price)
       .send({
         from: User.profile.address,
         gas: gasLimit,
       })
       .then(() => {
+        setIsLoading(false);
         setSuccess(true);
       })
       .catch(() => {
+        setIsLoading(false);
         setFailure(true);
       });
   };
@@ -128,6 +135,7 @@ export default function DonationForm({ CreaterAddress, CreaterName, CreaterPhoto
         <DialogTitle id="responsive-dialog-title" className="flex justify-center bg-gray-200 font-semibold">
           打賞
         </DialogTitle>
+
         <DialogContent className="bg-gray-200 md:w-full lg:w-96">
           <div className="flex flex-row items-center">
             <Avatar className="h-10 w-10 rounded-full" src={CreaterPhoto} alt="not find Avatar" />
@@ -149,17 +157,21 @@ export default function DonationForm({ CreaterAddress, CreaterName, CreaterPhoto
               onChange={handlePriceChange}
             />
           </div>
-          {/* 支付按鈕 FIXME:Andy button 轉帳AC給作者*/}
-          <button
-            onClick={TransferAC}
-            className="mx-auto mt-4 flex items-center justify-center rounded-md bg-gray-400 py-2 px-4 text-black hover:bg-gray-500"
-          >
-            <Image src="/MetaMask.png" alt="Null" width={30} height={30}></Image>
-            確定支付
-          </button>
+          {isLoading ? (
+            <Mining />
+          ) : (
+            // {/* 支付按鈕 FIXME:Andy button 轉帳AC給作者*/}
+            <button
+              onClick={TransferAC}
+              className="mx-auto mt-4 flex items-center justify-center rounded-md bg-gray-400 py-2 px-4 text-black hover:bg-gray-500"
+            >
+              <Image src="/MetaMask.png" alt="Null" width={30} height={30}></Image>
+              確定支付
+            </button>
+          )}
         </DialogContent>
       </Dialog>
-      {success && <SucessAlert message="轉錢失敗" />}
+      {success && <SucessAlert message="轉錢成功" />}
       {fail && <FailAlert message="轉錢失敗" />}
     </>
   );

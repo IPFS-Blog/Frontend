@@ -26,7 +26,7 @@ export default function Users({ userData, IsUser, IsCreater, createrData, Articl
       <div className="flex h-auto w-full justify-around">
         {/* FIXME:要 Card 縮小後要變另外一種*/}
         <div className="px-5">
-          <Card CreaterAddress={createrData.address} />
+          <Card CreaterPhoto={createrData.photo} CreaterAddress={createrData.address} />
         </div>
         <div className="w-auto flex-auto">
           <dl className="mx-auto grid grid-cols-3 p-3 text-gray-900 sm:grid-cols-3 sm:px-1 xl:grid-cols-3">

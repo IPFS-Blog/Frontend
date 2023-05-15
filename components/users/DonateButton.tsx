@@ -70,7 +70,7 @@ export default function DonationForm({ CreaterAddress, CreaterName, CreaterPhoto
             setAC(await MyTokenContract.methods.balanceOf(accounts[0]).call());
           }
         } catch {
-          // FIXME: Lin 登入失敗UI
+          setFailure(true);
         }
       } else {
         window.alert("Please download MetaMask");
@@ -114,6 +114,7 @@ export default function DonationForm({ CreaterAddress, CreaterName, CreaterPhoto
   // ui function
   const [success, setSuccess] = useState(false);
   const [fail, setFailure] = useState(false);
+  // const [fail, setFailure] = useState(false);
 
   return (
     <>
@@ -172,6 +173,7 @@ export default function DonationForm({ CreaterAddress, CreaterName, CreaterPhoto
         </DialogContent>
       </Dialog>
       {success && <SucessAlert message="轉錢成功" />}
+      {fail && <FailAlert message="轉錢失敗" />}
       {fail && <FailAlert message="轉錢失敗" />}
     </>
   );

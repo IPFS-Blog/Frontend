@@ -10,7 +10,10 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Web3 from "web3";
 
+import FailAlert from "@/components/alert/Fail";
+import SucessAlert from "@/components/alert/Sucess";
 import { _apiCheckJwt, apiUserGetUserData } from "@/components/api";
+import Mining from "@/pages/loading/mining";
 import { setLogin } from "@/store/UserSlice";
 
 import MyToken from "../../truffle/build/contracts/MyToken.json";
@@ -23,6 +26,8 @@ export default function DonationForm({ CreaterAddress, CreaterName, CreaterPhoto
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
   const [maxWidth] = useState<DialogProps["maxWidth"]>("md");
   const User = useSelector((state: any) => state.User);
+  // Loading
+  const [isLoading, setIsLoading] = useState(false);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -65,7 +70,7 @@ export default function DonationForm({ CreaterAddress, CreaterName, CreaterPhoto
             setAC(await MyTokenContract.methods.balanceOf(accounts[0]).call());
           }
         } catch {
-          // FIXME: Lin 登入失敗UI
+          setConnectFail(true);
         }
       } else {
         window.alert("Please download MetaMask");
@@ -77,6 +82,7 @@ export default function DonationForm({ CreaterAddress, CreaterName, CreaterPhoto
   }, [dispatch]);
   const TransferAC = async () => {
     const web3 = new Web3(window && window.ethereum);
+    setIsLoading(true); // 啟用 loading 狀態
     const MyTokenabi = MyToken.abi.map((item: any) => {
       return {
         inputs: item.inputs,
@@ -90,20 +96,25 @@ export default function DonationForm({ CreaterAddress, CreaterName, CreaterPhoto
     const gasLimit = 3000000;
 
     await MyTokenContract.methods
+
       .transfer(CreaterAddress, price)
       .send({
         from: User.profile.address,
         gas: gasLimit,
       })
-      // FIXME: Lin 轉帳成功
       .then(() => {
-        window.alert("轉帳成功");
+        setIsLoading(false);
+        setSuccess(true);
       })
-      // FIXME: Lin 轉帳失敗
       .catch(() => {
-        window.alert("轉帳失敗");
+        setIsLoading(false);
+        setFailure(true);
       });
   };
+  // ui function
+  const [success, setSuccess] = useState(false);
+  const [fail, setFailure] = useState(false);
+  const [connectfail, setConnectFail] = useState(false);
 
   return (
     <>
@@ -125,6 +136,7 @@ export default function DonationForm({ CreaterAddress, CreaterName, CreaterPhoto
         <DialogTitle id="responsive-dialog-title" className="flex justify-center bg-gray-200 font-semibold">
           打賞
         </DialogTitle>
+
         <DialogContent className="bg-gray-200 md:w-full lg:w-96">
           <div className="flex flex-row items-center">
             <Avatar className="h-10 w-10 rounded-full" src={CreaterPhoto} alt="not find Avatar" />
@@ -146,16 +158,23 @@ export default function DonationForm({ CreaterAddress, CreaterName, CreaterPhoto
               onChange={handlePriceChange}
             />
           </div>
-          {/* 支付按鈕 FIXME:Andy button 轉帳AC給作者*/}
-          <button
-            onClick={TransferAC}
-            className="mx-auto mt-4 flex items-center justify-center rounded-md bg-gray-400 py-2 px-4 text-black hover:bg-gray-500"
-          >
-            <Image src="/MetaMask.png" alt="Null" width={30} height={30}></Image>
-            確定支付
-          </button>
+          {isLoading ? (
+            <Mining />
+          ) : (
+            // {/* 支付按鈕 FIXME:Andy button 轉帳AC給作者*/}
+            <button
+              onClick={TransferAC}
+              className="mx-auto mt-4 flex items-center justify-center rounded-md bg-gray-400 py-2 px-4 text-black hover:bg-gray-500"
+            >
+              <Image src="/MetaMask.png" alt="Null" width={30} height={30}></Image>
+              確定支付
+            </button>
+          )}
         </DialogContent>
       </Dialog>
+      {success && <SucessAlert message="轉錢成功" />}
+      {fail && <FailAlert message="轉錢失敗" />}
+      {connectfail && <FailAlert message="連線失敗，請切換網路" />}
     </>
   );
 }

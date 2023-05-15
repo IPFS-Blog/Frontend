@@ -5,6 +5,7 @@ import * as React from "react";
 import { useDispatch } from "react-redux";
 import Web3 from "web3";
 
+import FailAlert from "@/components/alert/Fail";
 import { _apiCheckJwt, apiUserGetUserData } from "@/components/api";
 import { setLogin } from "@/store/UserSlice";
 
@@ -21,6 +22,7 @@ export default function SimpleFaucet() {
   const [alertTakeMoneyFail, setalertTakeMoneyFail] = useState(false);
   const [alertJoinCoinSucess, setalertJoinCoinSucess] = useState(false);
   const [alertTakeMoneySucess, setalertTakeMoneySucess] = useState(false);
+  const [connectfail, setConnectFail] = useState(false);
   const alertHandleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === "clickaway") {
       return;
@@ -69,7 +71,7 @@ export default function SimpleFaucet() {
             setAC(await MyTokenContract.methods.balanceOf(accounts[0]).call());
           }
         } catch {
-          // FIXME: Lin 登入失敗UI
+          setConnectFail(true);
         }
       } else {
         window.alert("Please download MetaMask");
@@ -195,6 +197,7 @@ export default function SimpleFaucet() {
           加入 AC 失敗
         </Alert>
       </Snackbar>
+      {connectfail && <FailAlert message="連線失敗，請切換網路" />}
     </div>
   );
 }

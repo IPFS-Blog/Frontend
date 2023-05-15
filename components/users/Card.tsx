@@ -1,11 +1,9 @@
 import { Avatar } from "@mui/material";
 import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
 
 import styles from "@/styles/users/users.module.css";
 
-const Card = ({ CreaterAddress }: any) => {
-  const User = useSelector((state: any) => state.User);
+const Card = ({ CreaterAddress, CreaterPhoto }: any) => {
   const router = useRouter();
   const [, route] = router.asPath.split("/");
 
@@ -18,11 +16,11 @@ const Card = ({ CreaterAddress }: any) => {
             <div className={styles.flip_card_front}>
               <div className="flex h-full flex-row">
                 <div className="flex h-48 w-2/6 flex-col items-center p-3">
-                  <Avatar src={User.profile.photo} className="h-auto w-full rounded-full" alt="Picture of the author" />
+                  <Avatar src={CreaterPhoto} className="h-auto w-full rounded-full" alt="Picture of the author" />
                 </div>
                 <div className="flex h-auto w-4/6 flex-col justify-start p-3 dark:text">
                   <h5 className="mb-2 text-3xl font-medium">{route}</h5>
-                  <p className="truncate">{User.profile.login ? User.profile.address : CreaterAddress}</p>
+                  <p className="truncate">{CreaterAddress}</p>
                   <div className="mb-4 pt-2 text-base">
                     <p>我喜歡貓咪</p>
                     <p>3D設計師</p>
@@ -35,7 +33,7 @@ const Card = ({ CreaterAddress }: any) => {
             <div className={styles.flip_card_back}>
               <div className="flex h-full flex-row">
                 <div className="flex h-48 w-2/6 flex-col items-center p-3">
-                  <Avatar src={User.profile.photo} className="h-auto w-full rounded-full" alt="Picture of the author" />
+                  <Avatar src={CreaterPhoto} className="h-auto w-full rounded-full" alt="Picture of the author" />
                 </div>
 
                 <div className="flex w-4/6 flex-col justify-start p-3">

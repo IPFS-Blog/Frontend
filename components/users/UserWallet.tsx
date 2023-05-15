@@ -132,10 +132,10 @@ export default function ResponsiveDialog() {
     }
   }
   async function AcToEth() {
-    setIsLoading(true); // 啟用 loading 狀態
     const web3 = new Web3(window && window.ethereum);
     if (web3) {
       const MyTokenContract = new web3.eth.Contract(MyTokenabi, process.env.NEXT_PUBLIC_MyTokenContractAddress);
+      setIsLoading(true); // 啟用 loading 狀態
       await MyTokenContract.methods
         .sellToken(selectedNumber1)
         .send({
@@ -143,12 +143,12 @@ export default function ResponsiveDialog() {
           gas: gasLimit,
         })
         .then(() => {
-          setchangeMoneySucess(true);
           setIsLoading(false);
+          setchangeMoneySucess(true);
         })
         .catch(() => {
-          setchangeMoneyFail(true);
           setIsLoading(false);
+          setchangeMoneyFail(true);
         });
     }
   }

@@ -16,6 +16,7 @@ import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Web3 from "web3";
@@ -31,6 +32,7 @@ export default function Login() {
   const [address, setAddress] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const router = useRouter();
   const dispatch = useDispatch();
   useEffect(() => {
     const connect = async () => {
@@ -47,6 +49,7 @@ export default function Login() {
         if (InChainId == false) {
           // FIXME: Lin 要求加入我們的區塊鏈
           window.alert("要求加入我們的網路");
+          router.push("/NetworkInstructions", undefined, { shallow: true });
         } else if (InChainId == "Fix") {
           // FIXME: Lin 區塊鏈維修中
           window.alert("區塊鏈維修中");
@@ -54,7 +57,8 @@ export default function Login() {
       }
     };
     connect();
-  }, [dispatch]);
+  }, [dispatch, router]);
+
   async function connectMetaMask() {
     if (typeof window.ethereum !== "undefined") {
       try {

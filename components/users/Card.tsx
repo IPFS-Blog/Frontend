@@ -1,11 +1,10 @@
 import { Avatar } from "@mui/material";
-import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 
 import styles from "@/styles/users/users.module.css";
 
-const Card = ({ CreaterAddress, CreaterPhoto }: any) => {
-  const router = useRouter();
-  const [, route] = router.asPath.split("/");
+const Card = () => {
+  const Creater = useSelector((state: any) => state.Creater);
 
   return (
     <div className="h-full w-full">
@@ -16,11 +15,15 @@ const Card = ({ CreaterAddress, CreaterPhoto }: any) => {
             <div className={styles.flip_card_front}>
               <div className="flex h-full flex-row">
                 <div className="flex h-48 w-2/6 flex-col items-center p-3">
-                  <Avatar src={CreaterPhoto} className="h-auto w-full rounded-full" alt="Picture of the author" />
+                  <Avatar
+                    src={Creater.profile.photo}
+                    className="h-auto w-full rounded-full"
+                    alt="Picture of the author"
+                  />
                 </div>
                 <div className="flex h-auto w-4/6 flex-col justify-start p-3 dark:text">
-                  <h5 className="mb-2 text-3xl font-medium">{route}</h5>
-                  <p className="truncate">{CreaterAddress}</p>
+                  <h5 className="mb-2 text-3xl font-medium">{Creater.profile.name}</h5>
+                  <p className="truncate">{Creater.profile.address}</p>
                   <div className="mb-4 pt-2 text-base">
                     <p>我喜歡貓咪</p>
                     <p>3D設計師</p>
@@ -33,11 +36,15 @@ const Card = ({ CreaterAddress, CreaterPhoto }: any) => {
             <div className={styles.flip_card_back}>
               <div className="flex h-full flex-row">
                 <div className="flex h-48 w-2/6 flex-col items-center p-3">
-                  <Avatar src={CreaterPhoto} className="h-auto w-full rounded-full" alt="Picture of the author" />
+                  <Avatar
+                    src={Creater.profile.photo}
+                    className="h-auto w-full rounded-full"
+                    alt="Picture of the author"
+                  />
                 </div>
 
                 <div className="flex w-4/6 flex-col justify-start p-3">
-                  <h5 className="mb-2 text-3xl font-medium dark:text">{route}</h5>
+                  <h5 className="mb-2 text-3xl font-medium dark:text">{Creater.profile.name}</h5>
                   <dl className="mx-auto grid grid-cols-3 p-3 text-gray-900 sm:grid-cols-3 sm:p-2 xl:grid-cols-3">
                     <div className="flex flex-col p-2 text-center">
                       <dt className="text-base">所有文章</dt>

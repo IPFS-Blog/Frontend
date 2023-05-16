@@ -4,7 +4,7 @@ import Head from "next/head";
 import { apiArticleTakeAllArticle } from "@/components/api";
 import ArticleItem from "@/components/article/comment/ArticleItem";
 
-export default function Home({ Articles }: any) {
+export default function Home(props: any) {
   return (
     <>
       <Head>
@@ -27,8 +27,8 @@ export default function Home({ Articles }: any) {
       </menu>
       <main className="my-2 grid w-full grid-cols-12 gap-x-16 px-2">
         <ul className="col-span-8" role="list">
-          {Articles != null &&
-            Articles.articles.map((item: any) => {
+          {props.Articles != null &&
+            props.Articles.articles.map((item: any) => {
               const { id, title, subtitle, updateAt } = item;
               const { username } = item.user;
               return (

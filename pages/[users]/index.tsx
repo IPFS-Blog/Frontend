@@ -1,22 +1,25 @@
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useClipboard } from "use-clipboard-copy";
 
-import { apiUserGetCreaterArticle, apiUserGetCreaterData, apiUserGetUserData } from "@/components/api";
+import { apiUserGetCreaterArticle, apiUserGetCreaterData } from "@/components/api";
 import ArticleItem from "@/components/article/comment/ArticleItem";
 import Card from "@/components/users/Card";
 import Editprofile from "@/components/users/EditProfile";
 import UserWallet from "@/components/users/UserWallet";
-import { setLogin } from "@/store/UserSlice";
+import { update } from "@/store/CreaterSlice";
 
-export default function Users({ userData, IsUser, IsCreater, createrData, Articles }: any) {
-  // TODO: API function
+export default function Users(props: any) {
+  // TODO: Handle function
+  const [IsPrivate, SetIsPrivate] = useState(false);
   const dispatch = useDispatch();
+  const User = useSelector((state: any) => state.User);
   useEffect(() => {
-    // 登入狀態
-    if (IsUser) dispatch(setLogin(JSON.stringify(userData)));
-  }, [IsUser, dispatch, userData]);
+    // TODO: 創作者狀態
+    if (props.createrData.name == User.profile.name) SetIsPrivate(true);
+    dispatch(update(JSON.stringify(props.createrData)));
+  }, [User.profile.name, dispatch, props.IsCreater, props.createrData]);
 
   //TODO: UI function
   const { copy } = useClipboard();
@@ -26,7 +29,7 @@ export default function Users({ userData, IsUser, IsCreater, createrData, Articl
       <div className="flex h-auto w-full justify-around">
         {/* FIXME:要 Card 縮小後要變另外一種*/}
         <div className="px-5">
-          <Card CreaterPhoto={createrData.photo} CreaterAddress={createrData.address} />
+          <Card />
         </div>
         <div className="w-auto flex-auto">
           <dl className="mx-auto grid grid-cols-3 p-3 text-gray-900 sm:grid-cols-3 sm:px-1 xl:grid-cols-3">
@@ -46,18 +49,18 @@ export default function Users({ userData, IsUser, IsCreater, createrData, Articl
           <dl>
             <div className="flex flex-col p-2 text-center">
               <div className="mx-10 flex min-w-fit items-center justify-center rounded-lg bg-gray-200 py-2 px-4">
-                <p className="select-all px-2 text">{createrData.address}</p>
+                <p className="select-all px-2 text">{props.createrData.address}</p>
                 <div
                   className="h-10 w-10 rounded-lg bg-gray-100 p-1 hover:bg-gray-300 dark:bg-gray-400 dark:text dark:hover:bg-gray-500"
                   onClick={() => {
-                    copy(createrData.address);
+                    copy(props.createrData.address);
                   }}
                 >
                   <ContentCopyRoundedIcon />
                 </div>
               </div>
 
-              {!IsCreater ? (
+              {IsPrivate ? (
                 // TODO:私人:編輯個人資料、個人錢包
                 <div>
                   <div className="my-1">
@@ -84,7 +87,7 @@ export default function Users({ userData, IsUser, IsCreater, createrData, Articl
         </div>
       </div>
       {/* //TODO:Menu */}
-      {!IsCreater ? (
+      {IsPrivate ? (
         // TODO:私人:所有、收藏、瀏覽紀錄、按讚紀錄
         <menu className="my-5 mx-2 flex justify-between bg-blue-200 px-1 text-lg">
           <ul className="my-2 flex h-full items-center">
@@ -135,12 +138,12 @@ export default function Users({ userData, IsUser, IsCreater, createrData, Articl
       )}
       <main className="my-2 grid w-full grid-cols-12 gap-x-16 px-2">
         <ul className="col-span-8" role="list">
-          {Articles.length != 0 &&
-            Articles.map((item: any) => {
+          {props.Articles.length != 0 &&
+            props.Articles.map((item: any) => {
               const { id, title, subtitle, updateAt } = item;
               return (
                 <ArticleItem
-                  username={createrData.name}
+                  username={props.createrData.name}
                   key={id}
                   id={id}
                   title={title}
@@ -156,41 +159,23 @@ export default function Users({ userData, IsUser, IsCreater, createrData, Articl
 }
 
 export const getServerSideProps = async (context: any) => {
-  const match = context.req.headers.cookie?.match(/UserJWT=([^;]+)/);
-  const jwt = match ? match[1] : null;
   const url = context.req.url.substring(1);
 
-  let userData = { id: 0, name: "", address: "", email: "", photo: "" };
   let createrData = { id: 0, name: "", address: "", email: "", photo: "" };
-  let IsUser = true;
-  let IsCreater = true;
-  // 判斷是否登入狀態
-  if (jwt) {
-    try {
-      const res = await apiUserGetUserData(jwt);
-      userData = res.data.userData;
-      createrData = res.data.userData;
-      IsCreater = url != userData.name ? true : false;
-    } catch (error: any) {
-      IsUser = false;
-    }
-  } else IsUser = false;
 
   // 查詢創作者資料
-  if (IsCreater) {
-    await apiUserGetCreaterData(url)
-      .then(res => {
-        createrData = res.data.userData;
-      })
-      .catch(() => {
-        // 找不到使用者
-        return {
-          notFound: true,
-        };
-      });
-  }
+  await apiUserGetCreaterData(url)
+    .then(res => {
+      createrData = res.data.userData;
+    })
+    .catch(() => {
+      // 找不到使用者
+      return {
+        notFound: true,
+      };
+    });
 
   const Articles = await apiUserGetCreaterArticle(createrData.name);
 
-  return { props: { userData, IsUser, IsCreater, createrData, Articles: Articles.data } };
+  return { props: { createrData, Articles: Articles.data } };
 };

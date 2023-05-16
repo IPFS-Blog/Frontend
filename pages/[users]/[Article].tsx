@@ -4,21 +4,22 @@ import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlin
 import SendIcon from "@mui/icons-material/Send";
 import Avatar from "@mui/material/Avatar";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import { apiArticleTakeArticle, apiUserGetUserData } from "@/components/api";
+import { apiArticleTakeArticle } from "@/components/api";
 import Comment from "@/components/article/comment/Comment";
 import DonateButton from "@/components/users/DonateButton";
-import { setLogin } from "@/store/UserSlice";
+import { update } from "@/store/CreaterSlice";
 
-export default function Article({ userData, IsUser, article, createrData }: any) {
+export default function Article(props: any) {
   // TODO: Handle funtion
   const dispatch = useDispatch();
+  const User = useSelector((state: any) => state.User);
+
   useEffect(() => {
-    // 登入狀態
-    if (IsUser) dispatch(setLogin(JSON.stringify(userData)));
-  }, [IsUser, dispatch, userData]);
-  // const [label, setLabel] = useState(""); // 添加標籤
+    // TODO: 文章創作者資料
+    dispatch(update(JSON.stringify(props.createrData)));
+  }, [dispatch, props.createrData]);
 
   // TODO: UI funtion
   return (
@@ -26,14 +27,14 @@ export default function Article({ userData, IsUser, article, createrData }: any)
     <div className="my-2 grid w-full grid-cols-12 gap-x-16 px-2">
       <div className="col-span-8 text-base">
         <a
-          href={"/" + createrData.username}
+          href={"/" + props.createrData.username}
           className="my-2 flex flex-row items-center justify-between rounded border border-blue-200 bg-gray-50 p-2 dark:bg-gray-700"
         >
           {/* TODO: 文章擁有者資料 頭貼、名稱 */}
           <div className="flex flex-row items-center">
-            <Avatar className="h-auto w-10 rounded-full" src={createrData.photo} alt="not find Avatar" />
+            <Avatar className="h-auto w-10 rounded-full" src={props.createrData.photo} alt="not find Avatar" />
             <div className="px-2">
-              <div>{createrData.username}</div>
+              <div>{props.createrData.username}</div>
             </div>
           </div>
           <button>
@@ -43,9 +44,9 @@ export default function Article({ userData, IsUser, article, createrData }: any)
         <div className="my-2 rounded border border-blue-200 bg-gray-50 dark:bg-gray-700">
           {/* TODO: 文章資料 */}
           <div className="p-2">
-            <h1 className="text-3xl font-semibold">{article.title}</h1>
-            <h3 className="mt-3 mb-4 text-lg">{article.subtitle}</h3>
-            <div className="whitespace-pre-line">{article.contents}</div>
+            <h1 className="text-3xl font-semibold">{props.article.title}</h1>
+            <h3 className="mt-3 mb-4 text-lg">{props.article.subtitle}</h3>
+            <div className="whitespace-pre-line">{props.article.contents}</div>
           </div>
           {/* 文章內覽列 */}
           {/* FIXME:針對文章喜歡、讚賞、分享、收藏 */}
@@ -57,12 +58,7 @@ export default function Article({ userData, IsUser, article, createrData }: any)
                 <FavoriteBorderOutlinedIcon />
                 <span>like</span>
               </button>
-              {/* FIXME:Andy 未登入不顯示打賞 */}
-              <DonateButton
-                CreaterAddress={createrData.address}
-                CreaterName={createrData.username}
-                CreaterPhoto={createrData.photo}
-              />
+              {User.profile.login ? <DonateButton /> : null}
             </div>
             <div className="col-span-1 col-end-7 flex flex-row items-center">
               {/* 分享 */}
@@ -73,15 +69,15 @@ export default function Article({ userData, IsUser, article, createrData }: any)
               <button className="mx-1 h-10 w-10 rounded-lg text-yellow-500 hover:bg-yellow-300 hover:text-white">
                 <BookmarkAddOutlinedIcon />
               </button>
-              <p className="mx-1 font-mono">{article.updateAt.substr(0, 10)}</p>
+              <p className="mx-1 font-mono">{props.article.updateAt.substr(0, 10)}</p>
             </div>
           </div>
           {/* TODO: 使用者頭像、名稱 */}
           {/* 輸入留言 */}
           <form>
             <div className="flex items-center bg-gray-50 px-3 py-1 dark:bg-gray-700">
-              <Avatar className="h-auto w-10 rounded-full" src={userData.photo} alt="not find Avatar" />
-              <p className="mx-2">{userData.name}</p>
+              <Avatar className="h-auto w-10 rounded-full" src={User.profile.photo} alt="not find Avatar" />
+              <p className="mx-2">{User.profile.name}</p>
               <textarea
                 id="chat"
                 className="mx-4 block w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
@@ -106,11 +102,11 @@ export default function Article({ userData, IsUser, article, createrData }: any)
       <div className="col-span-4">
         {/* TODO: 文章擁有者資料 頭貼、名稱 */}
         <div className="col-span-2 flex justify-center">
-          <Avatar className="h-auto w-1/2 rounded-full" src={createrData.photo} alt="not find Avatar" />
+          <Avatar className="h-auto w-1/2 rounded-full" src={props.createrData.photo} alt="not find Avatar" />
         </div>
         <div className="text-center">
           {/* ${Username} */}
-          <div className="my-2 px-2">{createrData.username}</div>
+          <div className="my-2 px-2">{props.createrData.username}</div>
           {/* FIXME: 標籤 */}
           {/*Label*/}
           {/* <span className="inline-grid grid-cols-3 gap-1">{label}</span> */}
@@ -206,25 +202,10 @@ export default function Article({ userData, IsUser, article, createrData }: any)
 }
 
 export const getServerSideProps = async (context: any) => {
-  // 查看是否登入狀態
-  const match = context.req.headers.cookie?.match(/UserJWT=([^;]+)/);
-  const jwt = match ? match[1] : null;
-  let userData = { id: 0, name: "", address: "", email: "", photo: "" };
-  let IsUser = true;
-  // 判斷是否登入狀態
-  if (jwt) {
-    try {
-      const res = await apiUserGetUserData(jwt);
-      userData = res.data.userData;
-    } catch (error: any) {
-      IsUser = false;
-    }
-  } else IsUser = false;
-
   // 查詢文章
   const ArticleUrl = context.req.url.split("/")[2];
-  let createrData = { id: 0, username: "", address: "", email: "", photo: "", updateAt: "" };
-  let article = { title: "", subtitle: "", contents: "" };
+  let createrData = { id: 0, username: "", address: "", email: "", photo: "" };
+  let article = { title: "", subtitle: "", contents: "", updateAt: "" };
 
   await apiArticleTakeArticle(ArticleUrl)
     .then(res => {
@@ -247,5 +228,5 @@ export const getServerSideProps = async (context: any) => {
     return {
       notFound: true,
     };
-  return { props: { userData, IsUser, article, createrData } };
+  return { props: { article, createrData } };
 };

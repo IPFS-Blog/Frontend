@@ -29,7 +29,7 @@ import { _apiAuthLogin, _apiAuthLogout, apiAuthTakeNonce, apiAuthTakeToken, apiU
 export default function Login() {
   // TODO: Handle funcion
   const [address, setAddress] = useState("");
-  const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const dispatch = useDispatch();
   useEffect(() => {
@@ -72,7 +72,7 @@ export default function Login() {
             () => registerSetOpen(true),
           );
       } catch (error) {
-        handleClick();
+        alertRejectSetOpen(true);
       }
     } else {
       window.alert("Please download MetaMask");
@@ -107,7 +107,7 @@ export default function Login() {
   }
 
   async function Register() {
-    const data = { address, username, email };
+    const data = { address, username: name, email };
     apiUserRegister(data)
       .then(() => {
         registerSetOpen(false);
@@ -158,23 +158,6 @@ export default function Login() {
     setAddress(event.target.value);
   };
 
-  const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(event.target.value);
-  };
-
-  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-  };
-  const handleClick = () => {
-    alertRejectSetOpen(true);
-  };
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
   return (
     <div>
       {!User.profile.login ? (
@@ -190,7 +173,7 @@ export default function Login() {
       ) : (
         <Box sx={{ flexGrow: 0 }}>
           <Tooltip title="Open settings">
-            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+            <IconButton onClick={e => setAnchorElUser(e.currentTarget)} sx={{ p: 0 }}>
               <Avatar src={`${User.profile.photo}`} alt="haha" />
             </IconButton>
           </Tooltip>
@@ -208,9 +191,9 @@ export default function Login() {
               horizontal: "right",
             }}
             open={Boolean(anchorElUser)}
-            onClose={handleCloseUserMenu}
+            onClose={() => setAnchorElUser(null)}
           >
-            <MenuItem onClick={handleCloseUserMenu}>
+            <MenuItem onClick={() => setAnchorElUser(null)}>
               <Typography textAlign="center">
                 <a href={"/" + User.profile.name} className="no-underline">
                   {User.profile.name}
@@ -221,7 +204,7 @@ export default function Login() {
               onClick={() => {
                 _apiAuthLogout();
                 dispatch(setLogout());
-                handleCloseUserMenu();
+                setAnchorElUser(null);
               }}
             >
               <Typography textAlign="center">登出</Typography>
@@ -257,7 +240,7 @@ export default function Login() {
                 variant="standard"
                 required
                 value={email}
-                onChange={handleEmailChange}
+                onChange={e => setEmail(e.target.value)}
               />
             ) : (
               <TextField
@@ -293,15 +276,15 @@ export default function Login() {
                 placeholder="輸入使用者名稱"
                 variant="standard"
                 required
-                value={username}
-                onChange={handleUsernameChange}
+                value={name}
+                onChange={e => setName(e.target.value)}
               />
             ) : (
               <TextField
                 error
                 id="standard-error-helper-text"
                 label="Error"
-                defaultValue={username}
+                defaultValue={name}
                 helperText={errorMessageUsername}
                 variant="standard"
                 onChange={() => seterrorMessageUsername("")}

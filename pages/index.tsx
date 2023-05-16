@@ -1,25 +1,10 @@
 import { Avatar } from "@mui/material";
 import Head from "next/head";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 
-import { _apiCheckJwt, apiArticleTakeAllArticle, apiUserGetUserData } from "@/components/api";
+import { apiArticleTakeAllArticle } from "@/components/api";
 import ArticleItem from "@/components/article/comment/ArticleItem";
-import { setLogin } from "@/store/UserSlice";
 
 export default function Home({ Articles }: any) {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    async function login() {
-      let jwt = "";
-      const res_CheckJwt = await _apiCheckJwt();
-      jwt = res_CheckJwt.data.jwt;
-      const res_GetUserData = await apiUserGetUserData(jwt);
-      dispatch(setLogin(JSON.stringify(res_GetUserData.data.userData)));
-    }
-    login();
-  }, [dispatch]);
   return (
     <>
       <Head>

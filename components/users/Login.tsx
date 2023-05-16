@@ -16,11 +16,11 @@ import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Web3 from "web3";
 
+import { CheckChainIdFunction } from "@/helpers/users/CheckChainIdFunction";
 import { LoginFunction } from "@/helpers/users/LoginFunction";
 import { setLogin, setLogout } from "@/store/UserSlice";
 
@@ -33,10 +33,27 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const dispatch = useDispatch();
   useEffect(() => {
-    //TODO: 登入狀態
-    LoginFunction().then(userData => {
-      if (userData != null) dispatch(setLogin(userData));
-    });
+    const connect = async () => {
+      //TODO: 登入狀態
+      LoginFunction().then(userData => {
+        if (userData != null) dispatch(setLogin(userData));
+      });
+      if (typeof window.ethereum === "undefined") {
+        // TODO: 未安裝MetaMask導向官網
+        window.alert("Please download MetaMask");
+        window.open("https://metamask.io/download/", "_blank");
+      } else {
+        const InChainId = await CheckChainIdFunction();
+        if (InChainId == false) {
+          // FIXME: Lin 要求加入我們的區塊鏈
+          window.alert("要求加入我們的網路");
+        } else if (InChainId == "Fix") {
+          // FIXME: Lin 區塊鏈維修中
+          window.alert("區塊鏈維修中");
+        }
+      }
+    };
+    connect();
   }, [dispatch]);
   async function connectMetaMask() {
     if (typeof window.ethereum !== "undefined") {
@@ -167,7 +184,7 @@ export default function Login() {
             connectMetaMask();
           }}
         >
-          <Image src="/MetaMask.png" alt="Null" width={35} height={35}></Image>
+          <img src="/MetaMask.png" alt="Null" width={35} height={35}></img>
           連線
         </Button>
       ) : (

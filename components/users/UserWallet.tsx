@@ -9,61 +9,96 @@ import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import Web3 from "web3";
 
+import { MyTokenFunction } from "@/helpers/Contract/MyTokenFunction";
+import { GetACFunction } from "@/helpers/users/GetACFunction";
 import Mining from "@/pages/loading/mining";
 
-import MyToken from "../../truffle/build/contracts/MyToken.json";
-
 export default function ResponsiveDialog() {
+  // TODO: Handle funtion
+  const [address, setAddress] = useState("");
+  const [ETH, setETH] = useState("");
+  const [AC, setAC] = useState("");
+  const gasLimit = 3000000;
+
+  useEffect(() => {
+    const connect = async () => {
+      const web3 = new Web3(window && window.ethereum);
+      // TODO: 拿取帳號
+      const accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      setAddress(accounts[0]);
+      if (accounts[0]) {
+        // TODO: 拿取ETH
+        const ethBalance = web3.utils.fromWei(await web3.eth.getBalance(accounts[0]));
+        setETH(ethBalance);
+
+        // TODO: 拿取AC
+        GetACFunction(accounts[0]).then(res => {
+          if (res != null) setAC(res);
+        });
+      }
+    };
+    connect();
+  }, []);
+  // TODO: 換錢
+  async function EthToAc() {
+    setIsLoading(true); // 啟用 loading 狀態
+    const web3 = new Web3(window && window.ethereum);
+    // TODO:合約
+    const MyTokenContractabi = MyTokenFunction();
+    const MyTokenContract = new web3.eth.Contract(MyTokenContractabi, process.env.NEXT_PUBLIC_MyTokenContractAddress);
+    if (web3) {
+      const selectedNumberInWei = web3.utils.toWei(selectedNumber.toString());
+      await MyTokenContract.methods
+        .buyToken()
+        .send({
+          from: address,
+          value: selectedNumberInWei,
+          gas: gasLimit,
+        })
+        .then(() => {
+          setchangeMoneySucess(true);
+          setIsLoading(false);
+        })
+        .catch(() => {
+          setchangeMoneyFail(true);
+          setIsLoading(false);
+        });
+    }
+  }
+  async function AcToEth() {
+    setIsLoading(true); // 啟用 loading 狀態
+    const web3 = new Web3(window && window.ethereum);
+    // TODO:合約
+    const MyTokenContractabi = MyTokenFunction();
+    const MyTokenContract = new web3.eth.Contract(MyTokenContractabi, process.env.NEXT_PUBLIC_MyTokenContractAddress);
+    if (web3) {
+      await MyTokenContract.methods
+        .sellToken(selectedNumber1)
+        .send({
+          from: address,
+          gas: gasLimit,
+        })
+        .then(() => {
+          setchangeMoneySucess(true);
+          setIsLoading(false);
+        })
+        .catch(() => {
+          setchangeMoneyFail(true);
+          setIsLoading(false);
+        });
+    }
+  }
+
+  // TODO: UI funtion
   const [open, setOpen] = useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
   const [maxWidth] = useState<DialogProps["maxWidth"]>("md");
-  const [account, setAccount] = useState("");
-  const gasLimit = 3000000;
-  const dispatch = useDispatch();
-  useEffect(() => {
-    //TODO: 登入狀態
 
-    const connect = async () => {
-      if (typeof window.ethereum !== "undefined") {
-        try {
-          const web3 = new Web3(window && window.ethereum);
-          if (web3) {
-            // TODO: 拿取address
-            const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-            setAccount(accounts[0]);
-            // TODO: 拿取Eth & AC
-            const ethBalance = await web3.eth.getBalance(accounts[0]);
-            setETH(await web3.utils.fromWei(ethBalance));
-            const MyTokenabi = MyToken.abi.map((item: any) => {
-              return {
-                inputs: item.inputs,
-                name: item.name,
-                outputs: item.outputs,
-                stateMutability: item.stateMutability,
-                type: item.type,
-              };
-            });
-            const MyTokenContract = new web3.eth.Contract(MyTokenabi, process.env.NEXT_PUBLIC_MyTokenContractAddress);
-            setAC(await MyTokenContract.methods.balanceOf(accounts[0]).call());
-          }
-        } catch {
-          // FIXME: Lin 登入失敗UI
-        }
-      } else {
-        window.alert("Please download MetaMask");
-        window.open("https://metamask.io/download/", "_blank");
-      }
-    };
-    connect();
-  }, [dispatch]);
-
-  // TODO: 換錢
-  const [ETH, setETH] = useState("");
-  const [AC, setAC] = useState("");
   const [selectedNumber, setSelectedNumber] = useState(1);
   const [selectedNumber1, setSelectedNumber1] = useState(1);
   // Loading
@@ -89,60 +124,6 @@ export default function ResponsiveDialog() {
     setSelectedNumber1(parseInt(event.target.value));
   }
 
-  const MyTokenabi = MyToken.abi.map((item: any) => {
-    return {
-      inputs: item.inputs,
-      name: item.name,
-      outputs: item.outputs,
-      stateMutability: item.stateMutability,
-      type: item.type,
-    };
-  });
-
-  async function EthToAc() {
-    setIsLoading(true); // 啟用 loading 狀態
-    const web3 = new Web3(window && window.ethereum);
-    if (web3) {
-      const MyTokenContract = new web3.eth.Contract(MyTokenabi, process.env.NEXT_PUBLIC_MyTokenContractAddress);
-      const selectedNumberInWei = web3.utils.toWei(selectedNumber.toString());
-      await MyTokenContract.methods
-        .buyToken()
-        .send({
-          from: account,
-          value: selectedNumberInWei,
-          gas: gasLimit,
-        })
-        .then(() => {
-          setchangeMoneySucess(true);
-          setIsLoading(false);
-        })
-        .catch(() => {
-          setchangeMoneyFail(true);
-          setIsLoading(false);
-        });
-    }
-  }
-  async function AcToEth() {
-    const web3 = new Web3(window && window.ethereum);
-    if (web3) {
-      const MyTokenContract = new web3.eth.Contract(MyTokenabi, process.env.NEXT_PUBLIC_MyTokenContractAddress);
-      setIsLoading(true); // 啟用 loading 狀態
-      await MyTokenContract.methods
-        .sellToken(selectedNumber1)
-        .send({
-          from: account,
-          gas: gasLimit,
-        })
-        .then(() => {
-          setIsLoading(false);
-          setchangeMoneySucess(true);
-        })
-        .catch(() => {
-          setIsLoading(false);
-          setchangeMoneyFail(true);
-        });
-    }
-  }
   const handleClickOpen = () => {
     setOpen(true);
   };

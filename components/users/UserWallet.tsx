@@ -94,9 +94,21 @@ export default function ResponsiveDialog() {
           from: address,
           gas: gasLimit,
         })
-        .then(() => {
+        .then(async () => {
           setchangeMoneySucess(true);
           setIsLoading(false);
+          // TODO: 拿取帳號
+          const accounts = await window.ethereum.request({
+            method: "eth_requestAccounts",
+          });
+          // TODO: 拿取ETH
+          const ethBalance = web3.utils.fromWei(await web3.eth.getBalance(accounts[0]));
+          setETH(ethBalance);
+
+          // TODO: 拿取AC
+          GetACFunction(accounts[0]).then(res => {
+            if (res != null) setAC(res);
+          });
         })
         .catch(() => {
           setchangeMoneyFail(true);

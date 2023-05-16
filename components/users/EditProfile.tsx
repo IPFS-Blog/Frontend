@@ -18,7 +18,7 @@ import { _apiCheckJwt, apiUserEditProfile } from "../api";
 
 export default function Editprofile() {
   // TODO: Handle funtion
-  const [username, setusername] = useState(""); // 使用者名稱
+  const [name, setName] = useState(""); // 使用者名稱
   const [email, setemail] = useState(""); // 電子信箱
   const [Introduction, setIntroduction] = useState(""); // 個人簡介
   const [Label, setLabel] = useState(""); // 添加標籤
@@ -29,11 +29,11 @@ export default function Editprofile() {
   async function EditProfile() {
     let jwt = "";
     await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
-    const data = { username, email };
+    const data = { username: name, email };
     apiUserEditProfile(jwt, data)
       .then(() => setalertEditSucess(true))
       .catch(() => setalertEditFail(true));
-    handleClose();
+    setOpen(false);
   }
 
   // TODO: UI funtion
@@ -56,20 +56,13 @@ export default function Editprofile() {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
   return (
     <>
       <div>
         {/*  dialog部分皆為彈窗*/}
         <Button
           className="items-center rounded-lg bg-gray-200 py-2 px-20 text hover:bg-gray-300"
-          onClick={handleClickOpen}
+          onClick={() => setOpen(true)}
         >
           編輯個人資料
         </Button>
@@ -77,7 +70,7 @@ export default function Editprofile() {
           fullScreen={fullScreen}
           maxWidth={maxWidth}
           open={open}
-          onClose={handleClose}
+          onClose={() => setOpen(false)}
           aria-labelledby="responsive-dialog-title"
         >
           <DialogTitle id="responsive-dialog-title"> 修改個人資料 </DialogTitle>
@@ -144,7 +137,7 @@ export default function Editprofile() {
                         id="outlined-basic"
                         label="請輸入名稱"
                         variant="outlined"
-                        onChange={e => setusername(e.target.value)}
+                        onChange={e => setName(e.target.value)}
                       />
                       <span className="p-2 text-base text-gray-300">2-20字元</span>
                     </div>
@@ -210,7 +203,7 @@ export default function Editprofile() {
             </div>
           </DialogContent>
           <DialogActions>
-            <Button autoFocus onClick={handleClose}>
+            <Button autoFocus onClick={() => setOpen(false)}>
               取消
             </Button>
             <Button

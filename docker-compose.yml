@@ -1,0 +1,13 @@
+version: "3.1"
+
+services:
+  frontend:
+    # image: a20688392/ipfs-blog-frontend:0.0.1
+    build:
+      dockerfile: Dockerfile
+      context: .
+      target: production
+    env_file:
+      - .env
+    ports:
+      - 3004:3000

@@ -17,10 +17,11 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Web3 from "web3";
 
+import { LoginFunction } from "@/helpers/users/LoginFunction";
 import { setLogin, setLogout } from "@/store/UserSlice";
 
 import { _apiAuthLogin, _apiAuthLogout, apiAuthTakeNonce, apiAuthTakeToken, apiUserRegister } from "../api";
@@ -31,7 +32,12 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const dispatch = useDispatch();
-
+  useEffect(() => {
+    //TODO: 登入狀態
+    LoginFunction().then(userData => {
+      if (userData != null) dispatch(setLogin(userData));
+    });
+  }, [dispatch]);
   async function connectMetaMask() {
     if (typeof window.ethereum !== "undefined") {
       try {

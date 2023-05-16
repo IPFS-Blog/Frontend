@@ -13,10 +13,6 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import Web3 from "web3";
 
-import FailAlert from "@/components/alert/Fail";
-import { _apiCheckJwt, apiUserGetUserData } from "@/components/api";
-import { setLogin } from "@/store/UserSlice";
-
 import MyToken from "../../truffle/build/contracts/MyToken.json";
 
 export default function JoinCoin() {
@@ -35,14 +31,6 @@ export default function JoinCoin() {
   };
   const [, setAC] = useState("");
   useEffect(() => {
-    //TODO: 登入狀態
-    const login = async () => {
-      let jwt = "";
-      const res_CheckJwt = await _apiCheckJwt();
-      jwt = res_CheckJwt.data.jwt;
-      const res_GetUserData = await apiUserGetUserData(jwt);
-      dispatch(setLogin(JSON.stringify(res_GetUserData.data.userData)));
-    };
     const connect = async () => {
       if (typeof window.ethereum !== "undefined") {
         try {
@@ -74,7 +62,7 @@ export default function JoinCoin() {
         window.open("https://metamask.io/download/", "_blank");
       }
     };
-    login();
+
     connect();
   }, [dispatch]);
   const [, setETH] = useState("");

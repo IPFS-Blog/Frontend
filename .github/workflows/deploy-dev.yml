@@ -18,6 +18,6 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
       - name: connect and pull
-        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && git checkout ${{ secrets.DEV_BRANCH }} && git pull && yarn install && yarn build && yarn start -p 3004"
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && git checkout ${{ secrets.DEV_BRANCH }} && git pull && docker-compose down -v && docker rmi ${{ secrets.IMAGE }} && docker-compose up -d && exit"
       - name: cleanup
         run: rm -rf ~/.ssh

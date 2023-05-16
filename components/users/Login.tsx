@@ -16,6 +16,7 @@ import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Web3 from "web3";
@@ -25,13 +26,13 @@ import { LoginFunction } from "@/helpers/users/LoginFunction";
 import { setLogin, setLogout } from "@/store/UserSlice";
 
 import { _apiAuthLogin, _apiAuthLogout, apiAuthTakeNonce, apiAuthTakeToken, apiUserRegister } from "../api";
-import { useRouter } from "next/router";
 
 export default function Login() {
   // TODO: Handle funcion
   const [address, setAddress] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const router = useRouter();
   const dispatch = useDispatch();
   useEffect(() => {
     const connect = async () => {
@@ -56,7 +57,8 @@ export default function Login() {
       }
     };
     connect();
-  }, [dispatch]);
+  }, [dispatch, router]);
+
   async function connectMetaMask() {
     if (typeof window.ethereum !== "undefined") {
       try {
@@ -136,7 +138,6 @@ export default function Login() {
   const [errorMessageUsername, seterrorMessageUsername] = useState("");
   const [errorMessageEmail, seterrorMessageEmail] = useState("");
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-  const router = useRouter();
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("xs"));

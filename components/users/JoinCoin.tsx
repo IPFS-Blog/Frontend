@@ -9,63 +9,11 @@ import { useTheme } from "@mui/material/styles";
 //TODO: 響應式
 import useMediaQuery from "@mui/material/useMediaQuery";
 import * as React from "react";
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import Web3 from "web3";
-
-import MyToken from "../../truffle/build/contracts/MyToken.json";
+import { useState } from "react";
 
 export default function JoinCoin() {
-  const [, setAccount] = useState("");
-  const dispatch = useDispatch();
-  const [alertJoinCoinFail, setalertJoinCoinFail] = useState(false);
+  // TODO: Handle funtion
 
-  const [alertJoinCoinSucess, setalertJoinCoinSucess] = useState(false);
-
-  const alertHandleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setalertJoinCoinSucess(false);
-    setalertJoinCoinFail(false);
-  };
-  const [, setAC] = useState("");
-  useEffect(() => {
-    const connect = async () => {
-      if (typeof window.ethereum !== "undefined") {
-        try {
-          const web3 = new Web3(window && window.ethereum);
-          if (web3) {
-            // TODO: 拿取address
-            const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-            setAccount(accounts[0]);
-            // TODO: 拿取Eth & AC
-            const ethBalance = await web3.eth.getBalance(accounts[0]);
-            setETH(await web3.utils.fromWei(ethBalance));
-            const MyTokenabi = MyToken.abi.map((item: any) => {
-              return {
-                inputs: item.inputs,
-                name: item.name,
-                outputs: item.outputs,
-                stateMutability: item.stateMutability,
-                type: item.type,
-              };
-            });
-            const MyTokenContract = new web3.eth.Contract(MyTokenabi, process.env.NEXT_PUBLIC_MyTokenContractAddress);
-            setAC(await MyTokenContract.methods.balanceOf(accounts[0]).call());
-          }
-        } catch {
-          // FIXME: Lin 登入失敗UI
-        }
-      } else {
-        window.alert("Please download MetaMask");
-        window.open("https://metamask.io/download/", "_blank");
-      }
-    };
-
-    connect();
-  }, [dispatch]);
-  const [, setETH] = useState("");
   // TODO: 加入錢幣到metamask
   // FIXME: Lin AC 圖片設計
   async function AddCoinToMetaMask() {
@@ -100,6 +48,17 @@ export default function JoinCoin() {
   const fullScreen = useMediaQuery(theme.breakpoints.down("lg"));
   const [maxWidth] = useState<DialogProps["maxWidth"]>("lg");
 
+  const [alertJoinCoinFail, setalertJoinCoinFail] = useState(false);
+
+  const [alertJoinCoinSucess, setalertJoinCoinSucess] = useState(false);
+
+  const alertHandleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setalertJoinCoinSucess(false);
+    setalertJoinCoinFail(false);
+  };
   //material ui toast
   const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;

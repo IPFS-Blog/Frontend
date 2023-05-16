@@ -5,78 +5,41 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Web3 from "web3";
 
-import MyToken from "../../truffle/build/contracts/MyToken.json";
+import { MyTokenFunction } from "@/helpers/Contract/MyTokenFunction";
+import { GetACFunction } from "@/helpers/users/GetACFunction";
 
 export default function DonationForm({ CreaterAddress, CreaterName, CreaterPhoto }: any) {
+  // TODO: Handle funtion
   const [AC, setAC] = useState("");
-  const [open, setOpen] = useState(false);
+
   const dispatch = useDispatch();
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
-  const [maxWidth] = useState<DialogProps["maxWidth"]>("md");
-  const User = useSelector((state: any) => state.User);
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-  const [price, setPrice] = useState(1);
-
-  const handlePriceChange = (event: any) => {
-    setPrice(parseInt(event.target.value));
-  };
   useEffect(() => {
     //TODO: 登入狀態
     const connect = async () => {
-      if (typeof window.ethereum !== "undefined") {
-        try {
-          const web3 = new Web3(window && window.ethereum);
-          if (web3) {
-            // TODO: 拿取address
-            const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-            // TODO: 拿取Eth & AC
-            const MyTokenabi = MyToken.abi.map((item: any) => {
-              return {
-                inputs: item.inputs,
-                name: item.name,
-                outputs: item.outputs,
-                stateMutability: item.stateMutability,
-                type: item.type,
-              };
-            });
-            const MyTokenContract = new web3.eth.Contract(MyTokenabi, process.env.NEXT_PUBLIC_MyTokenContractAddress);
-            setAC(await MyTokenContract.methods.balanceOf(accounts[0]).call());
-          }
-        } catch {
-          // FIXME: Lin 登入失敗UI
-        }
-      } else {
-        window.alert("Please download MetaMask");
-        window.open("https://metamask.io/download/", "_blank");
+      // TODO: 拿取帳號
+      const accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      if (accounts[0]) {
+        // TODO: 拿取AC
+        GetACFunction(accounts[0]).then(res => {
+          if (res != null) setAC(res);
+        });
       }
     };
 
     connect();
   }, [dispatch]);
+
   const TransferAC = async () => {
     const web3 = new Web3(window && window.ethereum);
-    const MyTokenabi = MyToken.abi.map((item: any) => {
-      return {
-        inputs: item.inputs,
-        name: item.name,
-        outputs: item.outputs,
-        stateMutability: item.stateMutability,
-        type: item.type,
-      };
-    });
-    const MyTokenContract = new web3.eth.Contract(MyTokenabi, process.env.NEXT_PUBLIC_MyTokenContractAddress);
+    // TODO:合約
+    const MyTokenContractabi = MyTokenFunction();
+    const MyTokenContract = new web3.eth.Contract(MyTokenContractabi, process.env.NEXT_PUBLIC_MyTokenContractAddress);
     const gasLimit = 3000000;
 
     await MyTokenContract.methods
@@ -94,7 +57,24 @@ export default function DonationForm({ CreaterAddress, CreaterName, CreaterPhoto
         window.alert("轉帳失敗");
       });
   };
+  // TODO: UI funtion
+  const [open, setOpen] = useState(false);
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const [maxWidth] = useState<DialogProps["maxWidth"]>("md");
+  const User = useSelector((state: any) => state.User);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
 
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const [price, setPrice] = useState(1);
+
+  const handlePriceChange = (event: any) => {
+    setPrice(parseInt(event.target.value));
+  };
   return (
     <>
       <button
@@ -141,7 +121,7 @@ export default function DonationForm({ CreaterAddress, CreaterName, CreaterPhoto
             onClick={TransferAC}
             className="mx-auto mt-4 flex items-center justify-center rounded-md bg-gray-400 py-2 px-4 text-black hover:bg-gray-500"
           >
-            <Image src="/MetaMask.png" alt="Null" width={30} height={30}></Image>
+            <img src="/MetaMask.png" alt="Null" width={30} height={30}></img>
             確定支付
           </button>
         </DialogContent>

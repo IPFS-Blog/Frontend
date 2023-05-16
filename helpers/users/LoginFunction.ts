@@ -1,4 +1,4 @@
-import { _apiCheckJwt, apiUserGetUserData } from "../../components/api";
+import { _apiCheckJwt, apiUserGetUserData } from "@/components/api";
 
 export const LoginFunction = async () => {
   const res = await _apiCheckJwt();

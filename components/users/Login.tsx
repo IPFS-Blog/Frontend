@@ -25,6 +25,7 @@ import { LoginFunction } from "@/helpers/users/LoginFunction";
 import { setLogin, setLogout } from "@/store/UserSlice";
 
 import { _apiAuthLogin, _apiAuthLogout, apiAuthTakeNonce, apiAuthTakeToken, apiUserRegister } from "../api";
+import { useRouter } from "next/router";
 
 export default function Login() {
   // TODO: Handle funcion
@@ -47,6 +48,7 @@ export default function Login() {
         if (InChainId == false) {
           // FIXME: Lin 要求加入我們的區塊鏈
           window.alert("要求加入我們的網路");
+          router.push("/NetworkInstructions", undefined, { shallow: true });
         } else if (InChainId == "Fix") {
           // FIXME: Lin 區塊鏈維修中
           window.alert("區塊鏈維修中");
@@ -134,6 +136,7 @@ export default function Login() {
   const [errorMessageUsername, seterrorMessageUsername] = useState("");
   const [errorMessageEmail, seterrorMessageEmail] = useState("");
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const router = useRouter();
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("xs"));

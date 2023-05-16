@@ -51,9 +51,12 @@ export default function SimpleFaucet() {
           gasPrice: gasPrice,
           gas: gasLimit,
         })
-        .then(() => {
+        .then(async () => {
           setalertTakeMoneySucess(true);
           setIsLoading(false);
+          // TODO: 更新ETH
+          const ethBalance = web3.utils.fromWei(await web3.eth.getBalance(accounts[0]));
+          setETH(ethBalance);
         })
         .catch(() => {
           setalertTakeMoneyFail(true);

@@ -46,7 +46,7 @@ export default function Login() {
         const InChainId = await CheckChainIdFunction();
         if (InChainId == false) {
           // FIXME: Lin 要求加入我們的區塊鏈
-          window.alert("要求加入我們的區塊鏈");
+          window.alert("要求加入我們的網路");
         } else if (InChainId == "Fix") {
           // FIXME: Lin 區塊鏈維修中
           window.alert("區塊鏈維修中");

@@ -3,8 +3,8 @@ import MuiAlert from "@mui/material/Alert";
 import { useState } from "react";
 import * as React from "react";
 
-export default function SimpleFaucet() {
-  const [alertEditFail, setalertEditFail] = useState(false);
+export default function SimpleFaucet(props: any) {
+  const [alertEditFail, setalertEditFail] = useState(true);
   const alertHandleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === "clickaway") {
       return;
@@ -18,7 +18,7 @@ export default function SimpleFaucet() {
   return (
     <Snackbar open={alertEditFail} autoHideDuration={6000} onClose={alertHandleClose}>
       <Alert onClose={alertHandleClose} severity="error" sx={{ width: "100%" }}>
-        編輯錯誤!
+        {props.message}
       </Alert>
     </Snackbar>
   );

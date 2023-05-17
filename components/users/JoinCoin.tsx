@@ -1,6 +1,5 @@
 import { AlertProps, Snackbar } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
-import Button from "@mui/material/Button";
 import Dialog, { DialogProps } from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -75,12 +74,12 @@ export default function JoinCoin() {
     <>
       <div>
         {/*  dialog部分皆為彈窗*/}
-        <Button
+        <button
           className="items-center rounded-lg bg-gray-200 py-2 px-20 text hover:bg-gray-300"
           onClick={handleClickOpen}
         >
           加入 AC 貨幣
-        </Button>
+        </button>
         <Dialog
           fullScreen={fullScreen}
           maxWidth={maxWidth}

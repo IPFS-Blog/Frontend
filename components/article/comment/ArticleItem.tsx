@@ -2,12 +2,12 @@ import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import BookmarkAddOutlinedIcon from "@mui/icons-material/BookmarkAddOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import StarsOutlinedIcon from "@mui/icons-material/StarsOutlined";
-import { IconButton, Link } from "@mui/material";
+import { IconButton } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 export default function ArticleItem({ username, id, title, subtitle, updateAt }: any) {
   return (
     <li className="group/item my-4 rounded-lg border-4 border-blue-200 first:mt-0">
-      <Link className="text no-underline" href={`/${username}/${id}`}>
+      <a className="text no-underline" href={`/${username}/${id}`}>
         <div className="grid h-auto w-full grid-cols-12 gap-x-16 rounded-lg p-2 hover:bg-slate-200 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700">
           <div className="col-span-8">
             <p className="mb-2 text-2xl font-bold tracking-tight text-slate-900 line-clamp-1 dark:text-white">
@@ -51,7 +51,7 @@ export default function ArticleItem({ username, id, title, subtitle, updateAt }:
             </div>
           </div>
         </div>
-      </Link>
+      </a>
     </li>
   );
 }

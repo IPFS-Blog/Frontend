@@ -6,7 +6,7 @@ import Avatar from "@mui/material/Avatar";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { apiArticleTakeArticle } from "@/components/api";
+import { apiArticleTakeArticle, apiUserGetCreaterData } from "@/components/api";
 import Comment from "@/components/article/comment/Comment";
 import DonateButton from "@/components/users/DonateButton";
 import { update } from "@/store/CreaterSlice";
@@ -32,7 +32,7 @@ export default function Article(props: any) {
         >
           {/* TODO: 文章擁有者資料 頭貼、名稱 */}
           <div className="flex flex-row items-center">
-            <Avatar className="h-auto w-10 rounded-full" src={props.createrData.photo} alt="not find Avatar" />
+            <Avatar className="h-auto w-10 rounded-full" src={props.createrData.picture} alt="not find Avatar" />
             <div className="px-2">
               <div>{props.createrData.username}</div>
             </div>
@@ -76,7 +76,7 @@ export default function Article(props: any) {
           {/* 輸入留言 */}
           <form>
             <div className="flex items-center bg-gray-50 px-3 py-1 dark:bg-gray-700">
-              <Avatar className="h-auto w-10 rounded-full" src={User.profile.photo} alt="not find Avatar" />
+              <Avatar className="h-auto w-10 rounded-full" src={User.profile.picture} alt="not find Avatar" />
               <p className="mx-2">{User.profile.name}</p>
               <textarea
                 id="chat"
@@ -102,7 +102,7 @@ export default function Article(props: any) {
       <div className="col-span-4">
         {/* TODO: 文章擁有者資料 頭貼、名稱 */}
         <div className="col-span-2 flex justify-center">
-          <Avatar className="h-auto w-1/2 rounded-full" src={props.createrData.photo} alt="not find Avatar" />
+          <Avatar className="h-auto w-1/2 rounded-full" src={props.createrData.picture} alt="not find Avatar" />
         </div>
         <div className="text-center">
           {/* ${Username} */}
@@ -204,12 +204,15 @@ export default function Article(props: any) {
 export const getServerSideProps = async (context: any) => {
   // 查詢文章
   const ArticleUrl = context.req.url.split("/")[2];
-  let createrData = { id: 0, username: "", address: "", email: "", photo: "" };
+  let createrData = { id: 0, username: "", address: "", email: "", picture: "" };
   let article = { title: "", subtitle: "", contents: "", updateAt: "" };
 
   await apiArticleTakeArticle(ArticleUrl)
-    .then(res => {
-      createrData = res.data.user;
+    .then(async res => {
+      const rescreaterdata = await apiUserGetCreaterData(res.data.user.username);
+      rescreaterdata.data.userData.username = rescreaterdata.data.userData.name;
+      delete rescreaterdata.data.userData.name;
+      createrData = rescreaterdata.data.userData;
       const resarticle = {
         title: res.data.title,
         subtitle: res.data.subtitle,

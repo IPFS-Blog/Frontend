@@ -92,12 +92,15 @@ export default function Login() {
     // 索取jwt
     const data = { address: address, signature };
     apiAuthTakeToken(data).then((res: any) => {
+      res.data.userData.picture = res.data.userData.photo;
+      delete res.data.userData.photo;
       const jwt = res.data.access_token;
       // 將JWT塞入 Cookie中
       _apiAuthLogin({ jwt });
 
       // 將傳回來的會員資料轉成json的字串模式
       const UserData = JSON.stringify(res.data.userData);
+
       // 透過redux儲存會員資料
       dispatch(setLogin(UserData));
       // 將會員資料存在localStroage
@@ -178,7 +181,7 @@ export default function Login() {
         <Box sx={{ flexGrow: 0 }}>
           <Tooltip title="Open settings">
             <IconButton onClick={e => setAnchorElUser(e.currentTarget)} sx={{ p: 0 }}>
-              <Avatar src={`${User.profile.photo}`} alt="haha" />
+              <Avatar src={`${User.profile.picture}`} alt="haha" />
             </IconButton>
           </Tooltip>
           <Menu
@@ -207,8 +210,11 @@ export default function Login() {
             <MenuItem
               onClick={() => {
                 _apiAuthLogout();
+                localStorage.removeItem("UserData");
                 dispatch(setLogout());
-                setAnchorElUser(null);
+                if (localStorage.getItem("UserData")) {
+                  localStorage.removeItem("UserData");
+                }
               }}
             >
               <Typography textAlign="center">登出</Typography>

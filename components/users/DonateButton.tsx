@@ -105,7 +105,7 @@ export default function DonationForm() {
         </DialogTitle>
         <DialogContent className="bg-gray-200 md:w-full lg:w-96">
           <div className="flex flex-row items-center">
-            <Avatar className="h-10 w-10 rounded-full" src={Creater.profile.photo} alt="not find Avatar" />
+            <Avatar className="h-10 w-10 rounded-full" src={Creater.profile.picture} alt="not find Avatar" />
             <div className="ml-2 flex items-center">
               <p className="text-xl font-semibold ">{Creater.profile.username}</p>
             </div>

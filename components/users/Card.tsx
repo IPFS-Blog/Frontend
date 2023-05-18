@@ -16,7 +16,7 @@ const Card = () => {
               <div className="flex h-full flex-row">
                 <div className="flex h-48 w-2/6 flex-col items-center p-3">
                   <Avatar
-                    src={Creater.profile.photo}
+                    src={Creater.profile.picture}
                     className="h-auto w-full rounded-full"
                     alt="Picture of the author"
                   />
@@ -37,7 +37,7 @@ const Card = () => {
               <div className="flex h-full flex-row">
                 <div className="flex h-48 w-2/6 flex-col items-center p-3">
                   <Avatar
-                    src={Creater.profile.photo}
+                    src={Creater.profile.picture}
                     className="h-auto w-full rounded-full"
                     alt="Picture of the author"
                   />

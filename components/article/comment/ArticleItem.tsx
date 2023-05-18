@@ -4,7 +4,19 @@ import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlin
 import StarsOutlinedIcon from "@mui/icons-material/StarsOutlined";
 import { IconButton } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
+import { useEffect, useState } from "react";
+
+import { apiUserGetCreaterData } from "@/components/api";
 export default function ArticleItem({ username, id, title, subtitle, updateAt }: any) {
+  const [createrpicture, setcreaterpicture] = useState("");
+  useEffect(() => {
+    const GetCreaterData = async () => {
+      const createrdata = await apiUserGetCreaterData(username);
+      if (createrdata.data.userData) setcreaterpicture(createrdata.data.userData.picture);
+    };
+    GetCreaterData();
+  }, [setcreaterpicture, username]);
+
   return (
     <li className="group/item my-4 rounded-lg border-4 border-blue-200 first:mt-0">
       <a className="text no-underline" href={`/${username}/${id}`}>
@@ -14,7 +26,7 @@ export default function ArticleItem({ username, id, title, subtitle, updateAt }:
               {title}
             </p>
             <div className="mb-2 flex flex-row items-center">
-              <Avatar src="" alt="not find Avatar" />
+              <Avatar src={createrpicture} alt="not find Avatar" />
               <div className="ml-2 flex items-center">
                 <p className="text-base"> {username}</p>
               </div>

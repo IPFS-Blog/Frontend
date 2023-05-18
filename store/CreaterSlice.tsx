@@ -6,7 +6,7 @@ interface CreaterSlice {
     name: string;
     address: string;
     email: string;
-    photo: string;
+    picture: string;
   };
 }
 
@@ -16,7 +16,7 @@ const initialState: CreaterSlice = {
     name: "",
     address: "",
     email: "",
-    photo: "",
+    picture: "",
   },
 };
 

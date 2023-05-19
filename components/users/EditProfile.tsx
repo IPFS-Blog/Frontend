@@ -18,7 +18,7 @@ import { _apiCheckJwt, apiUserEditProfile } from "../api";
 
 export default function Editprofile() {
   // TODO: Handle funtion
-  const [name, setName] = useState(""); // 使用者名稱
+  const [username, setUsername] = useState(""); // 使用者名稱
   const [email, setemail] = useState(""); // 電子信箱
   const [Introduction, setIntroduction] = useState(""); // 個人簡介
   const [Label, setLabel] = useState(""); // 添加標籤
@@ -29,7 +29,7 @@ export default function Editprofile() {
   async function EditProfile() {
     let jwt = "";
     await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
-    const data = { username: name, email };
+    const data = { username, email };
     apiUserEditProfile(jwt, data)
       .then(() => setalertEditSucess(true))
       .catch(() => setalertEditFail(true));
@@ -137,7 +137,7 @@ export default function Editprofile() {
                         id="outlined-basic"
                         label="請輸入名稱"
                         variant="outlined"
-                        onChange={e => setName(e.target.value)}
+                        onChange={e => setUsername(e.target.value)}
                       />
                       <span className="p-2 text-base text-gray-300">2-20字元</span>
                     </div>

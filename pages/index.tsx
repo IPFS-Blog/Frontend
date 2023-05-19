@@ -30,10 +30,11 @@ export default function Home(props: any) {
           {props.Articles != null &&
             props.Articles.articles.map((item: any) => {
               const { id, title, subtitle, updateAt } = item;
-              const { username } = item.user;
+              const { username, picture } = item.user;
               return (
                 <ArticleItem
                   username={username}
+                  picture={picture}
                   key={id}
                   id={id}
                   title={title}

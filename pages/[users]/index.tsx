@@ -17,9 +17,9 @@ export default function Users(props: any) {
   const User = useSelector((state: any) => state.User);
   useEffect(() => {
     // TODO: 創作者狀態
-    if (props.createrData.name == User.profile.name) SetIsPrivate(true);
+    if (props.createrData.username == User.profile.username) SetIsPrivate(true);
     dispatch(update(JSON.stringify(props.createrData)));
-  }, [User.profile.name, dispatch, props.IsCreater, props.createrData]);
+  }, [User.profile.username, dispatch, props.IsCreater, props.createrData]);
 
   //TODO: UI function
   const { copy } = useClipboard();
@@ -143,7 +143,8 @@ export default function Users(props: any) {
               const { id, title, subtitle, updateAt } = item;
               return (
                 <ArticleItem
-                  username={props.createrData.name}
+                  username={props.createrData.username}
+                  picture={props.createrData.picture}
                   key={id}
                   id={id}
                   title={title}
@@ -161,7 +162,7 @@ export default function Users(props: any) {
 export const getServerSideProps = async (context: any) => {
   const url = context.req.url.substring(1);
 
-  let createrData = { id: 0, name: "", address: "", email: "", photo: "" };
+  let createrData = { id: 0, username: "", address: "", email: "", picture: "" };
 
   // 查詢創作者資料
   await apiUserGetCreaterData(url)
@@ -175,7 +176,7 @@ export const getServerSideProps = async (context: any) => {
       };
     });
 
-  const Articles = await apiUserGetCreaterArticle(createrData.name);
+  const Articles = await apiUserGetCreaterArticle(createrData.username);
 
   return { props: { createrData, Articles: Articles.data } };
 };

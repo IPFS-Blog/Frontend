@@ -6,7 +6,7 @@ import Avatar from "@mui/material/Avatar";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { apiArticleTakeArticle, apiUserGetCreaterData } from "@/components/api";
+import { apiArticleTakeArticle } from "@/components/api";
 import Comment from "@/components/article/comment/Comment";
 import DonateButton from "@/components/users/DonateButton";
 import { update } from "@/store/CreaterSlice";
@@ -77,7 +77,7 @@ export default function Article(props: any) {
           <form>
             <div className="flex items-center bg-gray-50 px-3 py-1 dark:bg-gray-700">
               <Avatar className="h-auto w-10 rounded-full" src={User.profile.picture} alt="not find Avatar" />
-              <p className="mx-2">{User.profile.name}</p>
+              <p className="mx-2">{User.profile.username}</p>
               <textarea
                 id="chat"
                 className="mx-4 block w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
@@ -209,15 +209,13 @@ export const getServerSideProps = async (context: any) => {
 
   await apiArticleTakeArticle(ArticleUrl)
     .then(async res => {
-      const rescreaterdata = await apiUserGetCreaterData(res.data.user.username);
-      rescreaterdata.data.userData.username = rescreaterdata.data.userData.name;
-      delete rescreaterdata.data.userData.name;
-      createrData = rescreaterdata.data.userData;
+      const { title, subtitle, contents, updateAt, user } = res.data.article;
+      createrData = user;
       const resarticle = {
-        title: res.data.title,
-        subtitle: res.data.subtitle,
-        contents: res.data.contents,
-        updateAt: res.data.updateAt,
+        title,
+        subtitle,
+        contents,
+        updateAt,
       };
       article = resarticle;
     })
@@ -227,9 +225,5 @@ export const getServerSideProps = async (context: any) => {
       };
     });
 
-  if (createrData.username != context.req.url.split("/")[1])
-    return {
-      notFound: true,
-    };
   return { props: { article, createrData } };
 };

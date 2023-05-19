@@ -30,7 +30,7 @@ import { _apiAuthLogin, _apiAuthLogout, apiAuthTakeNonce, apiAuthTakeToken, apiU
 export default function Login() {
   // TODO: Handle funcion
   const [address, setAddress] = useState("");
-  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const router = useRouter();
   const dispatch = useDispatch();
@@ -90,10 +90,9 @@ export default function Login() {
     const signer = web3.eth.personal;
     const signature = await signer.sign(nonce, address, "");
     // 索取jwt
-    const data = { address: address, signature };
+    const data = { address, signature };
+
     apiAuthTakeToken(data).then((res: any) => {
-      res.data.userData.picture = res.data.userData.photo;
-      delete res.data.userData.photo;
       const jwt = res.data.access_token;
       // 將JWT塞入 Cookie中
       _apiAuthLogin({ jwt });
@@ -114,7 +113,7 @@ export default function Login() {
   }
 
   async function Register() {
-    const data = { address, username: name, email };
+    const data = { address, username, email };
     apiUserRegister(data)
       .then(() => {
         registerSetOpen(false);
@@ -202,8 +201,8 @@ export default function Login() {
           >
             <MenuItem onClick={() => setAnchorElUser(null)}>
               <Typography textAlign="center">
-                <a href={"/" + User.profile.name} className="no-underline">
-                  {User.profile.name}
+                <a href={"/" + User.profile.username} className="no-underline">
+                  {User.profile.username}
                 </a>
               </Typography>
             </MenuItem>
@@ -286,15 +285,15 @@ export default function Login() {
                 placeholder="輸入使用者名稱"
                 variant="standard"
                 required
-                value={name}
-                onChange={e => setName(e.target.value)}
+                value={username}
+                onChange={e => setUsername(e.target.value)}
               />
             ) : (
               <TextField
                 error
                 id="standard-error-helper-text"
                 label="Error"
-                defaultValue={name}
+                defaultValue={username}
                 helperText={errorMessageUsername}
                 variant="standard"
                 onChange={() => seterrorMessageUsername("")}

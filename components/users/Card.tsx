@@ -22,7 +22,7 @@ const Card = () => {
                   />
                 </div>
                 <div className="flex h-auto w-4/6 flex-col justify-start p-3 dark:text">
-                  <h5 className="mb-2 text-3xl font-medium">{Creater.profile.name}</h5>
+                  <h5 className="mb-2 text-3xl font-medium">{Creater.profile.username}</h5>
                   <p className="truncate">{Creater.profile.address}</p>
                   <div className="mb-4 pt-2 text-base">
                     <p>我喜歡貓咪</p>
@@ -44,7 +44,7 @@ const Card = () => {
                 </div>
 
                 <div className="flex w-4/6 flex-col justify-start p-3">
-                  <h5 className="mb-2 text-3xl font-medium dark:text">{Creater.profile.name}</h5>
+                  <h5 className="mb-2 text-3xl font-medium dark:text">{Creater.profile.username}</h5>
                   <dl className="mx-auto grid grid-cols-3 p-3 text-gray-900 sm:grid-cols-3 sm:p-2 xl:grid-cols-3">
                     <div className="flex flex-col p-2 text-center">
                       <dt className="text-base">所有文章</dt>

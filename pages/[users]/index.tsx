@@ -9,6 +9,7 @@ import Card from "@/components/users/Card";
 import Editprofile from "@/components/users/EditProfile";
 import UserWallet from "@/components/users/UserWallet";
 import { update } from "@/store/CreaterSlice";
+import DonateButton from "@/components/users/DonateButton";
 
 export default function Users(props: any) {
   // TODO: Handle function
@@ -76,10 +77,7 @@ export default function Users(props: any) {
                   <button className="mx-2 rounded border border-red-500 py-2 px-20 font-semibold text-red-500 hover:bg-red-500 hover:text-white">
                     追蹤
                   </button>
-
-                  <button className="mx-2 rounded border border-green-500 py-2 px-20 font-semibold text-green-500 hover:bg-green-500 hover:text-white">
-                    打賞
-                  </button>
+                  <DonateButton/> 
                 </div>
               )}
             </div>

@@ -1,5 +1,6 @@
 import classNames from "classnames";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 import {
   AiOutlineDoubleLeft,
@@ -20,8 +21,18 @@ const menuItems = [
   { id: 4, label: "創作", icon: AiOutlineForm, link: "/create" },
   { id: 5, label: "水龍頭", icon: FaFaucet, link: "/SimpleFaucet" },
 ];
+const dashboardSidebar = [
+  { id: 1, label: "首頁", icon: AiOutlineHome, link: "/" },
+  { id: 2, label: "我的後台", icon: AiOutlineLayout, link: "/Dashboard" },
+  { id: 3, label: "創作", icon: AiOutlineFileText, link: "/docs" },
+  { id: 4, label: "編輯個人文章", icon: AiOutlineForm, link: "/create" },
+  { id: 5, label: "管理文章", icon: FaFaucet, link: "/SimpleFaucet" },
+  { id: 6, label: "瀏覽文章數據", icon: FaFaucet, link: "/SimpleFaucet" },
+];
 
 const Sidebar = () => {
+  const router = useRouter();
+  const routerpath = router.asPath;
   const [toggleCollapse, setToggleCollapse] = useState(false);
   const collapseIconClasses = classNames({
     "rotate-180": toggleCollapse,
@@ -35,6 +46,7 @@ const Sidebar = () => {
   const handleSidebarToggle = () => {
     setToggleCollapse(!toggleCollapse);
   };
+
   return (
     <div>
       {/* //sidebar */}
@@ -44,21 +56,42 @@ const Sidebar = () => {
             <AiOutlineDoubleLeft />
           </button>
           <div className="mt-2 flex flex-col items-start">
-            {menuItems.map(({ icon: Icon, ...menu }) => {
-              const classes = getNavItemClasses(menu);
-              return (
-                <div key={menu.id} className={classes}>
-                  <Link href={menu.link}>
-                    <div className="flex w-full items-center py-4 px-3">
-                      <div className="w-8">
-                        <Icon />
-                      </div>
-                      {toggleCollapse && <div className={classNames("font-medium text-dark w-20")}>{menu.label}</div>}
+            {/* TODO: 如果是Dashboard會換sidebar */}
+            {routerpath !== "/Dashboard"
+              ? menuItems.map(({ icon: Icon, ...menu }) => {
+                  const classes = getNavItemClasses(menu);
+                  return (
+                    <div key={menu.id} className={classes}>
+                      <Link href={menu.link}>
+                        <div className="flex w-full items-center py-4 px-3">
+                          <div className="w-8">
+                            <Icon />
+                          </div>
+                          {toggleCollapse && (
+                            <div className={classNames("font-medium text-dark w-20")}>{menu.label}</div>
+                          )}
+                        </div>
+                      </Link>
                     </div>
-                  </Link>
-                </div>
-              );
-            })}
+                  );
+                })
+              : dashboardSidebar.map(({ icon: Icon, ...menu }) => {
+                  const classes = getNavItemClasses(menu);
+                  return (
+                    <div key={menu.id} className={classes}>
+                      <Link href={menu.link}>
+                        <div className="flex w-full items-center py-4 px-3">
+                          <div className="w-8">
+                            <Icon />
+                          </div>
+                          {toggleCollapse && (
+                            <div className={classNames("font-medium text-dark w-20")}>{menu.label}</div>
+                          )}
+                        </div>
+                      </Link>
+                    </div>
+                  );
+                })}
           </div>
           <div
             className={classNames("flex flex-col", {

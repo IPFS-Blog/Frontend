@@ -7,6 +7,7 @@ interface UserState {
     address: string;
     email: string;
     picture: string;
+    background: string;
     login: boolean;
   };
 }
@@ -18,6 +19,7 @@ const initialState: UserState = {
     address: "",
     email: "",
     picture: "",
+    background: "",
     login: false,
   },
 };

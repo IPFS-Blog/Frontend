@@ -20,7 +20,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
   [`&.${tableCellClasses.body}`]: {
     textAlign: "left",
-    maxHeight: "100px",
     overflow: "hidden",
     verticalAlign: "top",
     wordBreak: "break-word",
@@ -44,7 +43,15 @@ const rows = [
     "標題123456標題1標標題123456標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1",
     "副標題1",
     "tag",
-    "內文1",
+    "內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1",
+    "2023/5/21",
+    true,
+  ),
+  createData(
+    "標題123456標題1標標題123456標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1",
+    "副標題1",
+    "tag",
+    "內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1",
     "2023/5/21",
     true,
   ),
@@ -84,16 +91,16 @@ export default function CustomizedTables() {
           {rows.map(row => (
             <StyledTableRow key={row.title}>
               <StyledTableCell component="th" scope="row">
-                <div className="overflow-hidden text-base">{row.title}</div>
+                <div className="h-24 overflow-hidden text-base">{row.title}</div>
               </StyledTableCell>
-              <StyledTableCell align="left">
-                <div className="overflow-hidden text-base">{row.subtitle}</div>
+              <StyledTableCell component="th" scope="row" className="overflow-hidden text-base ">
+                {row.subtitle}
               </StyledTableCell>
               <StyledTableCell align="left">
                 <div className="overflow-hidden text-base">{row.tag}</div>
               </StyledTableCell>
               <StyledTableCell align="left">
-                <div className="overflow-hidden text-base">{row.content}</div>
+                <div className="h-24 overflow-hidden text-ellipsis text-base">{row.content}</div>
               </StyledTableCell>
               <StyledTableCell align="left">
                 <div className="overflow-hidden text-base">{row.time}</div>

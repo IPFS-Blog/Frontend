@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import {
+  AiOutlineBarChart,
   AiOutlineDoubleLeft,
   AiOutlineFileText,
   AiOutlineForm,
@@ -24,10 +25,10 @@ const menuItems = [
 const dashboardSidebar = [
   { id: 1, label: "首頁", icon: AiOutlineHome, link: "/" },
   { id: 2, label: "我的後台", icon: AiOutlineLayout, link: "/Dashboard" },
-  { id: 3, label: "創作", icon: AiOutlineFileText, link: "/docs" },
+  { id: 3, label: "創作", icon: AiOutlineFileText, link: "/create" },
   { id: 4, label: "編輯個人文章", icon: AiOutlineForm, link: "/create" },
   { id: 5, label: "管理文章", icon: FaFaucet, link: "/SimpleFaucet" },
-  { id: 6, label: "瀏覽文章數據", icon: FaFaucet, link: "/SimpleFaucet" },
+  { id: 6, label: "瀏覽文章數據", icon: AiOutlineBarChart, link: "/SimpleFaucet" },
 ];
 
 const Sidebar = () => {

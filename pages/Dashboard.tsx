@@ -58,7 +58,7 @@ const rows = [
 ];
 export default function CustomizedTables() {
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} className="mt-3 mr-5 w-auto">
       <Table stickyHeader aria-label="sticky table">
         <TableHead>
           <TableRow>

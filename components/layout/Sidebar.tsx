@@ -65,11 +65,11 @@ const Sidebar = () => {
                     <div key={menu.id} className={classes}>
                       <Link href={menu.link}>
                         <div className="flex w-full items-center py-4 px-3">
-                          <div className="w-8">
+                          <div className="w-auto mr-2">
                             <Icon />
                           </div>
                           {toggleCollapse && (
-                            <div className={classNames("font-medium text-dark w-20")}>{menu.label}</div>
+                            <div className={classNames("font-medium text-dark w-max")}>{menu.label}</div>
                           )}
                         </div>
                       </Link>
@@ -82,11 +82,11 @@ const Sidebar = () => {
                     <div key={menu.id} className={classes}>
                       <Link href={menu.link}>
                         <div className="flex w-full items-center py-4 px-3">
-                          <div className="w-8">
+                          <div className="w-auto mr-2">
                             <Icon />
                           </div>
                           {toggleCollapse && (
-                            <div className={classNames("font-medium text-dark w-20")}>{menu.label}</div>
+                            <div className={classNames("font-medium text-dark w-max")}>{menu.label}</div>
                           )}
                         </div>
                       </Link>

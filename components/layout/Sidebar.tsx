@@ -65,7 +65,7 @@ const Sidebar = () => {
                     <div key={menu.id} className={classes}>
                       <Link href={menu.link}>
                         <div className="flex w-full items-center py-4 px-3">
-                          <div className="w-auto mr-2">
+                          <div className="mr-2 w-auto">
                             <Icon />
                           </div>
                           {toggleCollapse && (
@@ -82,7 +82,7 @@ const Sidebar = () => {
                     <div key={menu.id} className={classes}>
                       <Link href={menu.link}>
                         <div className="flex w-full items-center py-4 px-3">
-                          <div className="w-auto mr-2">
+                          <div className="mr-2 w-auto">
                             <Icon />
                           </div>
                           {toggleCollapse && (

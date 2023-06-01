@@ -8,10 +8,8 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import * as React from "react";
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
+const StyledTableCell = styled(TableCell)(() => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.white,
-    color: theme.palette.common.black,
     position: "sticky",
     top: 0,
     textAlign: "left",
@@ -20,10 +18,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
   [`&.${tableCellClasses.body}`]: {
     textAlign: "left",
-    overflow: "hidden",
     verticalAlign: "top",
-    wordBreak: "break-word",
-    textOverflow: "ellipsis",
   },
 }));
 
@@ -53,36 +48,52 @@ const rows = [
     "tag",
     "內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1",
     "2023/5/21",
-    true,
+    false,
   ),
 ];
+
+function renderButton(isTrue: any) {
+  if (isTrue) {
+    return (
+      <button className=" mx-5 rounded-full border  bg-blue-500 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5">
+        已發布
+      </button>
+    );
+  } else {
+    return (
+      <button className="mx-5 rounded-full border bg-yellow-400 py-2 px-10 font-semibold text-white tablet:mx-2 tablet:px-5">
+        草稿
+      </button>
+    );
+  }
+}
 export default function CustomizedTables() {
   return (
     <TableContainer component={Paper} className="mt-3 mr-5 w-auto">
       <Table stickyHeader aria-label="sticky table">
         <TableHead>
           <TableRow>
-            <StyledTableCell align="center" colSpan={6} className="text-2xl">
+            <StyledTableCell align="center" colSpan={6} className="bg-purple-100 text-2xl">
               文章
             </StyledTableCell>
           </TableRow>
-          <TableRow className="rounded-lg">
-            <StyledTableCell className="text-base" sx={{ width: "20%" }}>
+          <TableRow className="rounded-lg ">
+            <StyledTableCell className="bg-red-200 text-base" sx={{ width: "20%" }}>
               標題
             </StyledTableCell>
-            <StyledTableCell className="text-base" sx={{ width: "20%" }}>
+            <StyledTableCell className="bg-orange-300 text-base" sx={{ width: "20%" }}>
               副標
             </StyledTableCell>
-            <StyledTableCell className="text-base" sx={{ width: "10%" }}>
+            <StyledTableCell className="bg-yellow-300 text-base" sx={{ width: "10%" }}>
               tag
             </StyledTableCell>
-            <StyledTableCell className="text-base" sx={{ width: "30%" }}>
+            <StyledTableCell className="bg-green-300 text-base" sx={{ width: "30%" }}>
               內文
             </StyledTableCell>
-            <StyledTableCell className="text-base" sx={{ width: "10%" }}>
+            <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "10%" }}>
               時間
             </StyledTableCell>
-            <StyledTableCell className="text-base" sx={{ width: "10%" }}>
+            <StyledTableCell className="bg-rose-300 text-base" sx={{ width: "10%" }}>
               狀態
             </StyledTableCell>
           </TableRow>
@@ -105,9 +116,7 @@ export default function CustomizedTables() {
               <StyledTableCell align="left">
                 <div className="overflow-hidden text-base">{row.time}</div>
               </StyledTableCell>
-              <StyledTableCell align="left">
-                <div className="overflow-hidden text-base">{row.state.toString()}</div>
-              </StyledTableCell>
+              <StyledTableCell align="left">{renderButton(row.state)}</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>

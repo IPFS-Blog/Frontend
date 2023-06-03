@@ -28,7 +28,7 @@ const StyledTableRow = styled(TableRow)(({}) => ({
     border: 0,
   },
 }));
-
+/*  FIXME: Andy 拿取文章資訊*/
 function createData(title: string, subtitle: string, tag: string, content: string, time: string, state: boolean) {
   return { title, subtitle, tag, content, time, state };
 }
@@ -51,7 +51,7 @@ const rows = [
     false,
   ),
 ];
-
+//文章狀態button
 function renderButton(isTrue: any) {
   if (isTrue) {
     return (
@@ -69,6 +69,7 @@ function renderButton(isTrue: any) {
 }
 export default function CustomizedTables() {
   return (
+    /* 包括標題欄位 and 文章表格 */
     <TableContainer component={Paper} className="mt-3 mr-5 w-auto">
       <Table stickyHeader aria-label="sticky table">
         <TableHead>

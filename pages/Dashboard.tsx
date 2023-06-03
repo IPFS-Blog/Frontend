@@ -78,22 +78,22 @@ export default function CustomizedTables() {
             </StyledTableCell>
           </TableRow>
           <TableRow className="rounded-lg ">
-            <StyledTableCell className="bg-red-200 text-base" sx={{ width: "20%" }}>
+            <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "20%" }}>
               標題
             </StyledTableCell>
-            <StyledTableCell className="bg-orange-300 text-base" sx={{ width: "20%" }}>
+            <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "20%" }}>
               副標
             </StyledTableCell>
-            <StyledTableCell className="bg-yellow-300 text-base" sx={{ width: "10%" }}>
+            <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "10%" }}>
               tag
             </StyledTableCell>
-            <StyledTableCell className="bg-green-300 text-base" sx={{ width: "30%" }}>
+            <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "30%" }}>
               內文
             </StyledTableCell>
             <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "10%" }}>
               時間
             </StyledTableCell>
-            <StyledTableCell className="bg-rose-300 text-base" sx={{ width: "10%" }}>
+            <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "10%" }}>
               狀態
             </StyledTableCell>
           </TableRow>

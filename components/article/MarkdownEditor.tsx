@@ -29,9 +29,9 @@ const MarkdownEditor = () => {
     const data = { title, subtitle, contents: markdown, release };
     apiArticleCreate(jwt, data)
       .then(() => {
-        if(release){
-          setSuccessMessage("上傳 " + title + " 發布成功");  
-        }else{
+        if (release) {
+          setSuccessMessage("上傳 " + title + " 發布成功");
+        } else {
           setSuccessMessage("另存 " + title + " 為草稿成功");
         }
         setSuccessAlert(true);
@@ -132,14 +132,20 @@ const MarkdownEditor = () => {
         <button
           type="submit"
           className="inline-flex items-center rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900"
-          onClick={() => {ArticleCreate(); setrelease(1);}}
+          onClick={() => {
+            ArticleCreate();
+            setrelease(1);
+          }}
         >
           上傳發布
         </button>
         <button
           type="submit"
           className="inline-flex items-center rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900"
-          onClick={() => {ArticleCreate(); setrelease(0);}}
+          onClick={() => {
+            ArticleCreate();
+            setrelease(0);
+          }}
         >
           另存草稿
         </button>

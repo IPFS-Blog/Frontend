@@ -1,12 +1,7 @@
 name: Frontend SonarQube Build
 
 on:
-  pull_request:
-    branches:
-      - master
-      - developer
-    types:
-      - closed
+  workflow_dispatch:
 
 jobs:
   build:

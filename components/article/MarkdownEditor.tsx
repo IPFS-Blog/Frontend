@@ -7,7 +7,7 @@ import {
   VisibilityOff,
 } from "@mui/icons-material";
 import MarkdownIt from "markdown-it";
-// import { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 
 import FailAlert from "@/components/alert/Fail";
@@ -20,22 +20,25 @@ const MarkdownEditor = () => {
   const [title, setTitle] = useState(""); // 標題
   const [subtitle, setSubtitle] = useState(""); // 副標題
   const [markdown, setMarkdown] = useState(""); // 內文
-  // const router = useRouter();
+  const [release, setrelease] = useState(0); // release狀態
+  const router = useRouter();
 
   const ArticleCreate = async () => {
     let jwt = "";
     await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
-    const data = { title, subtitle, contents: markdown };
-    console.log(data);
+    const data = { title, subtitle, contents: markdown, release };
     apiArticleCreate(jwt, data)
       .then(() => {
-        setSuccessMessage("另存 " + title + " 為草稿成功");
+        if(release){
+          setSuccessMessage("上傳 " + title + " 發布成功");  
+        }else{
+          setSuccessMessage("另存 " + title + " 為草稿成功");
+        }
         setSuccessAlert(true);
-        // router.push("/Dashboard"); //回到後台查看自己草稿
+        router.push("/Dashboard"); //回到後台查看自己草稿
       })
-      .catch((error: any) => {
-        console.log(error);
-        setFailMessage("失敗儲存草稿");
+      .catch(() => {
+        setFailMessage("失敗，請再重新試試(如有問題可以向平台反映)。");
         setFailAlert(true);
       });
   };
@@ -129,13 +132,18 @@ const MarkdownEditor = () => {
         <button
           type="submit"
           className="inline-flex items-center rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900"
-          onClick={() => ArticleCreate()}
+          onClick={() => {ArticleCreate(); setrelease(1);}}
+        >
+          上傳發布
+        </button>
+        <button
+          type="submit"
+          className="inline-flex items-center rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900"
+          onClick={() => {ArticleCreate(); setrelease(0);}}
         >
           另存草稿
         </button>
       </div>
-      {edit}
-
       {edit && preview ? (
         <>
           <div className="no-scrollbar resize-none overflow-auto border-r-4 border-gray-300 bg-white text-lg text-gray-800 focus:outline-none dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-400">

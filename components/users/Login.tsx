@@ -199,13 +199,11 @@ export default function Login() {
             open={Boolean(anchorElUser)}
             onClose={() => setAnchorElUser(null)}
           >
-            <MenuItem onClick={() => setAnchorElUser(null)}>
-              <Typography textAlign="center">
-                <a href={"/" + User.profile.username} className="no-underline">
-                  {User.profile.username}
-                </a>
-              </Typography>
-            </MenuItem>
+            <a href={"/" + User.profile.username} className="no-underline">
+              <MenuItem onClick={() => setAnchorElUser(null)}>
+                <Typography textAlign="center">{User.profile.username}</Typography>
+              </MenuItem>
+            </a>
             <MenuItem
               onClick={() => {
                 _apiAuthLogout();

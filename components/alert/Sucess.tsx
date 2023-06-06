@@ -1,25 +1,24 @@
-import { AlertProps, Snackbar } from "@mui/material";
-import MuiAlert from "@mui/material/Alert";
-import { useState } from "react";
-import * as React from "react";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+import Stack from "@mui/material/Stack";
 
-export default function SimpleFaucet(props: any) {
-  const [alertEditSucess, setalertEditSucess] = useState(true);
-  const alertHandleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setalertEditSucess(false);
-  };
-  //material ui toast
-  const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-  });
+const Success = (props: any) => {
   return (
-    <Snackbar open={alertEditSucess} autoHideDuration={6000} onClose={alertHandleClose}>
-      <Alert onClose={alertHandleClose} severity="success" sx={{ width: "100%" }}>
-        {props.message}
+    <Stack
+      sx={{
+        width: "auto",
+        position: "fixed",
+        bottom: "20px",
+        left: "20px",
+        zIndex: 9999,
+      }}
+      spacing={2}
+    >
+      <Alert severity="success">
+        <AlertTitle>Success</AlertTitle>
+        {props.message} <strong>check it out!</strong>
       </Alert>
-    </Snackbar>
+    </Stack>
   );
-}
+};
+export default Success;

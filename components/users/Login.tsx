@@ -49,7 +49,7 @@ export default function Login() {
         if (InChainId == false) {
           // FIXME: Lin 要求加入我們的區塊鏈
           window.alert("要求加入我們的網路");
-          router.push("/NetworkInstructions", undefined, { shallow: true });
+          router.push("/NetworkInstructions");
         } else if (InChainId == "Fix") {
           // FIXME: Lin 區塊鏈維修中
           window.alert("區塊鏈維修中");
@@ -199,13 +199,11 @@ export default function Login() {
             open={Boolean(anchorElUser)}
             onClose={() => setAnchorElUser(null)}
           >
-            <MenuItem onClick={() => setAnchorElUser(null)}>
-              <Typography textAlign="center">
-                <a href={"/" + User.profile.username} className="no-underline">
-                  {User.profile.username}
-                </a>
-              </Typography>
-            </MenuItem>
+            <a href={"/" + User.profile.username} className="no-underline">
+              <MenuItem onClick={() => setAnchorElUser(null)}>
+                <Typography textAlign="center">{User.profile.username}</Typography>
+              </MenuItem>
+            </a>
             <MenuItem
               onClick={() => {
                 _apiAuthLogout();

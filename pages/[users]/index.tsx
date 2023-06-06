@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useClipboard } from "use-clipboard-copy";
 
 import { apiUserGetCreaterArticle, apiUserGetCreaterData } from "@/components/api";
-import ArticleItem from "@/components/article/comment/ArticleItem";
+import ArticleItem from "@/components/article/ArticleItem";
 import Card from "@/components/users/Card";
 import DonateButton from "@/components/users/DonateButton";
 import Editprofile from "@/components/users/EditProfile";

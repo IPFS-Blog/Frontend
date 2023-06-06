@@ -17,7 +17,7 @@ const menuItems = [
   { id: 1, label: "首頁", icon: AiOutlineHome, link: "/" },
   { id: 2, label: "我的後台", icon: AiOutlineLayout, link: "/Dashboard" },
   { id: 3, label: "文件", icon: AiOutlineFileText, link: "/docs" },
-  { id: 4, label: "創作", icon: AiOutlineForm, link: "/create" },
+  { id: 4, label: "創建", icon: AiOutlineForm, link: "/CreateArticle" },
   { id: 5, label: "水龍頭", icon: FaFaucet, link: "/SimpleFaucet" },
 ];
 

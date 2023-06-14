@@ -1,6 +1,7 @@
-export default function user() {
-  const getInitialProps = () => {
-    throw new Error("Server Test 1");
-  };
-  return getInitialProps();
+export default function Test1() {
+  return null;
+}
+
+export async function getServerSideProps() {
+  throw new Error("Server Test 1");
 }

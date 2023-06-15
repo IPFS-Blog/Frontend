@@ -17,6 +17,8 @@ module.exports = {
         "white-100": "#f3f3f3",
         "white-50": "rgba(253, 247, 247, 0.60)",
         "yellow-50": "rgba(253, 246, 231, 0.32)",
+        "green-700": "rgba(0, 182, 155, 1)",
+        "yellow-400": "rgba(252, 190, 45, 1)",
       },
       textColor: {
         DEFAULT: "#1F2937",

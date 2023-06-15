@@ -55,15 +55,40 @@ const rows = [
 function renderButton(isTrue: any) {
   if (isTrue) {
     return (
-      <button className=" mx-5 w-4/5 rounded-full border  bg-gray-400 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5">
+      <button className=" mx-5 w-4/5 rounded-full border  bg-yellow-400 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5">
         已發布
       </button>
     );
   } else {
     return (
-      <button className="mx-5 w-4/5 rounded-full border bg-yellow-400 py-2 px-10 font-semibold text-white tablet:mx-2 tablet:px-5">
+      <button className="mx-5 w-4/5 rounded-full border bg-green-700 py-2 px-10 font-semibold text-white tablet:mx-2 tablet:px-5">
         草稿
       </button>
+    );
+  }
+}
+function activebutton(isTrue: any) {
+  if (isTrue) {
+    return (
+      <div>
+        <button className=" mx-5 my-2 w-4/5 rounded-full border  bg-red-500 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5">
+          刪除
+        </button>
+        <button className=" mx-5  w-4/5 rounded-full border  bg-green-700 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5">
+          更改狀態
+        </button>
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <button className=" mx-5 my-2 w-4/5 rounded-full border  bg-red-500 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5">
+          刪除
+        </button>
+        <button className=" mx-5 w-4/5 rounded-full border  bg-blue-500 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5">
+          編輯
+        </button>
+      </div>
     );
   }
 }
@@ -74,12 +99,12 @@ export default function CustomizedTables() {
       <Table stickyHeader aria-label="sticky table">
         <TableHead>
           <TableRow>
-            <StyledTableCell align="center" colSpan={7} className="bg-purple-100 text-2xl">
+            <StyledTableCell align="center" colSpan={7} className=" text-2xl">
               文章
             </StyledTableCell>
           </TableRow>
           <TableRow className="rounded-lg ">
-            <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "8%" }}>
+            <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "10%" }}>
               狀態
             </StyledTableCell>
             <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "15%" }}>
@@ -88,13 +113,13 @@ export default function CustomizedTables() {
             <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "15%" }}>
               副標
             </StyledTableCell>
-            <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "11%" }}>
+            <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "15%" }}>
               tag
             </StyledTableCell>
             <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "25%" }}>
               內文
             </StyledTableCell>
-            <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "16%" }}>
+            <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "10%" }}>
               時間
             </StyledTableCell>
             <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "10%" }}></StyledTableCell>
@@ -119,14 +144,7 @@ export default function CustomizedTables() {
               <StyledTableCell align="left">
                 <div className="overflow-hidden text-base">{row.time}</div>
               </StyledTableCell>
-              <StyledTableCell align="left">
-                <button className=" mx-5 w-4/5 rounded-full border  bg-red-500 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5">
-                  刪除
-                </button>
-                <button className=" mx-5 w-4/5 rounded-full border  bg-blue-500 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5">
-                  編輯
-                </button>
-              </StyledTableCell>
+              <StyledTableCell align="left">{activebutton(row.state)}</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>

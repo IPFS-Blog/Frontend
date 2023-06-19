@@ -6,7 +6,14 @@ import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import router from "next/router";
 import * as React from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import { _apiCheckJwt, apiArticleDeleteArticle, apiUserGetCreaterArticle } from "@/components/api";
+import { LoginFunction } from "@/helpers/users/LoginFunction";
+import { setLogin } from "@/store/UserSlice";
 
 const StyledTableCell = styled(TableCell)(() => ({
   [`&.${tableCellClasses.head}`]: {
@@ -28,71 +35,89 @@ const StyledTableRow = styled(TableRow)(({}) => ({
     border: 0,
   },
 }));
-/*  FIXME: Andy 拿取文章資訊*/
-function createData(state: boolean, title: string, subtitle: string, tag: string, content: string, time: string) {
-  return { state, title, subtitle, tag, content, time };
-}
 
-const rows = [
-  createData(
-    true,
-    "標題123456標題1標標題123456標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1",
-    "副標題1",
-    "tag",
-    "內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1",
-    "2023/5/21",
-  ),
-  createData(
-    false,
-    "標題123456標題1標標題123456標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1標題1",
-    "副標題1",
-    "tag",
-    "內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1內文1",
-    "2023/5/21",
-  ),
-];
-//文章狀態button
-function renderButton(isTrue: any) {
-  if (isTrue) {
-    return (
-      <button className=" mx-5 w-4/5 rounded-full border  bg-yellow-400 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5">
-        已發布
-      </button>
-    );
-  } else {
-    return (
-      <button className="mx-5 w-4/5 rounded-full border bg-green-700 py-2 px-10 font-semibold text-white tablet:mx-2 tablet:px-5">
-        草稿
-      </button>
-    );
-  }
-}
-function activebutton(isTrue: any) {
-  if (isTrue) {
-    return (
-      <div>
-        <button className=" mx-5 my-2 w-4/5 rounded-full border  bg-red-500 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5">
-          刪除
-        </button>
-        <button className=" mx-5  w-4/5 rounded-full border  bg-green-700 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5">
-          更改狀態
-        </button>
-      </div>
-    );
-  } else {
-    return (
-      <div>
-        <button className=" mx-5 my-2 w-4/5 rounded-full border  bg-red-500 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5">
-          刪除
-        </button>
-        <button className=" mx-5 w-4/5 rounded-full border  bg-blue-500 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5">
-          編輯
-        </button>
-      </div>
-    );
-  }
-}
 export default function CustomizedTables() {
+  const User = useSelector((state: any) => state.User);
+  const dispatch = useDispatch();
+  const [Articles, setArticles] = useState([]);
+  useEffect(() => {
+    const UserCheck = async () => {
+      LoginFunction().then(userData => {
+        if (userData == null) router.push("/");
+        else dispatch(setLogin(userData));
+      });
+    };
+    const TakeArticle = async () => {
+      try {
+        const res = await apiUserGetCreaterArticle(User.profile.username);
+        setArticles(res.data);
+      } catch {}
+    };
+    UserCheck();
+    TakeArticle();
+  }, [User.profile.username, dispatch]);
+
+  //文章狀態button
+  function renderButton(isTrue: any) {
+    if (isTrue) {
+      return (
+        <button className=" mx-5 w-4/5 rounded-full border  bg-yellow-400 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5">
+          已發布
+        </button>
+      );
+    } else {
+      return (
+        <button className="mx-5 w-4/5 rounded-full border bg-green-700 py-2 px-10 font-semibold text-white tablet:mx-2 tablet:px-5">
+          草稿
+        </button>
+      );
+    }
+  }
+
+  function activebutton(isTrue: any, articleid: any) {
+    if (isTrue) {
+      return (
+        <div>
+          <button
+            onClick={() => deleteArticle(articleid)}
+            className=" mx-5 my-2 w-4/5 rounded-full border  bg-red-500 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5"
+          >
+            刪除
+          </button>
+          <button className=" mx-5  w-4/5 rounded-full border  bg-green-700 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5">
+            更改狀態
+          </button>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <button
+            onClick={() => deleteArticle(articleid)}
+            className=" mx-5 my-2 w-4/5 rounded-full border  bg-red-500 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5"
+          >
+            刪除
+          </button>
+          <button className=" mx-5 w-4/5 rounded-full border  bg-blue-500 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5">
+            編輯
+          </button>
+        </div>
+      );
+    }
+  }
+  async function deleteArticle(articleid: any) {
+    console.log("?");
+    let jwt = "";
+    await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
+    apiArticleDeleteArticle(jwt, articleid)
+      .then(async () => {
+        try {
+          const res = await apiUserGetCreaterArticle(User.profile.username);
+          setArticles(res.data);
+        } catch {}
+      })
+      .catch();
+  }
   return (
     /* 包括標題欄位 and 文章表格 */
     <TableContainer component={Paper} className="mt-3 mr-5 w-auto">
@@ -126,25 +151,25 @@ export default function CustomizedTables() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map(row => (
-            <StyledTableRow key={row.title}>
-              <StyledTableCell align="left">{renderButton(row.state)}</StyledTableCell>
+          {Articles.map((item: any) => (
+            <StyledTableRow key={item.title}>
+              <StyledTableCell align="left">{renderButton(item.release)}</StyledTableCell>
               <StyledTableCell component="th" scope="row">
-                <div className="h-24 overflow-hidden text-base">{row.title}</div>
+                <div className="h-24 overflow-hidden text-base">{item.title}</div>
               </StyledTableCell>
               <StyledTableCell component="th" scope="row" className="overflow-hidden text-base ">
-                {row.subtitle}
+                {item.subtitle}
               </StyledTableCell>
               <StyledTableCell align="left">
-                <div className="overflow-hidden text-base">{row.tag}</div>
+                <div className="overflow-hidden text-base">{item.tag}</div>
               </StyledTableCell>
               <StyledTableCell align="left">
-                <div className="h-24 overflow-hidden text-ellipsis text-base">{row.content}</div>
+                <div className="h-24 overflow-hidden text-ellipsis text-base">{item.content}</div>
               </StyledTableCell>
               <StyledTableCell align="left">
-                <div className="overflow-hidden text-base">{row.time}</div>
+                <div className="overflow-hidden text-base">{item.updateAt.substring(0, 10)}</div>
               </StyledTableCell>
-              <StyledTableCell align="left">{activebutton(row.state)}</StyledTableCell>
+              <StyledTableCell align="left">{activebutton(item.release, item.id)}</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>

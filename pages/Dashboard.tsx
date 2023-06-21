@@ -111,6 +111,7 @@ export default function CustomizedTables() {
     await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
     apiArticleDeleteArticle(jwt, articleid)
       .then(async () => {
+        //FIXME: Lin alert 1.刪除成功、2.確定是否刪除
         try {
           const res = await apiUserGetCreaterArticle(User.profile.username);
           setArticles(res.data);

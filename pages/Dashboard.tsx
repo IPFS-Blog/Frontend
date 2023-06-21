@@ -50,6 +50,7 @@ export default function CustomizedTables() {
     const TakeArticle = async () => {
       try {
         const res = await apiUserGetCreaterArticle(User.profile.username);
+        console.log(res.data);
         setArticles(res.data);
       } catch {}
     };
@@ -106,7 +107,6 @@ export default function CustomizedTables() {
     }
   }
   async function deleteArticle(articleid: any) {
-    console.log("?");
     let jwt = "";
     await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
     apiArticleDeleteArticle(jwt, articleid)

@@ -77,14 +77,14 @@ export default function CustomizedTables() {
   function activebutton(isTrue: any, articleid: any, articleTitle: any) {
     if (isTrue) {
       return (
-        <div>
+        <div className="flex">
           <button
             onClick={() => deleteArticle(articleid)}
             className=" mx-5 my-2 w-4/5 rounded-full border  bg-red-500 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5"
           >
             刪除
           </button>
-          <button className=" mx-5  w-4/5 rounded-full border  bg-green-700 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5">
+          <button className=" mx-5 my-2 w-4/5 rounded-full border  bg-green-700 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5">
             更改狀態
           </button>
           <button
@@ -142,7 +142,7 @@ export default function CustomizedTables() {
       <Table stickyHeader aria-label="sticky table">
         <TableHead>
           <TableRow>
-            <StyledTableCell align="center" colSpan={7} className=" text-2xl">
+            <StyledTableCell align="center" colSpan={4} className=" text-2xl">
               文章
             </StyledTableCell>
           </TableRow>
@@ -150,22 +150,16 @@ export default function CustomizedTables() {
             <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "10%" }}>
               狀態
             </StyledTableCell>
-            <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "15%" }}>
+            <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "20%" }}>
               標題
             </StyledTableCell>
-            <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "15%" }}>
-              副標
-            </StyledTableCell>
-            <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "15%" }}>
+            <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "20%" }}>
               tag
             </StyledTableCell>
-            <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "25%" }}>
-              內文
-            </StyledTableCell>
-            <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "10%" }}>
+            <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "20%" }}>
               時間
             </StyledTableCell>
-            <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "10%" }}></StyledTableCell>
+            <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "30%" }}></StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -175,14 +169,8 @@ export default function CustomizedTables() {
               <StyledTableCell component="th" scope="row">
                 <div className="h-24 overflow-hidden text-base">{item.title}</div>
               </StyledTableCell>
-              <StyledTableCell component="th" scope="row" className="overflow-hidden text-base ">
-                {item.subtitle}
-              </StyledTableCell>
               <StyledTableCell align="left">
                 <div className="overflow-hidden text-base">{item.tag}</div>
-              </StyledTableCell>
-              <StyledTableCell align="left">
-                <div className="h-24 overflow-hidden text-ellipsis text-base">{item.content}</div>
               </StyledTableCell>
               <StyledTableCell align="left">
                 <div className="overflow-hidden text-base">{item.updateAt.substring(0, 10)}</div>

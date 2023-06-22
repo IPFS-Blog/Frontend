@@ -31,7 +31,7 @@ const dashboardSidebar = [
 
 const Sidebar = () => {
   const router = useRouter();
-  const routerpath = router.asPath;
+  const routerPath = router.asPath;
   const [toggleCollapse, setToggleCollapse] = useState(false);
   const collapseIconClasses = classNames({
     "rotate-180": toggleCollapse,
@@ -45,6 +45,7 @@ const Sidebar = () => {
   const handleSidebarToggle = () => {
     setToggleCollapse(!toggleCollapse);
   };
+  const hideNavbar = routerPath === "/Dashboard" || routerPath.startsWith("/articleHistory/");
 
   return (
     <div>
@@ -55,8 +56,8 @@ const Sidebar = () => {
             <AiOutlineDoubleLeft />
           </button>
           <div className="mt-2 flex flex-col items-start">
-            {/* TODO: 如果是Dashboard會換sidebar */}
-            {routerpath !== "/Dashboard"
+            {/* TODO: 如果是Dashboard、articleHistory會換sidebar */}
+            {!hideNavbar
               ? menuItems.map(({ icon: Icon, ...menu }) => {
                   const classes = getNavItemClasses(menu);
                   return (

@@ -50,7 +50,6 @@ export default function CustomizedTables() {
     const TakeArticle = async () => {
       try {
         const res = await apiUserGetCreaterArticle(User.profile.username);
-        console.log(res.data);
         setArticles(res.data);
       } catch {}
     };
@@ -75,7 +74,7 @@ export default function CustomizedTables() {
     }
   }
 
-  function activebutton(isTrue: any, articleid: any) {
+  function activebutton(isTrue: any, articleid: any, articleTitle: any) {
     if (isTrue) {
       return (
         <div>
@@ -87,6 +86,12 @@ export default function CustomizedTables() {
           </button>
           <button className=" mx-5  w-4/5 rounded-full border  bg-green-700 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5">
             更改狀態
+          </button>
+          <button
+            onClick={() => articleHistory(articleid, articleTitle)}
+            className=" mx-5 my-2 w-4/5 rounded-full border  bg-purple-500 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5"
+          >
+            歷史紀錄
           </button>
         </div>
       );
@@ -101,6 +106,12 @@ export default function CustomizedTables() {
           </button>
           <button className=" mx-5 w-4/5 rounded-full border  bg-blue-500 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5">
             編輯
+          </button>
+          <button
+            onClick={() => articleHistory(articleid, articleTitle)}
+            className=" mx-5 my-2 w-4/5 rounded-full border  bg-purple-500 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5"
+          >
+            歷史紀錄
           </button>
         </div>
       );
@@ -118,6 +129,12 @@ export default function CustomizedTables() {
         } catch {}
       })
       .catch();
+  }
+  function articleHistory(articleid: any, articleTitle: any) {
+    router.push({
+      pathname: "/articleHistory/[Article]",
+      query: { id: articleid, Article: articleTitle },
+    });
   }
   return (
     /* 包括標題欄位 and 文章表格 */
@@ -170,7 +187,7 @@ export default function CustomizedTables() {
               <StyledTableCell align="left">
                 <div className="overflow-hidden text-base">{item.updateAt.substring(0, 10)}</div>
               </StyledTableCell>
-              <StyledTableCell align="left">{activebutton(item.release, item.id)}</StyledTableCell>
+              <StyledTableCell align="left">{activebutton(item.release, item.id, item.title)}</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>

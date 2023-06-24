@@ -167,7 +167,7 @@ export default function CustomizedTables() {
             <StyledTableRow key={item.title}>
               <StyledTableCell align="left">{renderButton(item.release)}</StyledTableCell>
               <StyledTableCell component="th" scope="row">
-                <div className="h-24 overflow-hidden text-base">{item.title}</div>
+                <div className="h-20 overflow-hidden text-base">{item.title}</div>
               </StyledTableCell>
               <StyledTableCell align="left">
                 <div className="overflow-hidden text-base">{item.tag}</div>

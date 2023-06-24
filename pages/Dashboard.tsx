@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { _apiCheckJwt, apiArticleDeleteArticle, apiUserGetCreaterArticle } from "@/components/api";
 import { LoginFunction } from "@/helpers/users/LoginFunction";
 import { setLogin } from "@/store/UserSlice";
+import AlertDialogSlide from "@/components/alert/AlertDialogSlide";
 
 const StyledTableCell = styled(TableCell)(() => ({
   [`&.${tableCellClasses.head}`]: {
@@ -37,9 +38,11 @@ const StyledTableRow = styled(TableRow)(({}) => ({
 }));
 
 export default function CustomizedTables() {
+  // TODO: Handle funtion
   const User = useSelector((state: any) => state.User);
   const dispatch = useDispatch();
   const [Articles, setArticles] = useState([]);
+  const [selectedArticleId, setSelectedArticleId] = useState("");
   useEffect(() => {
     const UserCheck = async () => {
       LoginFunction().then(userData => {
@@ -57,6 +60,36 @@ export default function CustomizedTables() {
     TakeArticle();
   }, [User.profile.username, dispatch]);
 
+  async function deleteArticle(articleId: any, articleTitle: any) {
+    setSelectedArticleId(articleId);
+    setArticleTitle(articleTitle);
+    setOpenDeleteDialog(true);
+  }
+  
+  const handleDelete = async () => {
+    setOpenDeleteDialog(false);
+    let jwt = "";
+    await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
+    apiArticleDeleteArticle(jwt, selectedArticleId)
+      .then(async () => {
+        try {
+          const res = await apiUserGetCreaterArticle(User.profile.username);
+          setArticles(res.data);
+        } catch {}
+      })
+      .catch();
+  };
+  
+  function articleHistory(articleid: any, articleTitle: any) {
+    router.push({
+      pathname: "/articleHistory/[Article]",
+      query: { id: articleid, Article: articleTitle },
+    });
+  }
+
+  //TODO: UI function
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [articleTitle, setArticleTitle]= useState("");
   //文章狀態button
   function renderButton(isTrue: any) {
     if (isTrue) {
@@ -79,7 +112,7 @@ export default function CustomizedTables() {
       return (
         <div className="flex">
           <button
-            onClick={() => deleteArticle(articleid)}
+            onClick={() => deleteArticle(articleid, articleTitle)}
             className=" mx-5 my-2 w-4/5 rounded-full border  bg-red-500 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5"
           >
             刪除
@@ -99,7 +132,7 @@ export default function CustomizedTables() {
       return (
         <div>
           <button
-            onClick={() => deleteArticle(articleid)}
+            onClick={() => deleteArticle(articleid, articleTitle)}
             className=" mx-5 my-2 w-4/5 rounded-full border  bg-red-500 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5"
           >
             刪除
@@ -117,69 +150,56 @@ export default function CustomizedTables() {
       );
     }
   }
-  async function deleteArticle(articleid: any) {
-    let jwt = "";
-    await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
-    apiArticleDeleteArticle(jwt, articleid)
-      .then(async () => {
-        //FIXME: Lin alert 1.刪除成功、2.確定是否刪除
-        try {
-          const res = await apiUserGetCreaterArticle(User.profile.username);
-          setArticles(res.data);
-        } catch {}
-      })
-      .catch();
-  }
-  function articleHistory(articleid: any, articleTitle: any) {
-    router.push({
-      pathname: "/articleHistory/[Article]",
-      query: { id: articleid, Article: articleTitle },
-    });
-  }
+
   return (
-    /* 包括標題欄位 and 文章表格 */
-    <TableContainer component={Paper} className="mt-3 mr-5 w-auto">
-      <Table stickyHeader aria-label="sticky table">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell align="center" colSpan={4} className=" text-2xl">
-              文章
-            </StyledTableCell>
-          </TableRow>
-          <TableRow className="rounded-lg ">
-            <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "10%" }}>
-              狀態
-            </StyledTableCell>
-            <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "20%" }}>
-              標題
-            </StyledTableCell>
-            <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "20%" }}>
-              tag
-            </StyledTableCell>
-            <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "20%" }}>
-              時間
-            </StyledTableCell>
-            <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "30%" }}></StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {Articles.map((item: any) => (
-            <StyledTableRow key={item.title}>
-              <StyledTableCell align="left">{renderButton(item.release)}</StyledTableCell>
-              <StyledTableCell component="th" scope="row">
-                <div className="h-20 overflow-hidden text-base">{item.title}</div>
+    <>
+      {/* 包括標題欄位 and 文章表格 */}
+      <TableContainer component={Paper} className="mt-3 mr-5 w-auto">
+        <Table stickyHeader aria-label="sticky table">
+          <TableHead>
+            <TableRow>
+              <StyledTableCell align="center" colSpan={4} className=" text-2xl">
+                文章
               </StyledTableCell>
-              <StyledTableCell align="left">
-                <div className="overflow-hidden text-base">{item.tag}</div>
+            </TableRow>
+            <TableRow className="rounded-lg ">
+              <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "10%" }}>
+                狀態
               </StyledTableCell>
-              <StyledTableCell align="left">
-                <div className="overflow-hidden text-base">{item.updateAt.substring(0, 10)}</div>
+              <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "20%" }}>
+                標題
               </StyledTableCell>
-              <StyledTableCell align="left">{activebutton(item.release, item.id, item.title)}</StyledTableCell>
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+              <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "20%" }}>
+                tag
+              </StyledTableCell>
+              <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "20%" }}>
+                時間
+              </StyledTableCell>
+              <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "30%" }}></StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {Articles.map((item: any) => (
+              <StyledTableRow key={item.title}>
+                <StyledTableCell align="left">{renderButton(item.release)}</StyledTableCell>
+                <StyledTableCell component="th" scope="row">
+                  <div className="h-20 overflow-hidden text-base">{item.title}</div>
+                </StyledTableCell>
+                <StyledTableCell align="left">
+                  <div className="overflow-hidden text-base">{item.tag}</div>
+                </StyledTableCell>
+                <StyledTableCell align="left">
+                  <div className="overflow-hidden text-base">{item.updateAt.substring(0, 10)}</div>
+                </StyledTableCell>
+                <StyledTableCell align="left">{activebutton(item.release, item.id, item.title)}</StyledTableCell>
+              </StyledTableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      {openDeleteDialog && (
+        <AlertDialogSlide handleDelete={handleDelete} title={"確認刪除 " + articleTitle} />
+      )}
+    </>
   );
 }

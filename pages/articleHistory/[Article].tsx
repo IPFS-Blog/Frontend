@@ -95,13 +95,13 @@ export default function CustomizedTables() {
             </StyledTableCell>
           </TableRow>
           <TableRow className="rounded-lg">
-            <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "60%" }}>
+            <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "55%" }}>
               版本紀錄
             </StyledTableCell>
             <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "30%" }}>
               時間
             </StyledTableCell>
-            <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "10%" }}></StyledTableCell>
+            <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "15%" }}></StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -113,10 +113,10 @@ export default function CustomizedTables() {
               <StyledTableCell align="left">
                 <div className="overflow-hidden text-base">{row.creationTime}</div>
               </StyledTableCell>
-              <StyledTableCell align="left">
+              <StyledTableCell align="center">
                 <button
                   onClick={() => viewArticle(row.hashCode)}
-                  className="mx-5 w-4/5 rounded-full border bg-blue-500 py-2 px-10 font-semibold text-white tablet:mx-2 tablet:px-5"
+                  className="mx-5 w-fit rounded-full border bg-blue-500 py-2 px-10 font-semibold text-white tablet:mx-2 tablet:px-5"
                 >
                   查看文章
                 </button>

@@ -30,9 +30,9 @@ const MarkdownEditor = () => {
     apiArticleCreate(jwt, data)
       .then(() => {
         if (release) {
-          setSuccessMessage("上傳 " + title + " 發布成功" + release);
+          setSuccessMessage("上傳 " + title + " 發布成功");
         } else {
-          setSuccessMessage("另存 " + title + " 為草稿成功" + release);
+          setSuccessMessage("另存 " + title + " 為草稿成功");
         }
         setSuccessAlert(true);
         setTitle("");

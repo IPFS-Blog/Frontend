@@ -11,10 +11,10 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import AlertDialogSlide from "@/components/alert/AlertDialogSlide";
 import { _apiCheckJwt, apiArticleDeleteArticle, apiUserGetCreaterArticle } from "@/components/api";
 import { LoginFunction } from "@/helpers/users/LoginFunction";
 import { setLogin } from "@/store/UserSlice";
-import AlertDialogSlide from "@/components/alert/AlertDialogSlide";
 
 const StyledTableCell = styled(TableCell)(() => ({
   [`&.${tableCellClasses.head}`]: {
@@ -65,7 +65,7 @@ export default function CustomizedTables() {
     setArticleTitle(articleTitle);
     setOpenDeleteDialog(true);
   }
-  
+
   const handleDelete = async () => {
     setOpenDeleteDialog(false);
     let jwt = "";
@@ -79,7 +79,7 @@ export default function CustomizedTables() {
       })
       .catch();
   };
-  
+
   function articleHistory(articleid: any, articleTitle: any) {
     router.push({
       pathname: "/articleHistory/[Article]",
@@ -89,7 +89,7 @@ export default function CustomizedTables() {
 
   //TODO: UI function
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [articleTitle, setArticleTitle]= useState("");
+  const [articleTitle, setArticleTitle] = useState("");
   //文章狀態button
   function renderButton(isTrue: any) {
     if (isTrue) {
@@ -130,14 +130,14 @@ export default function CustomizedTables() {
       );
     } else {
       return (
-        <div>
+        <div className="flex">
           <button
             onClick={() => deleteArticle(articleid, articleTitle)}
             className=" mx-5 my-2 w-4/5 rounded-full border  bg-red-500 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5"
           >
             刪除
           </button>
-          <button className=" mx-5 w-4/5 rounded-full border  bg-blue-500 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5">
+          <button className=" mx-5 my-2 w-4/5 rounded-full border  bg-blue-500 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5">
             編輯
           </button>
           <button
@@ -197,9 +197,7 @@ export default function CustomizedTables() {
           </TableBody>
         </Table>
       </TableContainer>
-      {openDeleteDialog && (
-        <AlertDialogSlide handleDelete={handleDelete} title={"確認刪除 " + articleTitle} />
-      )}
+      {openDeleteDialog && <AlertDialogSlide handleDelete={handleDelete} title={"確認刪除 " + articleTitle} />}
     </>
   );
 }

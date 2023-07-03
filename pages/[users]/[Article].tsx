@@ -3,6 +3,7 @@ import BookmarkAddOutlinedIcon from "@mui/icons-material/BookmarkAddOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import SendIcon from "@mui/icons-material/Send";
 import Avatar from "@mui/material/Avatar";
+import MarkdownIt from "markdown-it";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -10,6 +11,7 @@ import { apiArticleTakeArticle } from "@/components/api";
 import Comment from "@/components/article/comment/Comment";
 import DonateButton from "@/components/users/DonateButton";
 import { update } from "@/store/CreaterSlice";
+import styles from "@/styles/MarkdownEditor.module.css";
 
 export default function Article(props: any) {
   // TODO: Handle funtion
@@ -22,6 +24,14 @@ export default function Article(props: any) {
   }, [dispatch, props.createrData]);
 
   // TODO: UI funtion
+  const { contents } = props.article;
+  const md = new MarkdownIt({
+    html: true,
+    linkify: true,
+    typographer: true,
+  });
+
+  const renderedHTML = md.render(contents);
   return (
     // 單一文章
     <div className="my-2 grid w-full grid-cols-12 gap-x-16 px-2">
@@ -44,9 +54,14 @@ export default function Article(props: any) {
         <div className="my-2 rounded border border-blue-200 bg-gray-50 dark:bg-gray-700">
           {/* TODO: 文章資料 */}
           <div className="p-2">
-            <h1 className="text-3xl font-semibold">{props.article.title}</h1>
-            <h3 className="mt-3 mb-4 text-lg">{props.article.subtitle}</h3>
-            <div className="whitespace-pre-line">{props.article.contents}</div>
+            <h1 className="text-5xl font-semibold text-slate-900 dark:text-white">{props.article.title}</h1>
+            <h3 className="mt-3 mb-4 text-2xl font-semibold text-slate-700 dark:text-slate-200">
+              {props.article.subtitle}
+            </h3>
+            <div
+              className={`whitespace-pre-line text-lg text-slate-600 ${styles["markdown-preview"]} dark:bg-gray-700 dark:text-slate-300`}
+              dangerouslySetInnerHTML={{ __html: renderedHTML }}
+            />
           </div>
           {/* 文章內覽列 */}
           {/* FIXME:針對文章喜歡、讚賞、分享、收藏 */}

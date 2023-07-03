@@ -1,0 +1,94 @@
+/* MarkdownEditor.css */
+
+.markdown-preview {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  
+.markdown-preview h1 {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.markdown-preview h2 {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.markdown-preview h3 {
+  font-size: 18px;
+  font-weight: semi-bold;
+}
+
+.markdown-preview h3 {
+  font-size: 18px;
+  font-weight: semi-bold;
+}
+
+.markdown-preview h4 {
+  font-size: 16px;
+}
+
+.markdown-preview h5 {
+  font-size: 14px;
+}
+
+.markdown-preview h6 {
+  font-size: 12px;
+}
+
+.markdown-preview ul {
+  list-style-type: disc;
+  padding-left: 20px;
+  height: auto;
+}
+
+.markdown-preview ul ul {
+  list-style-type: circle;
+}
+
+.markdown-preview ul ul ul {
+  list-style-type: square;
+}
+
+.markdown-preview ol {
+  counter-reset: item;
+  padding-left: 0px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.markdown-preview ol li {
+  list-style-type: none;
+  counter-increment: item;
+  padding: 0px;
+}
+
+.markdown-preview ol li::before {
+  content: counter(item) ". ";
+  display: inline-block;
+  text-align: right;
+  margin-right: 0.5em;
+}
+
+.markdown-preview a {
+  font-weight: 600;
+  color: #0ea5e9;
+}
+
+.markdown-preview blockquote {
+  border-left: 5px solid #ccc;
+  margin: 1.5em 5px;
+  padding: 0.5em 10px;
+}
+.markdown-preview blockquote:before {
+  color: #ccc;
+  content: "\201C";
+  font-size: 4em;
+  line-height: 0.1em;
+  margin-right: 0.25em;
+  vertical-align: -0.4em;
+}
+.markdown-preview blockquote p {
+  display: inline;
+}

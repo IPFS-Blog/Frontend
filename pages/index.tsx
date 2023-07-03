@@ -2,7 +2,7 @@ import { Avatar } from "@mui/material";
 import Head from "next/head";
 
 import { apiArticleTakeAllArticle } from "@/components/api";
-import ArticleItem from "@/components/article/comment/ArticleItem";
+import ArticleItem from "@/components/article/ArticleItem";
 
 export default function Home(props: any) {
   return (

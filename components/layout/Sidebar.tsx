@@ -1,7 +1,9 @@
 import classNames from "classnames";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 import {
+  AiOutlineBarChart,
   AiOutlineDoubleLeft,
   AiOutlineFileText,
   AiOutlineForm,
@@ -20,8 +22,16 @@ const menuItems = [
   { id: 4, label: "創建", icon: AiOutlineForm, link: "/CreateArticle" },
   { id: 5, label: "水龍頭", icon: FaFaucet, link: "/SimpleFaucet" },
 ];
+const dashboardSidebar = [
+  { id: 1, label: "首頁", icon: AiOutlineHome, link: "/" },
+  { id: 2, label: "我的後台", icon: AiOutlineLayout, link: "/Dashboard" },
+  { id: 3, label: "創作", icon: AiOutlineFileText, link: "/create" },
+  { id: 5, label: "瀏覽文章數據", icon: AiOutlineBarChart, link: "/SimpleFaucet" },
+];
 
 const Sidebar = () => {
+  const router = useRouter();
+  const routerPath = router.asPath;
   const [toggleCollapse, setToggleCollapse] = useState(false);
   const collapseIconClasses = classNames({
     "rotate-180": toggleCollapse,
@@ -35,6 +45,8 @@ const Sidebar = () => {
   const handleSidebarToggle = () => {
     setToggleCollapse(!toggleCollapse);
   };
+  const hideNavbar = routerPath === "/Dashboard" || routerPath.startsWith("/articleHistory/");
+
   return (
     <div>
       {/* //sidebar */}
@@ -44,21 +56,42 @@ const Sidebar = () => {
             <AiOutlineDoubleLeft />
           </button>
           <div className="mt-2 flex flex-col items-start">
-            {menuItems.map(({ icon: Icon, ...menu }) => {
-              const classes = getNavItemClasses(menu);
-              return (
-                <div key={menu.id} className={classes}>
-                  <Link href={menu.link}>
-                    <div className="flex w-full items-center py-4 px-3">
-                      <div className="w-8">
-                        <Icon />
-                      </div>
-                      {toggleCollapse && <div className={classNames("font-medium text-dark w-20")}>{menu.label}</div>}
+            {/* TODO: 如果是Dashboard、articleHistory會換sidebar */}
+            {!hideNavbar
+              ? menuItems.map(({ icon: Icon, ...menu }) => {
+                  const classes = getNavItemClasses(menu);
+                  return (
+                    <div key={menu.id} className={classes}>
+                      <Link href={menu.link}>
+                        <div className="flex w-full items-center py-4 px-3">
+                          <div className="mr-2 w-auto">
+                            <Icon />
+                          </div>
+                          {toggleCollapse && (
+                            <div className={classNames("font-medium text-dark w-max")}>{menu.label}</div>
+                          )}
+                        </div>
+                      </Link>
                     </div>
-                  </Link>
-                </div>
-              );
-            })}
+                  );
+                })
+              : dashboardSidebar.map(({ icon: Icon, ...menu }) => {
+                  const classes = getNavItemClasses(menu);
+                  return (
+                    <div key={menu.id} className={classes}>
+                      <Link href={menu.link}>
+                        <div className="flex w-full items-center py-4 px-3">
+                          <div className="mr-2 w-auto">
+                            <Icon />
+                          </div>
+                          {toggleCollapse && (
+                            <div className={classNames("font-medium text-dark w-max")}>{menu.label}</div>
+                          )}
+                        </div>
+                      </Link>
+                    </div>
+                  );
+                })}
           </div>
           <div
             className={classNames("flex flex-col", {

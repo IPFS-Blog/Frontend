@@ -20,7 +20,7 @@ const MarkdownEditor = () => {
   const [title, setTitle] = useState(""); // 標題
   const [subtitle, setSubtitle] = useState(""); // 副標題
   const [markdown, setMarkdown] = useState(""); // 內文
-  const [release, setrelease] = useState(0); // release狀態
+  const [release, setrelease] = useState(false); // release狀態
   const router = useRouter();
 
   const ArticleCreate = async () => {
@@ -35,10 +35,15 @@ const MarkdownEditor = () => {
           setSuccessMessage("另存 " + title + " 為草稿成功");
         }
         setSuccessAlert(true);
-        router.push("/Dashboard"); //回到後台查看自己草稿
+        setTitle("");
+        setSubtitle("");
+        setMarkdown("");
+        //FIXME: 等後台合進來後就可以導到後台
+        router.push("./");
+        // router.push("/Dashboard"); //回到後台查看自己草稿
       })
       .catch(() => {
-        setFailMessage("失敗，請再重新試試(如有問題可以向平台反映)。");
+        setFailMessage("失敗，請再重新試試（如有問題可以向平台反映）。");
         setFailAlert(true);
       });
   };
@@ -129,26 +134,28 @@ const MarkdownEditor = () => {
             )}
           </div>
         </div>
-        <button
-          type="submit"
-          className="inline-flex items-center rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900"
-          onClick={() => {
-            ArticleCreate();
-            setrelease(1);
-          }}
-        >
-          上傳發布
-        </button>
-        <button
-          type="submit"
-          className="inline-flex items-center rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900"
-          onClick={() => {
-            ArticleCreate();
-            setrelease(0);
-          }}
-        >
-          另存草稿
-        </button>
+        <div>
+          <button
+            type="submit"
+            className="mx-1 inline-flex items-center rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-bold text-white hover:bg-blue-800 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900"
+            onClick={() => {
+              ArticleCreate();
+              setrelease(true);
+            }}
+          >
+            發布
+          </button>
+          <button
+            type="submit"
+            className="mx-1 inline-flex items-center rounded-lg bg-blue-400 px-5 py-2.5 text-center text-sm font-bold text-white hover:bg-blue-500 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900"
+            onClick={() => {
+              ArticleCreate();
+              setrelease(false);
+            }}
+          >
+            草稿
+          </button>
+        </div>
       </div>
       {edit && preview ? (
         <>
@@ -157,20 +164,18 @@ const MarkdownEditor = () => {
               className="h-auto w-full resize-none border-0 px-2 pt-2 text-5xl text-gray-800 focus:outline-none dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-400"
               id="title"
               name="title"
+              value={title}
               placeholder="標題"
               onChange={e => setTitle(e.target.value)}
-            >
-              {title}
-            </textarea>
+            />
             <textarea
               className="h-auto w-full resize-none border-0 px-2 text-3xl text-gray-800 focus:outline-none dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-400"
               id="subtitle"
               name="subtitle"
+              value={subtitle}
               onChange={e => setSubtitle(e.target.value)}
               placeholder="副標題"
-            >
-              {subtitle}
-            </textarea>
+            />
             <textarea
               className="h-full w-full resize-none rounded-lg bg-white p-2 text-lg text-gray-800 focus:outline-none dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-400"
               id="content"
@@ -200,20 +205,18 @@ const MarkdownEditor = () => {
             className="h-auto w-full resize-none border-0 px-2 pt-2 text-6xl text-gray-800 focus:outline-none dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-400"
             id="title"
             name="title"
+            value={title}
             placeholder="標題"
             onChange={e => setTitle(e.target.value)}
-          >
-            {title}
-          </textarea>
+          />
           <textarea
             className="h-auto w-full resize-none border-0 px-2 text-3xl text-gray-800 focus:outline-none dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-400"
             id="subtitle"
             name="subtitle"
+            value={subtitle}
             onChange={e => setSubtitle(e.target.value)}
             placeholder="副標題"
-          >
-            {subtitle}
-          </textarea>
+          />
           <textarea
             className="h-full w-full resize-none rounded-lg bg-white p-2 text-lg text-gray-800 focus:outline-none dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-400"
             id="content"

@@ -1,0 +1,109 @@
+{
+	"compiler": {
+		"version": "0.8.18+commit.87f61d96"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"stateMutability": "payable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "_hashCode",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_creationTime",
+						"type": "string"
+					}
+				],
+				"name": "addArticle",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_id",
+						"type": "uint256"
+					}
+				],
+				"name": "getArticle",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "string",
+								"name": "hashCode",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "creationTime",
+								"type": "string"
+							}
+						],
+						"internalType": "struct ArticleRegistry.Article[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"stateMutability": "payable",
+				"type": "receive"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/test.sol": "ArticleRegistry"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/test.sol": {
+			"keccak256": "0x3895f87056bc65bb640547ba5f2f8170696f67140ee445f164636dc9d6162057",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://fc84afc9b939f16a68de3395024d6b8c2f7a9d6636c03440b112bd48e468eb74",
+				"dweb:/ipfs/QmdCezZeEHs9E3NB3wD4otW79HC41Ya5eax6u6MjBR9Rn9"
+			]
+		}
+	},
+	"version": 1
+}

@@ -68,7 +68,7 @@ export const apiArticleCreate = (jwt: string, data: any) =>
     },
   }); // 創建文章
 
-export const apiArticleTakeAllArticle = () => articleRequest.get("/", config); // 查詢所有文章
+export const apiArticleTakeAllArticle = (id: string) => articleRequest.get(`/${id}`, config); // 查詢所有文章
 
 export const apiArticleTakeArticle = (id: string) => articleRequest.get(`/${id}`, config); // 搜尋指定文章
 

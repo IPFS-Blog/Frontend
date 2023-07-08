@@ -7,7 +7,7 @@ import MarkdownIt from "markdown-it";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { apiArticleTakeArticle } from "@/components/api";
+import { apiArticleTakeAllArticle } from "@/components/api";
 import Comment from "@/components/article/comment/Comment";
 import DonateButton from "@/components/users/DonateButton";
 import { update } from "@/store/CreaterSlice";
@@ -222,7 +222,7 @@ export const getServerSideProps = async (context: any) => {
   let createrData = { id: 0, username: "", address: "", email: "", picture: "" };
   let article = { title: "", subtitle: "", contents: "", updateAt: "" };
 
-  await apiArticleTakeArticle(ArticleUrl)
+  await apiArticleTakeAllArticle("?aid=" + ArticleUrl)
     .then(async res => {
       const { title, subtitle, contents, updateAt, user } = res.data.article;
       createrData = user;

@@ -1,4 +1,8 @@
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -12,7 +16,12 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import AlertDialogSlide from "@/components/alert/AlertDialogSlide";
-import { _apiCheckJwt, apiArticleDeleteArticle, apiUserGetCreaterArticle } from "@/components/api";
+import {
+  _apiCheckJwt,
+  apiArticleDeleteArticle,
+  apiUserGetCreaterArticle,
+  apiUserGetCreaterOwnArticle,
+} from "@/components/api";
 import { LoginFunction } from "@/helpers/users/LoginFunction";
 import { setLogin } from "@/store/UserSlice";
 
@@ -43,6 +52,19 @@ export default function CustomizedTables() {
   const dispatch = useDispatch();
   const [Articles, setArticles] = useState([]);
   const [selectedArticleId, setSelectedArticleId] = useState("");
+  const [release, setRelease] = useState(2);
+  const [skip] = useState(0);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const TakeArticle = async () => {
+    try {
+      let jwt = "";
+      await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
+      const params = { release, skip };
+      const res = await apiUserGetCreaterOwnArticle(jwt, params);
+      setArticles(res.data);
+    } catch (error) {}
+  };
+
   useEffect(() => {
     const UserCheck = async () => {
       LoginFunction().then(userData => {
@@ -50,15 +72,9 @@ export default function CustomizedTables() {
         else dispatch(setLogin(userData));
       });
     };
-    const TakeArticle = async () => {
-      try {
-        const res = await apiUserGetCreaterArticle(User.profile.username);
-        setArticles(res.data);
-      } catch {}
-    };
     UserCheck();
     TakeArticle();
-  }, [User.profile.username, dispatch]);
+  }, [release, skip, User.profile.username, dispatch, TakeArticle]);
 
   async function deleteArticle(articleId: any, articleTitle: any) {
     setSelectedArticleId(articleId);
@@ -80,12 +96,25 @@ export default function CustomizedTables() {
       .catch();
   };
 
+  function editArticle(articleId: any) {
+    router.push({
+      pathname: "/me/drafts/[draft]",
+      query: { draft: articleId },
+    });
+  }
+
   function articleHistory(articleid: any, articleTitle: any) {
     router.push({
       pathname: "/articleHistory/[Article]",
       query: { id: articleid, Article: articleTitle },
     });
   }
+
+  const changeRelease = (event: SelectChangeEvent) => {
+    const selectedRelease = Number(event.target.value);
+    setRelease(selectedRelease);
+    TakeArticle();
+  };
 
   //TODO: UI function
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -117,7 +146,10 @@ export default function CustomizedTables() {
           >
             刪除
           </button>
-          <button className=" mx-5 my-2 w-4/5 rounded-full border  bg-green-700 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5">
+          <button
+            className=" mx-5 my-2 w-4/5 rounded-full border  bg-green-700 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5"
+            onClick={() => editArticle(articleid)}
+          >
             更改狀態
           </button>
           <button
@@ -137,7 +169,10 @@ export default function CustomizedTables() {
           >
             刪除
           </button>
-          <button className=" mx-5 my-2 w-4/5 rounded-full border  bg-blue-500 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5">
+          <button
+            className=" mx-5 my-2 w-4/5 rounded-full border  bg-blue-500 py-2 px-10 font-semibold  text-white tablet:mx-2 tablet:px-5"
+            onClick={() => editArticle(articleid)}
+          >
             編輯
           </button>
           <button
@@ -164,7 +199,20 @@ export default function CustomizedTables() {
             </TableRow>
             <TableRow className="rounded-lg ">
               <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "10%" }}>
-                狀態
+                <FormControl variant="standard" className="w-full">
+                  <InputLabel id="demo-simple-select-standard-label">狀態</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-standard-label"
+                    id="demo-simple-select-standard"
+                    value={String(release)}
+                    onChange={changeRelease}
+                    label="release"
+                  >
+                    <MenuItem value={2}>所有</MenuItem>
+                    <MenuItem value={0}>草稿</MenuItem>
+                    <MenuItem value={1}>發布</MenuItem>
+                  </Select>
+                </FormControl>
               </StyledTableCell>
               <StyledTableCell className="bg-blue-300 text-base" sx={{ width: "20%" }}>
                 標題
@@ -191,7 +239,9 @@ export default function CustomizedTables() {
                 <StyledTableCell align="left">
                   <div className="overflow-hidden text-base">{item.updateAt.substring(0, 10)}</div>
                 </StyledTableCell>
-                <StyledTableCell align="left">{activebutton(item.release, item.id, item.title)}</StyledTableCell>
+                <StyledTableCell align="left">
+                  {activebutton(item.release, item.id, item.title, item.subtitle, item.contents)}
+                </StyledTableCell>
               </StyledTableRow>
             ))}
           </TableBody>

@@ -23,12 +23,13 @@ const MarkdownEditor = (props: any) => {
   const [markdown, setMarkdown] = useState(router.query.contents); // 內文
   const [release, setrelease] = useState(false); // release狀態
 
-  console.log("router.query.contents",router.query.contents);
+  console.log("router.query.contents", router.query.contents);
   const ArticleCreate = async () => {
     let jwt = "";
     await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
     const id = router.query.draft;
     const data = { title, subtitle, contents: markdown, release };
+    console.log(id);
     try {
       apiArticleEditArticle(jwt, id, data);
 
@@ -254,10 +255,13 @@ export default MarkdownEditor;
 export const getServerSideProps = async (context: any) => {
   // 查詢文章
   const ArticleUrl = context.req.url.split("/")[3];
+  let jwt = "";
+  await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
   let createrData = { username: "" };
   let article = { id: 0, title: "", subtitle: "", contents: "", updateAt: "" };
+  // const id = ArticleUrl;
 
-  await apiArticleTakeArticle(ArticleUrl)
+  await apiArticleTakeArticle(jwt, ArticleUrl)
     .then(async res => {
       const { id, title, subtitle, contents, updateAt, user } = res.data.article;
       createrData = user;

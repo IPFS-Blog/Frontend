@@ -7,7 +7,7 @@ import {
   VisibilityOff,
 } from "@mui/icons-material";
 import MarkdownIt from "markdown-it";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 import React, { useState } from "react";
 
 import FailAlert from "@/components/alert/Fail";
@@ -21,7 +21,12 @@ const MarkdownEditor = () => {
   const [subtitle, setSubtitle] = useState(""); // 副標題
   const [markdown, setMarkdown] = useState(""); // 內文
   const [release, setrelease] = useState(false); // release狀態
-  const router = useRouter();
+  // const router = useRouter();
+
+  function changerelease(release: any) {
+    setrelease(!release);
+    ArticleCreate();
+  }
 
   const ArticleCreate = async () => {
     let jwt = "";
@@ -39,7 +44,7 @@ const MarkdownEditor = () => {
         setSubtitle("");
         setMarkdown("");
         //FIXME: 等後台合進來後就可以導到後台
-        router.push("./");
+        // router.push("./");
         // router.push("/Dashboard"); //回到後台查看自己草稿
       })
       .catch(() => {
@@ -139,8 +144,7 @@ const MarkdownEditor = () => {
             type="submit"
             className="mx-1 inline-flex items-center rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-bold text-white hover:bg-blue-800 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900"
             onClick={() => {
-              ArticleCreate();
-              setrelease(true);
+              changerelease(release);
             }}
           >
             發布
@@ -149,8 +153,7 @@ const MarkdownEditor = () => {
             type="submit"
             className="mx-1 inline-flex items-center rounded-lg bg-blue-400 px-5 py-2.5 text-center text-sm font-bold text-white hover:bg-blue-500 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900"
             onClick={() => {
-              ArticleCreate();
-              setrelease(false);
+              changerelease(release);
             }}
           >
             草稿

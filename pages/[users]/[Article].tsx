@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { apiArticleTakeArticle } from "@/components/api";
 import Comment from "@/components/article/comment/Comment";
+import CreateComment from "@/components/article/comment/CreateCommet";
 import DonateButton from "@/components/users/DonateButton";
 import { update } from "@/store/CreaterSlice";
 import styles from "@/styles/MarkdownEditor.module.css";
@@ -89,6 +90,11 @@ export default function Article(props: any) {
           </div>
           {/* TODO: 使用者頭像、名稱 */}
           {/* 輸入留言 */}
+          <CreateComment
+            username={User.profile.username}
+            picture={User.profile.picture}
+            articleid={props.ArticleUrl}
+          ></CreateComment>
           <form>
             <div className="flex items-center bg-gray-50 px-3 py-1 dark:bg-gray-700">
               <Avatar className="h-auto w-10 rounded-full" src={User.profile.picture} alt="not find Avatar" />
@@ -240,5 +246,5 @@ export const getServerSideProps = async (context: any) => {
       };
     });
 
-  return { props: { article, createrData } };
+  return { props: { article, createrData, ArticleUrl } };
 };

@@ -1,7 +1,6 @@
 import ArrowOutwardOutlinedIcon from "@mui/icons-material/ArrowOutwardOutlined";
 import BookmarkAddOutlinedIcon from "@mui/icons-material/BookmarkAddOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
-import SendIcon from "@mui/icons-material/Send";
 import Avatar from "@mui/material/Avatar";
 import MarkdownIt from "markdown-it";
 import { useEffect } from "react";
@@ -9,10 +8,10 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { apiArticleTakeAllArticle } from "@/components/api";
 import Comment from "@/components/article/comment/Comment";
+import CreateComment from "@/components/article/comment/CreateComment";
 import DonateButton from "@/components/users/DonateButton";
 import { update } from "@/store/CreaterSlice";
 import styles from "@/styles/MarkdownEditor.module.css";
-
 export default function Article(props: any) {
   // TODO: Handle funtion
   const dispatch = useDispatch();
@@ -89,26 +88,17 @@ export default function Article(props: any) {
           </div>
           {/* TODO: 使用者頭像、名稱 */}
           {/* 輸入留言 */}
-          <form>
-            <div className="flex items-center bg-gray-50 px-3 py-1 dark:bg-gray-700">
-              <Avatar className="h-auto w-10 rounded-full" src={User.profile.picture} alt="not find Avatar" />
-              <p className="mx-2">{User.profile.username}</p>
-              <textarea
-                id="chat"
-                className="mx-4 block w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                placeholder="輸入留言..."
-              ></textarea>
-              <button
-                type="submit"
-                className="inline-flex cursor-pointer justify-center rounded-full p-2 text-blue-600 hover:bg-gray-300 dark:text-blue-500 dark:hover:bg-gray-100"
-              >
-                <SendIcon />
-              </button>
-            </div>
-          </form>
+          <CreateComment
+            username={User.profile.username}
+            picture={User.profile.picture}
+            articleid={props.ArticleUrl}
+          ></CreateComment>
           {/* 顯示留言 */}
           <div className="my-2 divide-y divide-blue-200">
-            <Comment></Comment>
+            {props.comment.slice(1).map((comment: any) => {
+              const { number, likes, contents, updateAt } = comment;
+              return <Comment id={number} key={number} like={likes} contents={contents} updateAt={updateAt} />;
+            })}
           </div>
         </div>
       </div>
@@ -221,10 +211,11 @@ export const getServerSideProps = async (context: any) => {
   const ArticleUrl = context.req.url.split("/")[2];
   let createrData = { id: 0, username: "", address: "", email: "", picture: "" };
   let article = { title: "", subtitle: "", contents: "", updateAt: "" };
+  const comment = [{ number: 0, likes: 0, contents: "", updateAt: "" }];
 
   await apiArticleTakeAllArticle("?aid=" + ArticleUrl)
     .then(async res => {
-      const { title, subtitle, contents, updateAt, user } = res.data.article;
+      const { title, subtitle, contents, updateAt, user, comments } = res.data.article;
       createrData = user;
       const resarticle = {
         title,
@@ -233,6 +224,8 @@ export const getServerSideProps = async (context: any) => {
         updateAt,
       };
       article = resarticle;
+      comment.push(...comments);
+      console.log("!!!!!!!!!!!!!!!", res.data.article.comments);
     })
     .catch(() => {
       return {
@@ -240,5 +233,5 @@ export const getServerSideProps = async (context: any) => {
       };
     });
 
-  return { props: { article, createrData } };
+  return { props: { article, createrData, ArticleUrl, comment } };
 };

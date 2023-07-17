@@ -8,48 +8,102 @@ import {
 } from "@mui/icons-material";
 import MarkdownIt from "markdown-it";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import FailAlert from "@/components/alert/Fail";
 import SucessAlert from "@/components/alert/Sucess";
-import { _apiCheckJwt, apiArticleEditArticle, apiArticleReleaseArticle, apiArticleTakeArticle } from "@/components/api";
+import { _apiCheckJwt, apiArticleCreate, apiArticleEditArticle, apiArticleTakeArticle } from "@/components/api";
 import styles from "@/styles/MarkdownEditor.module.css";
+import { LoginFunction } from "@/helpers/users/LoginFunction";
+import { setLogin } from "@/store/UserSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const MarkdownEditor = (props: any) => {
   //TODO: Handle function
-  const router = useRouter();
-  const [title, setTitle] = useState(router.query.title); // 標題
-  const [subtitle, setSubtitle] = useState(router.query.subtitle); // 副標題
-  const [markdown, setMarkdown] = useState(router.query.contents); // 內文
+  const User = useSelector((state: any) => state.User);
+  const [title, setTitle] = useState(""); // 標題
+  const [subtitle, setSubtitle] = useState(""); // 副標題
+  const [markdown, setMarkdown] = useState(""); // 內文
   const [release, setrelease] = useState(false); // release狀態
+  const [jwt, setJWT] = useState(""); // jwt狀態
+  const router = useRouter();
+  const dispatch = useDispatch();
 
-  console.log("router.query.contents", router.query.contents);
+  useEffect(() => {
+    const UserCheck = async () => {
+      LoginFunction().then(userData => {
+        if (userData == null) router.push("/");
+        else dispatch(setLogin(userData));
+      });
+    };
+
+    const TakeArticle = async () => {
+      try {
+        let jwt = "";
+        await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
+        setJWT(jwt);
+        const id = Number(router.query.draft);
+        await apiArticleTakeArticle(jwt, id).then(async res => {
+          const { title, subtitle, contents } = res.data.article;
+          setTitle(title);
+          setSubtitle(subtitle);
+          setMarkdown(contents);
+        });
+      } catch (error) {}
+    };
+
+    UserCheck();
+    TakeArticle();
+  }, []);
+
+  function changerelease(release: any) {
+    setrelease(!release);
+    ArticleEdit();
+  }
+
   const ArticleCreate = async () => {
+    const data = { title, subtitle, contents: markdown, release };
+    apiArticleCreate(jwt, data)
+      .then(() => {
+        if (release) {
+          setSuccessMessage("上傳 " + title + " 發布成功");
+        } else {
+          setSuccessMessage("另存 " + title + " 為草稿成功");
+        }
+        setSuccessAlert(true);
+        setTitle("");
+        setSubtitle("");
+        setMarkdown("");
+        //FIXME: 等後台合進來後就可以導到後台
+        // router.push("./");
+        // router.push("/Dashboard"); //回到後台查看自己草稿
+      })
+      .catch(() => {
+        setFailMessage("失敗，請再重新試試（如有問題可以向平台反映）。");
+        setFailAlert(true);
+      });
+  };
+
+  const ArticleEdit = async () => {
     let jwt = "";
     await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
-    const id = router.query.draft;
-    const data = { title, subtitle, contents: markdown, release };
-    console.log(id);
-    try {
-      apiArticleEditArticle(jwt, id, data);
-
-      if (release) {
-        await apiArticleReleaseArticle(jwt, id);
-        setSuccessMessage("上傳 " + title + " 發布成功" + release);
-      } else {
-        setSuccessMessage("另存 " + title + " 為草稿成功" + release);
-      }
-      setSuccessAlert(true);
-      setTitle("");
-      setSubtitle("");
-      setMarkdown("");
-      //FIXME: 等後台合進來後就可以導到後台
-      router.push("/" + props.createrData.username + "/" + id);
-      // router.push("/Dashboard"); //回到後台查看自己草稿
-    } catch {
-      setFailMessage("失敗，請再重新試試（如有問題可以向平台反映）。");
-      setFailAlert(true);
-    }
+    const id = Number(router.query.draft);
+    const params = { title, subtitle, contents: markdown, release };
+    apiArticleEditArticle(jwt, id, params)
+      .then(() => {
+        if (release) {
+          setSuccessMessage("上傳 " + title + " 編輯並發布成功");
+        } else {
+          setSuccessMessage("另存 " + title + " 編輯並為草稿成功");
+        }
+        setSuccessAlert(true);
+        setTitle("");
+        setSubtitle("");
+        setMarkdown("");
+      })
+      .catch((error: any) => {
+        console.log(error);
+      });
   };
 
   //TODO: UI function
@@ -143,8 +197,7 @@ const MarkdownEditor = (props: any) => {
             type="submit"
             className="mx-1 inline-flex items-center rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-bold text-white hover:bg-blue-800 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900"
             onClick={() => {
-              ArticleCreate();
-              setrelease(true);
+              changerelease(release);
             }}
           >
             發布
@@ -153,8 +206,7 @@ const MarkdownEditor = (props: any) => {
             type="submit"
             className="mx-1 inline-flex items-center rounded-lg bg-blue-400 px-5 py-2.5 text-center text-sm font-bold text-white hover:bg-blue-500 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900"
             onClick={() => {
-              ArticleCreate();
-              setrelease(false);
+              changerelease(release);
             }}
           >
             草稿
@@ -251,34 +303,3 @@ const MarkdownEditor = (props: any) => {
 };
 
 export default MarkdownEditor;
-
-export const getServerSideProps = async (context: any) => {
-  // 查詢文章
-  const ArticleUrl = context.req.url.split("/")[3];
-  let jwt = "";
-  await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
-  let createrData = { username: "" };
-  let article = { id: 0, title: "", subtitle: "", contents: "", updateAt: "" };
-  // const id = ArticleUrl;
-
-  await apiArticleTakeArticle(jwt, ArticleUrl)
-    .then(async res => {
-      const { id, title, subtitle, contents, updateAt, user } = res.data.article;
-      createrData = user;
-      const resarticle = {
-        id,
-        title,
-        subtitle,
-        contents,
-        updateAt,
-      };
-      article = resarticle;
-    })
-    .catch(() => {
-      return {
-        notFound: true,
-      };
-    });
-
-  return { props: { article, createrData } };
-};

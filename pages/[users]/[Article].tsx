@@ -88,18 +88,18 @@ export default function Article(props: any) {
           </div>
           {/* TODO: 使用者頭像、名稱 */}
           {/* 輸入留言 */}
-          <CreateComment
+          {/* <CreateComment
             username={User.profile.username}
             picture={User.profile.picture}
             articleid={props.ArticleUrl}
           ></CreateComment>
-          {/* 顯示留言 */}
+          {/* 顯示留言 
           <div className="my-2 divide-y divide-blue-200">
             {props.comment.slice(1).map((comment: any) => {
               const { number, likes, contents, updateAt } = comment;
               return <Comment id={number} key={number} like={likes} contents={contents} updateAt={updateAt} />;
             })}
-          </div>
+          </div> */}
         </div>
       </div>
 

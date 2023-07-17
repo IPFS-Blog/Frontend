@@ -240,7 +240,7 @@ export default function CustomizedTables() {
                   <div className="overflow-hidden text-base">{item.updateAt.substring(0, 10)}</div>
                 </StyledTableCell>
                 <StyledTableCell align="left">
-                  {activebutton(item.release, item.id, item.title, item.subtitle, item.contents)}
+                  {activebutton(item.release, item.id, item.title)}
                 </StyledTableCell>
               </StyledTableRow>
             ))}

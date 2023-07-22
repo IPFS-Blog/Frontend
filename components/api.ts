@@ -94,12 +94,15 @@ export const apiArticleReleaseArticle = (jwt: string, id: string) =>
   }); // 發布指定文章
 
 export const apiArticleCommentCreate = (jwt: string, id: number, data: any) =>
-  articleRequest.post(`/${id}/comment`, {
-    headers: {
-      Authorization: `Bearer ${jwt}`,
+  articleRequest.post(
+    `/${id}/comment`,
+    { contents: data },
+    {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
     },
-    data: data,
-  }); // 新增指定文章留言
+  ); // 新增指定文章留言
 export const apiArticleCommentEdit = (jwt: string, id: string, cid: string) =>
   articleRequest.patch(`/${id}/comment/${cid}`, {
     headers: {

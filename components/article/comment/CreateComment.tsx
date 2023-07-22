@@ -2,7 +2,7 @@ import SendIcon from "@mui/icons-material/Send";
 import Avatar from "@mui/material/Avatar";
 import { useState } from "react";
 
-import { _apiCheckJwt, apiArticleCommentCreate } from "@/components/api";
+import { _apiCheckJwt, apiArticleCommentCreate, apiArticleTakeAllArticle } from "@/components/api";
 
 const CreateComment = (props: any) => {
   // TODO: Handle funtion
@@ -13,16 +13,28 @@ const CreateComment = (props: any) => {
     let jwt = "";
     await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
     const articleId = Number(articleid);
-    console.log(typeof articleId);
-    const data = String({ Comment });
-    console.log(jwt);
-    apiArticleCommentCreate(jwt, articleId, data)
-      .then(() => {
-        console.log("ABC");
+    //console.log(typeof articleId);
+    //const data = String({ Comment });
+    console.log(Comment);
+    apiArticleCommentCreate(jwt, articleId, Comment)
+      .then(async (res: any) => {
+        console.log("成功", res);
+        await apiArticleTakeAllArticle("?aid=" + props.articleid)
+          .then(async res => {
+            const { comments } = res.data.article;
+            console.log("!!!", comments);
+            props.setComments(comments);
+          })
+          .catch(() => {
+            return {
+              notFound: true,
+            };
+          });
       })
       .catch((error: any) => {
-        console.log(error);
+        console.log("錯誤:", error);
       });
+    //axios.post("http://192.168.0.16:3000/api/v1/articles/1/comment", { comment: Comment });
   }
 
   return (

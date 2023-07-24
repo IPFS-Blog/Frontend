@@ -51,9 +51,8 @@ export default function ResponsiveDialog() {
     const MyTokenContractabi = MyTokenFunction();
     const MyTokenContract = new web3.eth.Contract(MyTokenContractabi, process.env.NEXT_PUBLIC_MyTokenContractAddress);
     if (web3) {
-      const selectedNumberInWei = web3.utils.toWei(selectedNumber.toString());
-      await MyTokenContract.methods
-        .buyToken()
+      const selectedNumberInWei = web3.utils.toWei(selectedNumber.toString(),);
+      await MyTokenContract.methods.buyToken(createtime)
         .send({
           from: address,
           value: selectedNumberInWei,
@@ -125,6 +124,7 @@ export default function ResponsiveDialog() {
 
   const [selectedNumber, setSelectedNumber] = useState(1);
   const [selectedNumber1, setSelectedNumber1] = useState(1);
+  const [createtime, setcreateTime] = useState("");
   // Loading
   const [isLoading, setIsLoading] = useState(false);
   const [changeMoneyFail, setchangeMoneyFail] = useState(false);
@@ -143,6 +143,9 @@ export default function ResponsiveDialog() {
 
   function handleNumberChange(event: any) {
     setSelectedNumber(parseInt(event.target.value));
+  }
+  function handleCreatetimeChange(event: any) {
+    setcreateTime(event.target.value.toString(0,10));
   }
   function handleNumberChange1(event: any) {
     setSelectedNumber1(parseInt(event.target.value));
@@ -209,6 +212,11 @@ export default function ResponsiveDialog() {
                     name="number-selector"
                     value={selectedNumber}
                     onChange={handleNumberChange}
+                    className="ml-2 grow rounded border border-gray-400 px-2 py-1"
+                  />
+                  <input
+                    type="date"
+                    onChange={handleCreatetimeChange}
                     className="ml-2 grow rounded border border-gray-400 px-2 py-1"
                   />
                   <p className="mx-2 py-1">ETH換AC</p>

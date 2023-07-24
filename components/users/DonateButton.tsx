@@ -18,6 +18,7 @@ import Mining from "@/pages/loading/mining";
 export default function DonationForm() {
   // TODO: Handle funtion
   const [AC, setAC] = useState("");
+  const [currentTime, setCurrentTime] = useState("");
   const dispatch = useDispatch();
   const Creater = useSelector((state: any) => state.Creater);
   const User = useSelector((state: any) => state.User);
@@ -36,6 +37,11 @@ export default function DonationForm() {
       }
     };
 
+    // 取得現在時間
+    const now = new Date();
+    const formattedTime = now.toLocaleString(); // 將現在時間格式化為字串
+    // 設定時間狀態
+    setCurrentTime(formattedTime);
     connect();
   }, [dispatch]);
 
@@ -111,7 +117,8 @@ export default function DonationForm() {
             </div>
           </div>
           <div className="mb-4">
-            <p className="text-xl font-semibold">擁有: {AC}(AC)</p>
+            <p className="text-xl font-semibold">現在時間{currentTime}</p>
+            <p className="text-xl font-semibold">您目前擁有: {AC}(AC)</p>
             <input
               type="number"
               max={AC}

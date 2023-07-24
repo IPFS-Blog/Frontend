@@ -41,6 +41,12 @@ export default function ResponsiveDialog() {
         });
       }
     };
+    // 取得現在時間
+    const now = new Date();
+    const formattedTime = now.toLocaleString(); // 將現在時間格式化為字串
+    // 設定時間狀態
+    setcreateTime(formattedTime);
+    setcreateTime1(formattedTime);
     connect();
   }, []);
   // TODO: 換錢
@@ -88,7 +94,7 @@ export default function ResponsiveDialog() {
     const MyTokenContract = new web3.eth.Contract(MyTokenContractabi, process.env.NEXT_PUBLIC_MyTokenContractAddress);
     if (web3) {
       await MyTokenContract.methods
-        .sellToken(selectedNumber1)
+        .sellToken(selectedNumber1, createtime1)
         .send({
           from: address,
           gas: gasLimit,
@@ -125,6 +131,7 @@ export default function ResponsiveDialog() {
   const [selectedNumber, setSelectedNumber] = useState(1);
   const [selectedNumber1, setSelectedNumber1] = useState(1);
   const [createtime, setcreateTime] = useState("");
+  const [createtime1, setcreateTime1] = useState("");
   // Loading
   const [isLoading, setIsLoading] = useState(false);
   const [changeMoneyFail, setchangeMoneyFail] = useState(false);
@@ -146,6 +153,9 @@ export default function ResponsiveDialog() {
   }
   function handleCreatetimeChange(event: any) {
     setcreateTime(event.target.value.toString(0,10));
+  }
+  function handleCreatetimeChange1(event: any) {
+    setcreateTime1(event.target.value.toString(0, 10));
   }
   function handleNumberChange1(event: any) {
     setSelectedNumber1(parseInt(event.target.value));
@@ -188,14 +198,14 @@ export default function ResponsiveDialog() {
               </div>
               {/* 不同虛擬幣的圖案以及總額 */}
               <div className="flex w-full items-center rounded border-b-2 border-l-2 border-gray-600 py-2 text-base font-semibold hover:text-lg">
-                <div className="mx-2 h-9 w-9 border-r-2 bg-gray-300"></div>
+                <img src="/tokenLogo/AC2.png" className="mx-2 h-9 w-9 border-r-2 bg-gray-300" />
                 <div className="flex w-full justify-between">
                   <p>{AC}</p>
                   <p>AC</p>
                 </div>
               </div>
               <div className="flex w-full items-center rounded border-b-2 border-l-2 border-gray-600 py-2 text-base font-semibold hover:text-lg">
-                <div className="mx-2 h-9 w-9 border-r-2 bg-gray-300"></div>
+                <img src="/tokenLogo/Ethereum.png" className="mx-2 h-9 w-9 border-r-2 bg-gray-300" />
                 <div className="flex w-full justify-between">
                   <p>{ETH}</p>
                   <p>ETH</p>
@@ -212,11 +222,6 @@ export default function ResponsiveDialog() {
                     name="number-selector"
                     value={selectedNumber}
                     onChange={handleNumberChange}
-                    className="ml-2 grow rounded border border-gray-400 px-2 py-1"
-                  />
-                  <input
-                    type="date"
-                    onChange={handleCreatetimeChange}
                     className="ml-2 grow rounded border border-gray-400 px-2 py-1"
                   />
                   <p className="mx-2 py-1">ETH換AC</p>

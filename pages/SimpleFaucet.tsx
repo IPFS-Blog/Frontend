@@ -12,6 +12,7 @@ export default function SimpleFaucet() {
   // TODO: Handle funtion
   const [address, setAddress] = useState("");
   const [ETH, setETH] = useState("");
+  const [currentTime, setCurrentTime] = useState("");
 
   useEffect(() => {
     const connect = async () => {
@@ -27,6 +28,11 @@ export default function SimpleFaucet() {
         setETH(ethBalance);
       }
     };
+    // 取得現在時間
+    const now = new Date();
+    const formattedTime = now.toLocaleString(); // 將現在時間格式化為字串
+    // 設定時間狀態
+    setCurrentTime(formattedTime);
     connect();
   }, []);
   const takemoney = async () => {
@@ -45,7 +51,7 @@ export default function SimpleFaucet() {
       const gasPrice = await web3.eth.getGasPrice();
       const gasLimit = 3000000;
       await FaucetContract.methods
-        .requestTokens(accounts[0])
+        .requestTokens(accounts[0], currentTime)
         .send({
           from: SupperAccounts.address,
           gasPrice: gasPrice,
@@ -118,6 +124,25 @@ export default function SimpleFaucet() {
             領取10個ETHER
           </button>
         )}
+        <p>現在日期：{currentTime}</p>
+
+        <div className="m-5 p-5 border border-gray-100 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
+          <p className="text-lg font-semibold text-gray-900 dark:text-white">領取ETH紀錄</p>
+          <ul className="mt-3 divide-y divider-gray-200 dark:divide-gray-700">
+            <li>
+              <p>0x3E745260690caDA43751DF0911b50EbC6d59B818</p>
+              <p>2023/07/20</p>
+            </li>
+            <li>
+              <p>0xCd49E7a7cCbC87AC631d52f63c34967744eD6dA7</p>
+              <p>2023/07/21</p>
+            </li>
+            <li>
+              <p>0xEFa4Abac7FedB8F0514beE7212dc19D523DD3089</p>
+              <p>2023/07/22</p>
+            </li>
+          </ul>
+        </div>
         {transfermoney ? null : <h1>轉帳成功</h1>}
       </div>
       <Snackbar open={alertTakeMoneySucess} autoHideDuration={6000} onClose={alertHandleClose}>

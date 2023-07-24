@@ -48,7 +48,9 @@ export default function MyTokenRecords() {
         const userAddress = accounts[0];
 
         // Fetch buy records
-        const buyRecordResponse: BuyRecord[] = await MyTokenContract.methods.getBuyRecord().call({ from: userAddress });
+        const buyRecordResponse: BuyRecord[] = await MyTokenContract.methods
+          .getBuyRecord()
+          .call({ from: userAddress });
         setBuyRecords(buyRecordResponse);
 
         const sellRecordResponse: SellRecord[] = await MyTokenContract.methods
@@ -73,47 +75,97 @@ export default function MyTokenRecords() {
     fetchRecords();
   }, []);
 
+  //TODO: UI
+  const [showBuyRecords, setShowBuyRecords] = useState<boolean>(false);
+  const [showSellRecords, setShowSellRecords] = useState<boolean>(false);
+  const [showTransferRecords, setShowTransferRecords] = useState<boolean>(false);
+  const [showTakeRecords, setShowTakeRecords] = useState<boolean>(false);
+
   return (
     <div>
-      {/* Display buy records */}
-      <h2>AC代幣購買紀錄：</h2>
-      <ul>
-        {buyRecords.map((record, index) => (
-          <li key={index}>
-            購買數量：{record.token} AC，時間：{record.creationTime}
-          </li>
-        ))}
-      </ul>
+      <div className="m-5 p-5 border border-gray-100 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
+        <button
+          className="text-lg font-semibold text-gray-900 dark:text-white"
+          onClick={() => setShowBuyRecords(!showBuyRecords)}
+        >
+          ETH換取AC紀錄
+        </button>
+        {showBuyRecords && (
+          <ul className="mt-3 divide-y divide-gray-200 dark:divide-gray-700">
+            {buyRecords.map((record, index) => (
+              <li key={index}>
+                {record.creationTime}：{record.token} AC
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
 
-      {/* Display sell records */}
-      <h2>AC代幣銷售紀錄：</h2>
-      <ul>
-        {sellRecords.map((record, index) => (
-          <li key={index}>
-            銷售數量：{record.token} AC，時間：{record.creationTime}
-          </li>
-        ))}
-      </ul>
+      <div className="m-5 p-5 border border-gray-100 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
+        <button
+          className="text-lg font-semibold text-gray-900 dark:text-white"
+          onClick={() => setShowSellRecords(!showSellRecords)}
+        >
+          AC換取ETH紀錄
+        </button>
+        {showSellRecords && (
+          <ul className="mt-3 divide-y divide-gray-200 dark:divide-gray-700">
+            {sellRecords.map((record, index) => (
+              <li key={index}>
+                {record.creationTime}：{record.token} ETH
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
 
-      {/* Display transfer records */}
-      <h2>AC代幣轉帳紀錄：</h2>
-      <ul>
-        {transferRecords.map((record, index) => (
-          <li key={index}>
-            轉帳給：{record.to}，數量：{record.token} AC，時間：{record.creationTime}
-          </li>
-        ))}
-      </ul>
+      <div className="m-5 p-5 border border-gray-100 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
+        <button
+          className="text-lg font-semibold text-gray-900 dark:text-white"
+          onClick={() => setShowTransferRecords(!showTransferRecords)}
+        >
+          AC代幣支出紀錄
+        </button>
+        {showTransferRecords && (
+          <ul className="mt-3 divide-y divide-gray-200 dark:divide-gray-700">
+            {transferRecords.map((record, index) => (
+              <li key={index}>
+                <p>轉帳給：{record.to}</p>
+                <p>- {record.token} AC</p>
+                <p>{record.creationTime}</p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
 
-      {/* Display take records */}
-      <h2>AC代幣領取紀錄：</h2>
-      <ul>
-        {takeRecords.map((record, index) => (
-          <li key={index}>
-            來自：{record.from}，數量：{record.token} AC，時間：{record.creationTime}
-          </li>
-        ))}
-      </ul>
+      <div className="m-5 p-5 border border-gray-100 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
+        <button
+          className="text-lg font-semibold text-gray-900 dark:text-white"
+          onClick={() => setShowTakeRecords(!showTakeRecords)}
+        >
+          AC代幣收入紀錄
+        </button>
+        {showTakeRecords && (
+          <ul className="mt-3 divide-y divide-gray-200 dark:divide-gray-700">
+            {takeRecords.map((record, index) => (
+              <li key={index}>
+                來自：{record.from}，數量：{record.token} AC，時間：{record.creationTime}
+              </li>
+            ))}
+            <li>
+              <p>來自：0x3E745260690caDA43751DF0911b50EbC6d59B818</p>
+              <p>+ 10 AC</p>
+              <p>2023/07/20</p>
+            </li>
+            <li>
+              <p>來自：0xCd49E7a7cCbC87AC631d52f63c34967744eD6dA7</p>
+              <p>+ 10 AC</p>
+              <p>2023/07/20</p>
+            </li>
+          </ul>
+        )}
+      </div>
     </div>
   );
 }

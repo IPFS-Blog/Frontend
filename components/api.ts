@@ -68,7 +68,7 @@ export const apiArticleCreate = (jwt: string, data: any) =>
     },
   }); // 創建文章
 
-export const apiArticleTakeAllArticle = () => articleRequest.get("/", config); // 查詢所有文章
+export const apiArticleTakeAllArticle = (id: string) => articleRequest.get(`/${id}`, config); // 查詢所有文章
 
 export const apiArticleTakeArticle = (id: string) => articleRequest.get(`/${id}`, config); // 搜尋指定文章
 
@@ -92,3 +92,26 @@ export const apiArticleReleaseArticle = (jwt: string, id: string) =>
       Authorization: `Bearer ${jwt}`,
     },
   }); // 發布指定文章
+
+export const apiArticleCommentCreate = (jwt: string, id: number, data: any) =>
+  articleRequest.post(
+    `/${id}/comment`,
+    { contents: data },
+    {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    },
+  ); // 新增指定文章留言
+export const apiArticleCommentEdit = (jwt: string, id: string, cid: string) =>
+  articleRequest.patch(`/${id}/comment/${cid}`, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  }); //修改留言
+export const apiArticleCommentDelete = (jwt: string, id: string, cid: string) =>
+  articleRequest.delete(`/${id}/comment/${cid}`, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  }); //刪除指定文章的一條留言刪除

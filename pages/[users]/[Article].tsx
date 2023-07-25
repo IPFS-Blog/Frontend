@@ -236,7 +236,6 @@ export const getServerSideProps = async (context: any) => {
       };
       article = resarticle;
       comment.push(...comments);
-      //console.log("!!!!!!!!!!!!!!!", res.data.article.comments);
     })
     .catch(() => {
       return {

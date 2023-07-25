@@ -93,7 +93,7 @@ export default function Article(props: any) {
             articleid={props.ArticleUrl}
             setComments={setComments}
           ></CreateComment>
-          <div className="border-b-2 h-1 w-full border-blue-200"></div>
+          <div className="h-1 w-full border-b-2 border-blue-200"></div>
           {/* 顯示留言 */}
           <div className="my-2">
             {comments.slice(1).map((comment: any) => {
@@ -222,7 +222,7 @@ export const getServerSideProps = async (context: any) => {
   const ArticleUrl = context.req.url.split("/")[2];
   let createrData = { id: 0, username: "", address: "", email: "", picture: "" };
   let article = { title: "", subtitle: "", contents: "", updateAt: "" };
-  const comment = [{ number: 0, likes: 0, contents: "", updateAt: "", user: {}}];
+  const comment = [{ number: 0, likes: 0, contents: "", updateAt: "", user: {} }];
 
   await apiArticleTakeAllArticle("?aid=" + ArticleUrl)
     .then(async res => {

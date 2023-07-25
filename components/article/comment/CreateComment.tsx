@@ -15,7 +15,6 @@ const CreateComment = (props: any) => {
     let jwt = "";
     await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
     const articleId = Number(articleid);
-    //console.log(Comment);
     apiArticleCommentCreate(jwt, articleId, Comment)
       .then(async () => {
         setFailure(false);
@@ -24,6 +23,7 @@ const CreateComment = (props: any) => {
           .then(async res => {
             const { comments } = res.data.article;
             props.setComments(comments);
+            setComment("");
           })
           .catch(() => {
             return {
@@ -34,9 +34,7 @@ const CreateComment = (props: any) => {
       .catch(() => {
         setSuccess(false);
         setFailure(true);
-        //console.log("錯誤:", error);
       });
-    //axios.post("http://192.168.0.16:3000/api/v1/articles/1/comment", { comment: Comment });
   }
 
   return (
@@ -48,6 +46,7 @@ const CreateComment = (props: any) => {
           id="chat"
           className="mx-4 block w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
           placeholder="輸入留言..."
+          value={Comment}
           onChange={e => setComment(e.target.value)}
         ></textarea>
         <button

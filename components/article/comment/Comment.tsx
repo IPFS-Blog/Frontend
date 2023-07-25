@@ -1,15 +1,12 @@
-import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import * as React from "react";
 
-const options = [
-  "Edit",
-  "Delete",
-];
+const options = ["Edit", "Delete"];
 
 const Comment = (props: any) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -23,19 +20,19 @@ const Comment = (props: any) => {
 
   return (
     <div>
-      <div className="relative grid grid-cols-1 gap-4 p-4 mb-8 rounded-lg bg-white shadow-lg dark:bg-gray-700 dark:text-slate-300">
+      <div className="relative mb-8 grid grid-cols-1 gap-4 rounded-lg bg-white p-4 shadow-lg dark:bg-gray-700 dark:text-slate-300">
         <div className="relative flex gap-4">
-          <Avatar className="border h-15 w-15 rounded-full" src={props.picture} alt="not found" />
-          <div className="flex flex-col w-full">
+          <Avatar className="h-10 w-10 rounded-full border" src={props.picture} alt="not found" />
+          <div className="flex w-full flex-col">
             <div className="flex flex-row justify-between">
-              <p className="relative text-xl whitespace-nowrap truncate overflow-hidden">{props.username}</p>
+              <p className="relative overflow-hidden truncate whitespace-nowrap text-xl">{props.username}</p>
             </div>
-            <p className="text-gray-400 text-sm">{props.updateAt.substr(0, 10)}</p>
+            <p className="text-sm text-gray-400">{props.updateAt.substr(0, 10)}</p>
           </div>
           <div className="grid grid-cols-2">
             <button
               type="submit"
-              className="inline-flex cursor-pointer justify-center rounded-full p-2 h-fit text-blue-600 hover:bg-gray-300 dark:text-blue-500 dark:hover:bg-gray-100"
+              className="inline-flex h-fit cursor-pointer justify-center rounded-full p-2 text-blue-600 hover:bg-gray-300 dark:text-blue-500 dark:hover:bg-gray-100"
             >
               <ThumbUpOutlinedIcon />
             </button>

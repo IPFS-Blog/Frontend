@@ -86,7 +86,6 @@ export default function Article(props: any) {
               <p className="mx-1 font-mono">{props.article.updateAt.substr(0, 10)}</p>
             </div>
           </div>
-          {/* TODO: 使用者頭像、名稱 */}
           {/* 輸入留言 */}
           <CreateComment
             username={User.profile.username}
@@ -94,11 +93,22 @@ export default function Article(props: any) {
             articleid={props.ArticleUrl}
             setComments={setComments}
           ></CreateComment>
+          <div className="border-b-2 h-1 w-full border-blue-200"></div>
           {/* 顯示留言 */}
-          <div className="my-2 divide-y divide-blue-200">
+          <div className="my-2">
             {comments.slice(1).map((comment: any) => {
-              const { number, likes, contents, updateAt } = comment;
-              return <Comment id={number} key={number} like={likes} contents={contents} updateAt={updateAt} />;
+              const { number, likes, contents, updateAt, user } = comment;
+              return (
+                <Comment
+                  id={number}
+                  key={number}
+                  like={likes}
+                  contents={contents}
+                  updateAt={updateAt}
+                  username={user.username}
+                  picture={user.picture}
+                />
+              );
             })}
           </div>
         </div>
@@ -212,7 +222,7 @@ export const getServerSideProps = async (context: any) => {
   const ArticleUrl = context.req.url.split("/")[2];
   let createrData = { id: 0, username: "", address: "", email: "", picture: "" };
   let article = { title: "", subtitle: "", contents: "", updateAt: "" };
-  const comment = [{ number: 0, likes: 0, contents: "", updateAt: "" }];
+  const comment = [{ number: 0, likes: 0, contents: "", updateAt: "", user: {}}];
 
   await apiArticleTakeAllArticle("?aid=" + ArticleUrl)
     .then(async res => {

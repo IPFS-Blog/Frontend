@@ -40,7 +40,7 @@ const CreateComment = (props: any) => {
   }
 
   return (
-    <div>
+    <div className="mb-2">
       <div className="flex items-center bg-gray-50 px-3 py-1 dark:bg-gray-700">
         <Avatar className="h-auto w-10 rounded-full" src={props.picture} alt="not find Avatar" />
         <p className="mx-2">{props.username}</p>
@@ -51,7 +51,6 @@ const CreateComment = (props: any) => {
           onChange={e => setComment(e.target.value)}
         ></textarea>
         <button
-          //type="submit"
           className="inline-flex cursor-pointer justify-center rounded-full p-2 text-blue-600 hover:bg-gray-300 dark:text-blue-500 dark:hover:bg-gray-100"
           onClick={Create}
         >

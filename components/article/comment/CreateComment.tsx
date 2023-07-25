@@ -2,27 +2,27 @@ import SendIcon from "@mui/icons-material/Send";
 import Avatar from "@mui/material/Avatar";
 import { useState } from "react";
 
+import FailAlert from "@/components/alert/Fail";
+import SucessAlert from "@/components/alert/Sucess";
 import { _apiCheckJwt, apiArticleCommentCreate, apiArticleTakeAllArticle } from "@/components/api";
-
 const CreateComment = (props: any) => {
   // TODO: Handle funtion
   const [articleid] = useState(props.articleid);
   const [Comment, setComment] = useState(""); // 留言
-
+  const [success, setSuccess] = useState(false);
+  const [fail, setFailure] = useState(false);
   async function Create() {
     let jwt = "";
     await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
     const articleId = Number(articleid);
-    //console.log(typeof articleId);
-    //const data = String({ Comment });
     console.log(Comment);
     apiArticleCommentCreate(jwt, articleId, Comment)
-      .then(async (res: any) => {
-        console.log("成功", res);
+      .then(async () => {
+        setFailure(false);
+        setSuccess(true);
         await apiArticleTakeAllArticle("?aid=" + props.articleid)
           .then(async res => {
             const { comments } = res.data.article;
-            console.log("!!!", comments);
             props.setComments(comments);
           })
           .catch(() => {
@@ -32,6 +32,8 @@ const CreateComment = (props: any) => {
           });
       })
       .catch((error: any) => {
+        setSuccess(false);
+        setFailure(true);
         console.log("錯誤:", error);
       });
     //axios.post("http://192.168.0.16:3000/api/v1/articles/1/comment", { comment: Comment });
@@ -56,6 +58,8 @@ const CreateComment = (props: any) => {
           <SendIcon />
         </button>
       </div>
+      {success && <SucessAlert message="留言成功" />}
+      {fail && <FailAlert message="留言失敗" />}
     </div>
   );
 };

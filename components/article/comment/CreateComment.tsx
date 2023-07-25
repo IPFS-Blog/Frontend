@@ -15,7 +15,7 @@ const CreateComment = (props: any) => {
     let jwt = "";
     await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
     const articleId = Number(articleid);
-    console.log(Comment);
+    //console.log(Comment);
     apiArticleCommentCreate(jwt, articleId, Comment)
       .then(async () => {
         setFailure(false);
@@ -31,10 +31,10 @@ const CreateComment = (props: any) => {
             };
           });
       })
-      .catch((error: any) => {
+      .catch(() => {
         setSuccess(false);
         setFailure(true);
-        console.log("錯誤:", error);
+        //console.log("錯誤:", error);
       });
     //axios.post("http://192.168.0.16:3000/api/v1/articles/1/comment", { comment: Comment });
   }

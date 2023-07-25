@@ -85,12 +85,16 @@ export const apiArticleTakeArticle = (jwt: string, id: number) =>
     },
   }); // 獲取指定文章資料
 
-export const apiArticleEditArticle = (jwt: string, id: number, data: any) =>
-  articleRequest.patch(`/${id}`, {
+export const apiArticleEditArticle = (
+  jwt: string,
+  aid: number,
+  data: { title: string; subtitle: string; contents: string; release: boolean },
+) =>
+  articleRequest.patch(`/${aid}`, {
     headers: {
       Authorization: `Bearer ${jwt}`,
     },
-    params: data,
+    data: data,
   }); // 修改指定文章
 
 export const apiArticleDeleteArticle = (jwt: string, id: string) =>
@@ -99,3 +103,14 @@ export const apiArticleDeleteArticle = (jwt: string, id: string) =>
       Authorization: `Bearer ${jwt}`,
     },
   }); // 刪除指定文章
+
+  export const apiArticleCommentCreate = (jwt: string, id: number, data: any) =>
+  articleRequest.post(
+    `/${id}/comment`,
+    { contents: data },
+    {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    },
+  ); // 新增指定文章留言

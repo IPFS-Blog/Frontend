@@ -61,35 +61,15 @@ const MarkdownEditor = (props: any) => {
     ArticleEdit();
   }
 
-  const ArticleCreate = async () => {
-    const data = { title, subtitle, contents: markdown, release };
-    apiArticleCreate(jwt, data)
-      .then(() => {
-        if (release) {
-          setSuccessMessage("上傳 " + title + " 發布成功");
-        } else {
-          setSuccessMessage("另存 " + title + " 為草稿成功");
-        }
-        setSuccessAlert(true);
-        setTitle("");
-        setSubtitle("");
-        setMarkdown("");
-        //FIXME: 等後台合進來後就可以導到後台
-        // router.push("./");
-        // router.push("/Dashboard"); //回到後台查看自己草稿
-      })
-      .catch(() => {
-        setFailMessage("失敗，請再重新試試（如有問題可以向平台反映）。");
-        setFailAlert(true);
-      });
-  };
-
   const ArticleEdit = async () => {
     let jwt = "";
     await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
-    const id = Number(router.query.draft);
-    const params = { title, subtitle, contents: markdown, release };
-    apiArticleEditArticle(jwt, id, params)
+    const aid = Number(router.query.draft);
+    const data = { title, subtitle, contents: markdown, release };
+    console.log(data);
+    console.log(jwt);
+    console.log(aid);
+    apiArticleEditArticle(jwt, aid, data)
       .then(() => {
         if (release) {
           setSuccessMessage("上傳 " + title + " 編輯並發布成功");

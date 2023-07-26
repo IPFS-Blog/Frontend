@@ -135,7 +135,7 @@ export default function Home(props: any) {
 }
 export const getServerSideProps = async () => {
   try {
-    const Articles = await apiArticleTakeAllArticle();
+    const Articles = await apiArticleTakeAllArticle("");
 
     return { props: { Articles: Articles.data } };
   } catch {

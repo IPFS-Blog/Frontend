@@ -68,7 +68,7 @@ export default function Draft() {
         if (release) {
           setSuccessMessage("上傳 " + title + " 編輯並發布成功");
         } else {
-          setSuccessMessage("另存 " + title + " 編輯並為草稿成功");
+          setSuccessMessage("儲存 " + title + " 編輯並為草稿成功");
         }
         setSuccessAlert(true);
         router.push("../../Dashboard");
@@ -77,7 +77,7 @@ export default function Draft() {
         if (release) {
           setFailMessage("上傳 " + title + " 編輯並發布失敗");
         } else {
-          setFailMessage("另存 " + title + " 編輯並為草稿失敗");
+          setFailMessage("儲存 " + title + " 編輯並為草稿失敗");
         }
         setFailAlert(true);
       });
@@ -274,6 +274,7 @@ export default function Draft() {
         </div>
       )}
       {success && <SucessAlert message={successMessage} />}
+      <SucessAlert message={儲存 我是文章編輯草稿 編輯並為草稿成功} />
       {fail && <FailAlert message={failMessage} />}
     </div>
   );

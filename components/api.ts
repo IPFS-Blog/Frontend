@@ -76,7 +76,7 @@ export const apiArticleCreate = (jwt: string, data: any) =>
     },
   }); // 創建文章
 
-  export const apiArticleTakeAllArticle = (id: string) => articleRequest.get(`/${id}`, config); // 查詢所有文章
+export const apiArticleTakeAllArticle = (id: string) => articleRequest.get(`/${id}`, config); // 查詢所有文章
 
 export const apiArticleTakeArticle = (jwt: string, id: number) =>
   articleRequest.get(`/${id}`, {
@@ -85,16 +85,11 @@ export const apiArticleTakeArticle = (jwt: string, id: number) =>
     },
   }); // 獲取指定文章資料
 
-export const apiArticleEditArticle = (
-  jwt: string,
-  aid: number,
-  data: { title: string; subtitle: string; contents: string; release: boolean },
-) =>
-  articleRequest.patch(`/${aid}`, {
+export const apiArticleEditArticle = (jwt: string, aid: number, data: any) =>
+  articleRequest.patch(`/${aid}`, data, {
     headers: {
       Authorization: `Bearer ${jwt}`,
     },
-    data: data,
   }); // 修改指定文章
 
 export const apiArticleDeleteArticle = (jwt: string, id: string) =>
@@ -104,7 +99,7 @@ export const apiArticleDeleteArticle = (jwt: string, id: string) =>
     },
   }); // 刪除指定文章
 
-  export const apiArticleCommentCreate = (jwt: string, id: number, data: any) =>
+export const apiArticleCommentCreate = (jwt: string, id: number, data: any) =>
   articleRequest.post(
     `/${id}/comment`,
     { contents: data },

@@ -12,7 +12,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import router from "next/router";
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import AlertDialogSlide from "@/components/alert/AlertDialogSlide";
@@ -40,22 +40,20 @@ const StyledTableCell = styled(TableCell)(() => ({
 }));
 
 const StyledTableRow = styled(TableRow)(({}) => ({
-  // hide last border
   "&:last-child td, &:last-child th": {
     border: 0,
   },
 }));
 
-export default function CustomizedTables() {
+export default function Dashboard() {
   // TODO: Handle funtion
   const User = useSelector((state: any) => state.User);
   const dispatch = useDispatch();
   const [Articles, setArticles] = useState([]);
   const [selectedArticleId, setSelectedArticleId] = useState("");
   const [release, setRelease] = useState(2);
-  const [skip] = useState(0);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const TakeArticle = async () => {
+  const [skip, setskip] = useState(0);
+  const TakeArticle = useCallback(async (release: number, skip: number) => {
     try {
       let jwt = "";
       await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
@@ -63,7 +61,7 @@ export default function CustomizedTables() {
       const res = await apiUserGetCreaterOwnArticle(jwt, params);
       setArticles(res.data);
     } catch (error) {}
-  };
+  }, []);
 
   useEffect(() => {
     const UserCheck = async () => {
@@ -73,8 +71,9 @@ export default function CustomizedTables() {
       });
     };
     UserCheck();
-    TakeArticle();
-  }, [release, skip, User.profile.username, dispatch, TakeArticle]);
+    TakeArticle(release, skip);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [release, skip, User.profile.username, dispatch]);
 
   async function deleteArticle(articleId: any, articleTitle: any) {
     setSelectedArticleId(articleId);
@@ -110,11 +109,17 @@ export default function CustomizedTables() {
     });
   }
 
-  const changeRelease = (event: SelectChangeEvent) => {
+  function changeRelease(event: SelectChangeEvent) {
     const selectedRelease = Number(event.target.value);
     setRelease(selectedRelease);
-    TakeArticle();
-  };
+  }
+
+  function backPage() {
+    setskip(skip - 10);
+  }
+  function nextPage() {
+    setskip(skip + 10);
+  }
 
   //TODO: UI function
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -228,7 +233,7 @@ export default function CustomizedTables() {
           </TableHead>
           <TableBody>
             {Articles.map((item: any) => (
-              <StyledTableRow key={item.title}>
+              <StyledTableRow key={item.id}>
                 <StyledTableCell align="left">{renderButton(item.release)}</StyledTableCell>
                 <StyledTableCell component="th" scope="row">
                   <div className="h-20 overflow-hidden text-base">{item.title}</div>
@@ -239,14 +244,14 @@ export default function CustomizedTables() {
                 <StyledTableCell align="left">
                   <div className="overflow-hidden text-base">{item.updateAt.substring(0, 10)}</div>
                 </StyledTableCell>
-                <StyledTableCell align="left">
-                  {activebutton(item.release, item.id, item.title)}
-                </StyledTableCell>
+                <StyledTableCell align="left">{activebutton(item.release, item.id, item.title)}</StyledTableCell>
               </StyledTableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+      {skip > 9 ? <button onClick={backPage}>上</button> : null}
+      {Articles.length > 9 ? <button onClick={nextPage}>下 {Articles.length}</button> : null}
       {openDeleteDialog && <AlertDialogSlide handleDelete={handleDelete} title={"確認刪除 " + articleTitle} />}
     </>
   );

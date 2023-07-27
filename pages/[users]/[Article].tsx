@@ -7,8 +7,6 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { apiArticleTakeAllArticle } from "@/components/api";
-import Comment from "@/components/article/comment/Comment";
-import CreateComment from "@/components/article/comment/CreateComment";
 import DonateButton from "@/components/users/DonateButton";
 import { update } from "@/store/CreaterSlice";
 import styles from "@/styles/MarkdownEditor.module.css";

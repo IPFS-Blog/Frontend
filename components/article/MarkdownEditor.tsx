@@ -7,7 +7,7 @@ import {
   VisibilityOff,
 } from "@mui/icons-material";
 import MarkdownIt from "markdown-it";
-// import { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 
 import FailAlert from "@/components/alert/Fail";
@@ -21,7 +21,7 @@ const MarkdownEditor = () => {
   const [subtitle, setSubtitle] = useState(""); // 副標題
   const [markdown, setMarkdown] = useState(""); // 內文
   const [release, setrelease] = useState(false); // release狀態
-  // const router = useRouter();
+  const router = useRouter();
 
   function changerelease(release: any) {
     setrelease(!release);
@@ -43,9 +43,7 @@ const MarkdownEditor = () => {
         setTitle("");
         setSubtitle("");
         setMarkdown("");
-        //FIXME: 等後台合進來後就可以導到後台
-        // router.push("./");
-        // router.push("/Dashboard"); //回到後台查看自己草稿
+        router.push("/Dashboard");
       })
       .catch(() => {
         setFailMessage("失敗，請再重新試試（如有問題可以向平台反映）。");

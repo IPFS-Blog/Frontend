@@ -9,23 +9,21 @@ import {
 import MarkdownIt from "markdown-it";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
 import FailAlert from "@/components/alert/Fail";
 import SucessAlert from "@/components/alert/Sucess";
-import { _apiCheckJwt, apiArticleCreate, apiArticleEditArticle, apiArticleTakeArticle } from "@/components/api";
-import styles from "@/styles/MarkdownEditor.module.css";
+import { _apiCheckJwt, apiArticleEditArticle, apiArticleTakeArticle } from "@/components/api";
 import { LoginFunction } from "@/helpers/users/LoginFunction";
 import { setLogin } from "@/store/UserSlice";
-import { useDispatch, useSelector } from "react-redux";
+import styles from "@/styles/MarkdownEditor.module.css";
 
-const MarkdownEditor = (props: any) => {
+export default function Draft() {
   //TODO: Handle function
-  const User = useSelector((state: any) => state.User);
   const [title, setTitle] = useState(""); // 標題
   const [subtitle, setSubtitle] = useState(""); // 副標題
   const [markdown, setMarkdown] = useState(""); // 內文
   const [release, setrelease] = useState(false); // release狀態
-  const [jwt, setJWT] = useState(""); // jwt狀態
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -41,7 +39,6 @@ const MarkdownEditor = (props: any) => {
       try {
         let jwt = "";
         await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
-        setJWT(jwt);
         const id = Number(router.query.draft);
         await apiArticleTakeArticle(jwt, id).then(async res => {
           const { title, subtitle, contents } = res.data.article;
@@ -54,7 +51,7 @@ const MarkdownEditor = (props: any) => {
 
     UserCheck();
     TakeArticle();
-  }, []);
+  }, [dispatch, router]);
 
   function changerelease(release: any) {
     setrelease(!release);
@@ -66,9 +63,6 @@ const MarkdownEditor = (props: any) => {
     await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
     const aid = Number(router.query.draft);
     const data = { title, subtitle, contents: markdown, release };
-    console.log(data);
-    console.log(jwt);
-    console.log(aid);
     apiArticleEditArticle(jwt, aid, data)
       .then(() => {
         if (release) {
@@ -77,12 +71,15 @@ const MarkdownEditor = (props: any) => {
           setSuccessMessage("另存 " + title + " 編輯並為草稿成功");
         }
         setSuccessAlert(true);
-        setTitle("");
-        setSubtitle("");
-        setMarkdown("");
+        router.push("../../Dashboard");
       })
-      .catch((error: any) => {
-        console.log(error);
+      .catch(() => {
+        if (release) {
+          setFailMessage("上傳 " + title + " 編輯並發布失敗");
+        } else {
+          setFailMessage("另存 " + title + " 編輯並為草稿失敗");
+        }
+        setFailAlert(true);
       });
   };
 
@@ -280,6 +277,4 @@ const MarkdownEditor = (props: any) => {
       {fail && <FailAlert message={failMessage} />}
     </div>
   );
-};
-
-export default MarkdownEditor;
+}

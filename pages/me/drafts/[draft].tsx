@@ -274,7 +274,6 @@ export default function Draft() {
         </div>
       )}
       {success && <SucessAlert message={successMessage} />}
-      <SucessAlert message={儲存 我是文章編輯草稿 編輯並為草稿成功} />
       {fail && <FailAlert message={failMessage} />}
     </div>
   );

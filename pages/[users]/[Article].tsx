@@ -3,10 +3,12 @@ import BookmarkAddOutlinedIcon from "@mui/icons-material/BookmarkAddOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import Avatar from "@mui/material/Avatar";
 import MarkdownIt from "markdown-it";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { apiArticleTakeAllArticle } from "@/components/api";
+import Comment from "@/components/article/comment/Comment";
+import CreateComment from "@/components/article/comment/CreateComment";
 import DonateButton from "@/components/users/DonateButton";
 import { update } from "@/store/CreaterSlice";
 import styles from "@/styles/MarkdownEditor.module.css";
@@ -14,7 +16,7 @@ export default function Article(props: any) {
   // TODO: Handle funtion
   const dispatch = useDispatch();
   const User = useSelector((state: any) => state.User);
-
+  const [comments, setComments] = useState(props.comment);
   useEffect(() => {
     // TODO: 文章創作者資料
     dispatch(update(JSON.stringify(props.createrData)));
@@ -84,20 +86,31 @@ export default function Article(props: any) {
               <p className="mx-1 font-mono">{props.article.updateAt.substr(0, 10)}</p>
             </div>
           </div>
-          {/* TODO: 使用者頭像、名稱 */}
           {/* 輸入留言 */}
-          {/* <CreateComment
+          <CreateComment
             username={User.profile.username}
             picture={User.profile.picture}
             articleid={props.ArticleUrl}
+            setComments={setComments}
           ></CreateComment>
-          {/* 顯示留言 
-          <div className="my-2 divide-y divide-blue-200">
-            {props.comment.slice(1).map((comment: any) => {
-              const { number, likes, contents, updateAt } = comment;
-              return <Comment id={number} key={number} like={likes} contents={contents} updateAt={updateAt} />;
+          <div className="h-1 w-full border-b-2 border-blue-200"></div>
+          {/* 顯示留言 */}
+          <div className="my-2">
+            {comments.slice(1).map((comment: any) => {
+              const { number, likes, contents, updateAt, user } = comment;
+              return (
+                <Comment
+                  id={number}
+                  key={number}
+                  like={likes}
+                  contents={contents}
+                  updateAt={updateAt}
+                  username={user.username}
+                  picture={user.picture}
+                />
+              );
             })}
-          </div> */}
+          </div>
         </div>
       </div>
 
@@ -209,7 +222,7 @@ export const getServerSideProps = async (context: any) => {
   const ArticleUrl = context.req.url.split("/")[2];
   let createrData = { id: 0, username: "", address: "", email: "", picture: "" };
   let article = { title: "", subtitle: "", contents: "", updateAt: "" };
-  const comment = [{ number: 0, likes: 0, contents: "", updateAt: "" }];
+  const comment = [{ number: 0, likes: 0, contents: "", updateAt: "", user: {} }];
 
   await apiArticleTakeAllArticle("?aid=" + ArticleUrl)
     .then(async res => {
@@ -223,7 +236,6 @@ export const getServerSideProps = async (context: any) => {
       };
       article = resarticle;
       comment.push(...comments);
-      console.log("!!!!!!!!!!!!!!!", res.data.article.comments);
     })
     .catch(() => {
       return {

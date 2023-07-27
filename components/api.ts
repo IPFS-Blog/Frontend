@@ -109,3 +109,15 @@ export const apiArticleCommentCreate = (jwt: string, id: number, data: any) =>
       },
     },
   ); // 新增指定文章留言
+export const apiArticleCommentEdit = (jwt: string, id: string, cid: string) =>
+  articleRequest.patch(`/${id}/comment/${cid}`, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  }); //修改留言
+export const apiArticleCommentDelete = (jwt: string, id: string, cid: string) =>
+  articleRequest.delete(`/${id}/comment/${cid}`, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  }); //刪除指定文章的一條留言刪除

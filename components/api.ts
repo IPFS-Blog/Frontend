@@ -55,6 +55,14 @@ export const apiUserGetCreaterData = (username: any) => userRequest.get(`/${user
 
 export const apiUserGetCreaterArticle = (username: any) => userRequest.get(`/${username}/articles`, config); // 搜尋特定使用者的文章
 
+export const apiUserGetCreaterOwnArticle = (jwt: string, data: any) =>
+  userRequest.get("/own/article", {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+    params: data,
+  }); // 搜索使用者自身的文章
+
 // TODO: Auth相關的 api
 export const apiAuthTakeNonce = (address: any) => authRequest.get(`/login/${address}`, config); // 確認使用者
 
@@ -70,10 +78,15 @@ export const apiArticleCreate = (jwt: string, data: any) =>
 
 export const apiArticleTakeAllArticle = (id: string) => articleRequest.get(`/${id}`, config); // 查詢所有文章
 
-export const apiArticleTakeArticle = (id: string) => articleRequest.get(`/${id}`, config); // 搜尋指定文章
+export const apiArticleTakeArticle = (jwt: string, id: number) =>
+  articleRequest.get(`/${id}`, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  }); // 獲取指定文章資料
 
-export const apiArticleEditArticle = (jwt: string, id: string, data: any) =>
-  articleRequest.patch(`/${id}`, data, {
+export const apiArticleEditArticle = (jwt: string, aid: number, data: any) =>
+  articleRequest.patch(`/${aid}`, data, {
     headers: {
       Authorization: `Bearer ${jwt}`,
     },
@@ -85,13 +98,6 @@ export const apiArticleDeleteArticle = (jwt: string, id: string) =>
       Authorization: `Bearer ${jwt}`,
     },
   }); // 刪除指定文章
-
-export const apiArticleReleaseArticle = (jwt: string, id: string) =>
-  articleRequest.patch(`/${id}/release`, {
-    headers: {
-      Authorization: `Bearer ${jwt}`,
-    },
-  }); // 發布指定文章
 
 export const apiArticleCommentCreate = (jwt: string, id: number, data: any) =>
   articleRequest.post(

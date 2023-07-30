@@ -298,7 +298,7 @@ export default function Dashboard() {
           </button>
         ) : null}
       </div>
-      {openDeleteDialog && <AlertDialogSlide handleDelete={handleDelete} title={"確認刪除 " + articleTitle} />}
+      {openDeleteDialog && <AlertDialogSlide handlefunction={handleDelete} title={"確認刪除 " + articleTitle} />}
     </>
   );
 }

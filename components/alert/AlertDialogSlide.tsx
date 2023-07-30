@@ -7,10 +7,11 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import * as React from "react";
+import { ReactElement, useState } from "react";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
-    children: React.ReactElement<any, any>;
+    children: ReactElement<any, any>;
   },
   ref: React.Ref<unknown>,
 ) {
@@ -18,14 +19,14 @@ const Transition = React.forwardRef(function Transition(
 });
 
 export default function AlertDialogSlide(props: any) {
-  const [open, setOpen] = React.useState(true);
-  const { handleDelete } = props;
+  const [open, setOpen] = useState(true);
+  const { handlefunction } = props;
 
   const handleClose = () => {
     setOpen(false);
   };
   const handleAgree = () => {
-    handleDelete();
+    handlefunction();
     handleClose();
   };
 

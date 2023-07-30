@@ -11,43 +11,43 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 
 import FailAlert from "@/components/alert/Fail";
-import SucessAlert from "@/components/alert/Sucess";
 import { _apiCheckJwt, apiArticleCreate } from "@/components/api";
 import styles from "@/styles/MarkdownEditor.module.css";
+
+import AlertDialogSlide from "../alert/AlertDialogSlide";
 
 const MarkdownEditor = () => {
   //TODO: Handle function
   const [title, setTitle] = useState(""); // 標題
   const [subtitle, setSubtitle] = useState(""); // 副標題
   const [markdown, setMarkdown] = useState(""); // 內文
-  const [release, setrelease] = useState(false); // release狀態
   const router = useRouter();
 
-  function changerelease(release: any) {
-    setrelease(!release);
-    ArticleCreate();
-  }
-
-  const ArticleCreate = async () => {
+  const ArticleCreate = async (release: boolean) => {
     let jwt = "";
     await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
     const data = { title, subtitle, contents: markdown, release };
     apiArticleCreate(jwt, data)
-      .then(() => {
+      .then((res: any) => {
         if (release) {
-          setSuccessMessage("上傳 " + title + " 發布成功");
+          setSuccessMessage("上傳 ［" + title + " ］ 發布成功");
+          console.log(res.data.ipfsHash);
+          setIpfsHash(res.data.ipfsHash);
+          setAid(res.data.aid);
         } else {
           setSuccessMessage("另存 " + title + " 為草稿成功");
+          setAid(res.data.aid);
         }
-        setSuccessAlert(true);
+        setAlertDialogSlide(true);
         setTitle("");
         setSubtitle("");
         setMarkdown("");
-        router.push("/Dashboard");
       })
-      .catch(() => {
-        setFailMessage("失敗，請再重新試試（如有問題可以向平台反映）。");
+      .catch((error: any) => {
+        setFailMessage("失敗，請再重新試試（如有問題可以向平台反映）。\n");
         setFailAlert(true);
+        console.log(error);
+        console.log(error.request.respone);
       });
   };
 
@@ -56,8 +56,10 @@ const MarkdownEditor = () => {
   const [preview, setpreview] = useState(true);
   const [fail, setFailAlert] = useState(false);
   const [failMessage, setFailMessage] = useState("");
-  const [success, setSuccessAlert] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const [alertDialogSlide, setAlertDialogSlide] = useState(false);
+  const [aid, setAid] = useState("");
+  const [ipfsHash, setIpfsHash] = useState("");
 
   const handleMarkdownChange = (event: any) => {
     setMarkdown(event.target.value);
@@ -70,6 +72,10 @@ const MarkdownEditor = () => {
   });
 
   const renderedHTML = md.render(markdown);
+
+  function jumpPage() {
+    router.push("/Dashboard");
+  }
 
   return (
     <div
@@ -142,7 +148,7 @@ const MarkdownEditor = () => {
             type="submit"
             className="mx-1 inline-flex items-center rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-bold text-white hover:bg-blue-800 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900"
             onClick={() => {
-              changerelease(release);
+              ArticleCreate(true);
             }}
           >
             發布
@@ -151,7 +157,7 @@ const MarkdownEditor = () => {
             type="submit"
             className="mx-1 inline-flex items-center rounded-lg bg-blue-400 px-5 py-2.5 text-center text-sm font-bold text-white hover:bg-blue-500 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900"
             onClick={() => {
-              changerelease(release);
+              ArticleCreate(false);
             }}
           >
             草稿
@@ -241,8 +247,22 @@ const MarkdownEditor = () => {
           />
         </div>
       )}
-      {success && <SucessAlert message={successMessage} />}
       {fail && <FailAlert message={failMessage} />}
+      {alertDialogSlide && (
+        <AlertDialogSlide
+          handlefunction={jumpPage}
+          title={successMessage}
+          message={
+            <div>
+              {ipfsHash != "" ? "IPFS節點：" + ipfsHash : null}
+              <br />
+              {"文章編號：" + aid}
+              <br />
+              {"點擊 同意 後，即跳轉至 我的後台 確認文章"}
+            </div>
+          }
+        />
+      )}
     </div>
   );
 };

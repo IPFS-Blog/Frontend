@@ -6,7 +6,7 @@ import MarkdownIt from "markdown-it";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { apiArticleTakeAllArticle } from "@/components/api";
+import { _apiCheckJwt, apiArticleLike, apiArticleTakeAllArticle } from "@/components/api";
 import Comment from "@/components/article/comment/Comment";
 import CreateComment from "@/components/article/comment/CreateComment";
 import DonateButton from "@/components/users/DonateButton";
@@ -17,6 +17,7 @@ export default function Article(props: any) {
   const dispatch = useDispatch();
   const User = useSelector((state: any) => state.User);
   const [comments, setComments] = useState(props.comment);
+  const [likeNumber, setlikeNumber] = useState(props.article.likes);
   useEffect(() => {
     // TODO: 文章創作者資料
     dispatch(update(JSON.stringify(props.createrData)));
@@ -68,9 +69,30 @@ export default function Article(props: any) {
           <div className="grid items-center gap-2 bg-gray-100 p-2 dark:bg-gray-800">
             <div className="col-start-1 col-end-3 tablet:col-span-1 tablet:col-start-1">
               {/* 喜歡 */}
-              <button className="rounded border border-red-500 py-2 px-10 font-semibold text-red-500 hover:bg-red-500 hover:text-white tablet:mx-2 tablet:px-5">
+              <button
+                className="rounded border border-red-500 py-2 px-10 font-semibold text-red-500 hover:bg-red-500 hover:text-white tablet:mx-2 tablet:px-5"
+                onClick={async () => {
+                  let jwt = "";
+                  await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
+                  // FIXME: 使用者是否按過讚 目前為測試資料
+                  apiArticleLike(jwt, props.ArticleUrl, true).then(res => {
+                    console.log("Success :", res);
+                  });
+
+                  await apiArticleTakeAllArticle("?aid=" + props.ArticleUrl)
+                    .then(async res => {
+                      const { likes } = res.data.article;
+                      setlikeNumber(likes);
+                    })
+                    .catch(() => {
+                      return {
+                        notFound: true,
+                      };
+                    });
+                }}
+              >
                 <FavoriteBorderOutlinedIcon />
-                <span>like</span>
+                <span>like {likeNumber}</span>
               </button>
               {User.profile.login ? <DonateButton /> : null}
             </div>
@@ -101,12 +123,14 @@ export default function Article(props: any) {
               return (
                 <Comment
                   id={number}
+                  articleId={props.ArticleUrl}
                   key={number}
                   like={likes}
                   contents={contents}
                   updateAt={updateAt}
                   username={user.username}
                   picture={user.picture}
+                  setComments={setComments}
                 />
               );
             })}
@@ -221,18 +245,19 @@ export const getServerSideProps = async (context: any) => {
   // 查詢文章
   const ArticleUrl = context.req.url.split("/")[2];
   let createrData = { id: 0, username: "", address: "", email: "", picture: "" };
-  let article = { title: "", subtitle: "", contents: "", updateAt: "" };
+  let article = { title: "", subtitle: "", contents: "", updateAt: "", likes: 0 };
   const comment = [{ number: 0, likes: 0, contents: "", updateAt: "", user: {} }];
 
   await apiArticleTakeAllArticle("?aid=" + ArticleUrl)
     .then(async res => {
-      const { title, subtitle, contents, updateAt, user, comments } = res.data.article;
+      const { title, subtitle, contents, updateAt, user, comments, likes } = res.data.article;
       createrData = user;
       const resarticle = {
         title,
         subtitle,
         contents,
         updateAt,
+        likes,
       };
       article = resarticle;
       comment.push(...comments);

@@ -115,9 +115,23 @@ export const apiArticleCommentEdit = (jwt: string, id: string, cid: string) =>
       Authorization: `Bearer ${jwt}`,
     },
   }); //修改留言
+
 export const apiArticleCommentDelete = (jwt: string, id: string, cid: string) =>
   articleRequest.delete(`/${id}/comment/${cid}`, {
     headers: {
       Authorization: `Bearer ${jwt}`,
     },
   }); //刪除指定文章的一條留言刪除
+
+export const apiArticleLike = (jwt: string, id: string, data: any) =>
+  articleRequest.patch(`/${id}/likeStatus?userLike=${data}`, null, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  }); //對文章按讚
+export const apiCommentLike = (jwt: string, id: string, cid: string, data: any) =>
+  articleRequest.patch(`/${id}/comment/${cid}/likeStatus?userLike=${data}`, null, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  }); //對留言按讚

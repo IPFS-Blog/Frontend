@@ -6,6 +6,8 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import * as React from "react";
 
+import { _apiCheckJwt, apiArticleTakeAllArticle, apiCommentLike } from "@/components/api";
+
 const options = ["Edit", "Delete"];
 
 const Comment = (props: any) => {
@@ -33,6 +35,23 @@ const Comment = (props: any) => {
             <button
               type="submit"
               className="inline-flex h-fit cursor-pointer justify-center rounded-full p-2 text-blue-600 hover:bg-gray-300 dark:text-blue-500 dark:hover:bg-gray-100"
+              onClick={async () => {
+                let jwt = "";
+                await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
+                // FIXME: 使用者是否按過讚 目前為測試資料
+                await apiCommentLike(jwt, props.articleId, props.id, true);
+
+                await apiArticleTakeAllArticle("?aid=" + 1)
+                  .then(async res => {
+                    const { comments } = res.data.article;
+                    props.setComments(comments);
+                  })
+                  .catch(() => {
+                    return {
+                      notFound: true,
+                    };
+                  });
+              }}
             >
               <ThumbUpOutlinedIcon />
             </button>

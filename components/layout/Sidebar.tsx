@@ -25,7 +25,7 @@ const menuItems = [
 const dashboardSidebar = [
   { id: 1, label: "首頁", icon: AiOutlineHome, link: "/" },
   { id: 2, label: "我的後台", icon: AiOutlineLayout, link: "/Dashboard" },
-  { id: 3, label: "創建", icon: AiOutlineFileText, link: "/CreateArticle" },
+  { id: 3, label: "創建", icon: AiOutlineForm, link: "/CreateArticle" },
   { id: 5, label: "瀏覽文章數據", icon: AiOutlineBarChart, link: "/SimpleFaucet" },
 ];
 

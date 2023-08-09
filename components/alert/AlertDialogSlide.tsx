@@ -30,6 +30,8 @@ export default function AlertDialogSlide(props: any) {
     handleClose();
   };
 
+  console.log("我開過了");
+
   return (
     <div>
       <Dialog
@@ -38,6 +40,11 @@ export default function AlertDialogSlide(props: any) {
         keepMounted
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
+        PaperProps={{
+          style: {
+            zIndex: 9999,
+          },
+        }}
       >
         <DialogTitle>{props.title}</DialogTitle>
         <DialogContent>

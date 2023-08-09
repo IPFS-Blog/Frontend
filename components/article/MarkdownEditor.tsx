@@ -9,9 +9,12 @@ import {
 import MarkdownIt from "markdown-it";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+import Web3 from "web3";
 
 import FailAlert from "@/components/alert/Fail";
 import { _apiCheckJwt, apiArticleCreate } from "@/components/api";
+import { ArticleHistoryFunction } from "@/helpers/Contract/ArticleHistoryFunction";
+import Mining from "@/pages/loading/mining";
 import styles from "@/styles/MarkdownEditor.module.css";
 
 import AlertDialogSlide from "../alert/AlertDialogSlide";
@@ -21,35 +24,66 @@ const MarkdownEditor = () => {
   const [title, setTitle] = useState(""); // 標題
   const [subtitle, setSubtitle] = useState(""); // 副標題
   const [markdown, setMarkdown] = useState(""); // 內文
+  const [aid, setAid] = useState(""); //回傳文章編號
+  const [ipfsHash, setIpfsHash] = useState(""); //回傳IPFSHash
+  const [updateAt, setupdateAt] = useState(""); //回傳updateAt
   const router = useRouter();
 
-  const ArticleCreate = async (release: boolean) => {
-    let jwt = "";
-    await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
-    const data = { title, subtitle, contents: markdown, release };
-    apiArticleCreate(jwt, data)
-      .then((res: any) => {
+  async function ArticleCreate(release: boolean) {
+    try {
+      let jwt = "";
+      await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
+      const data = { title, subtitle, contents: markdown, release };
+      apiArticleCreate(jwt, data).then(async (res: any) => {
         if (release) {
           setSuccessMessage("上傳 ［" + title + " ］ 發布成功");
-          console.log(res.data.ipfsHash);
+          console.log("上傳 ［" + title + " ］ 發布成功");
           setIpfsHash(res.data.ipfsHash);
           setAid(res.data.aid);
+          setupdateAt(res.data.updateAt.substring(0, 10));
+          await addArticleHistory();
         } else {
-          setSuccessMessage("另存 " + title + " 為草稿成功");
-          setAid(res.data.aid);
+          setSuccessMessage("另存 [" + title + " ] 為草稿成功");
+          setAlertDialogSlide(true);
         }
-        setAlertDialogSlide(true);
         setTitle("");
         setSubtitle("");
         setMarkdown("");
-      })
-      .catch((error: any) => {
-        setFailMessage("失敗，請再重新試試（如有問題可以向平台反映）。\n");
-        setFailAlert(true);
-        console.log(error);
-        console.log(error.request.respone);
       });
-  };
+    } catch {
+      setFailMessage("失敗，請再重新試試（如有問題可以向平台反映）。\n");
+      setFailAlert(true);
+    }
+  }
+  // TODO: 存文章歷史紀錄
+  async function addArticleHistory() {
+    const web3 = new Web3(window && window.ethereum);
+    const articleId = parseInt(aid);
+    // TODO:拿取帳號
+    const accounts = await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
+    const address = accounts[0];
+    const gasLimit = 3000000;
+    // TODO:合約
+    const accountAddress = process.env.NEXT_PUBLIC_ArticlesHistoryAddress;
+    const articleHistoryContractabi = ArticleHistoryFunction();
+    const articleContract = new web3.eth.Contract(articleHistoryContractabi, accountAddress);
+    if (web3) {
+      await articleContract.methods
+        .addArticle(articleId, ipfsHash, updateAt)
+        .send({ from: address, gas: gasLimit })
+        .then(() => {
+          console.log("有執行紀錄");
+          setSuccessMessage("儲存 ［" + title + " ］ 紀錄成功");
+          setAlertDialogSlide(true);
+        })
+        .catch(() => {
+          setFailMessage("歷史紀錄失敗，請再重新試試（如有問題可以向平台反映）。\n");
+          setFailAlert(true);
+        });
+    }
+  }
 
   //TODO: UI function
   const [edit, setedit] = useState(true);
@@ -58,8 +92,7 @@ const MarkdownEditor = () => {
   const [failMessage, setFailMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [alertDialogSlide, setAlertDialogSlide] = useState(false);
-  const [aid, setAid] = useState("");
-  const [ipfsHash, setIpfsHash] = useState("");
+  const [isLoading] = useState(false);
 
   const handleMarkdownChange = (event: any) => {
     setMarkdown(event.target.value);
@@ -144,6 +177,7 @@ const MarkdownEditor = () => {
           </div>
         </div>
         <div>
+          {isLoading ? <Mining /> : null}
           <button
             type="submit"
             className="mx-1 inline-flex items-center rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-bold text-white hover:bg-blue-800 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900"

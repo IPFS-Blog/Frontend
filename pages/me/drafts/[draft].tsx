@@ -17,6 +17,7 @@ import FailAlert from "@/components/alert/Fail";
 import { _apiCheckJwt, apiArticleEditArticle, apiArticleTakeArticle } from "@/components/api";
 import { ArticleHistoryFunction } from "@/helpers/Contract/ArticleHistoryFunction";
 import { LoginFunction } from "@/helpers/users/LoginFunction";
+import Mining from "@/pages/loading/mining";
 import { setLogin } from "@/store/UserSlice";
 import styles from "@/styles/MarkdownEditor.module.css";
 
@@ -105,14 +106,18 @@ export default function Draft() {
     const articleHistoryContractabi = ArticleHistoryFunction();
     const articleContract = new web3.eth.Contract(articleHistoryContractabi, accountAddress);
     if (web3) {
+      setIsLoading(true);
       await articleContract.methods
         .addArticle(articleId, ipfsHash, updateAt)
         .send({ from: address, gas: gasLimit })
         .then(() => {
           setAlertDialogSlide(true);
+          setIsLoading(false);
         })
-        .catch((error: any) => {
-          console.log("Failed to add article:", error);
+        .catch(() => {
+          setFailMessage("歷史紀錄失敗，請再重新試試（如有問題可以向平台反映）。\n");
+          setFailAlert(true);
+          setIsLoading(false);
         });
     }
   }
@@ -125,6 +130,7 @@ export default function Draft() {
   const [successMessage, setSuccessMessage] = useState("");
   const [alertDialogSlide, setAlertDialogSlide] = useState(false);
   const [openHistoryDialog, setOpenHistoryDialog] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleMarkdownChange = (event: any) => {
     setMarkdown(event.target.value);
@@ -209,6 +215,7 @@ export default function Draft() {
           </div>
         </div>
         <div>
+          {isLoading ? <Mining /> : null}
           <button
             type="submit"
             className="mx-1 inline-flex items-center rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-bold text-white hover:bg-blue-800 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900"

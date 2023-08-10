@@ -66,7 +66,7 @@ export default function Draft() {
     apiArticleEditArticle(jwt, aid, data)
       .then(async (res: any) => {
         if (release) {
-          setSuccessMessage("上傳 ［" + title + " ］ 發布成功");
+          setSuccessMessage("是否將 [" + title + " ] 存入區塊鏈的文章歷史紀錄");
           setIpfsHash(res.data.ipfsHash);
           setAid(res.data.aid);
           setupdateAt(res.data.updateAt.substring(0, 10));
@@ -75,9 +75,6 @@ export default function Draft() {
           setSuccessMessage("另存 [" + title + " ] 為草稿成功");
           setAlertDialogSlide(true);
         }
-        setTitle("");
-        setSubtitle("");
-        setMarkdown("");
       })
       .catch((error: any) => {
         const statusCode = error?.response?.data?.statusCode;
@@ -111,8 +108,12 @@ export default function Draft() {
         .addArticle(articleId, ipfsHash, updateAt)
         .send({ from: address, gas: gasLimit })
         .then(() => {
+          setSuccessMessage("上傳 ［" + title + " ］ 發布成功");
           setAlertDialogSlide(true);
           setIsLoading(false);
+          setTitle("");
+          setSubtitle("");
+          setMarkdown("");
         })
         .catch(() => {
           setFailMessage("歷史紀錄失敗，請再重新試試（如有問題可以向平台反映）。\n");
@@ -335,7 +336,20 @@ export default function Draft() {
           }
         />
       )}
-      {openHistoryDialog && <AlertDialogSlide handlefunction={addArticleHistory} title={"存入區塊鏈" + title} />}
+      {openHistoryDialog && (
+        <AlertDialogSlide
+          handlefunction={addArticleHistory}
+          title={successMessage}
+          message={
+            <div>
+              {ipfsHash != "" ? "IPFS節點：" + ipfsHash : null}
+              <br />
+              {aid != "" ? "文章編號：" + aid : null}
+              <br />
+            </div>
+          }
+        />
+      )}
     </div>
   );
 }

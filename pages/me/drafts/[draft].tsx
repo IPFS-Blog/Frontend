@@ -69,7 +69,7 @@ export default function Draft() {
           setIpfsHash(res.data.ipfsHash);
           setAid(res.data.aid);
           setupdateAt(res.data.updateAt.substring(0, 10));
-          await addArticleHistory();
+          setOpenHistoryDialog(true);
         } else {
           setSuccessMessage("另存 [" + title + " ] 為草稿成功");
           setAlertDialogSlide(true);
@@ -78,8 +78,15 @@ export default function Draft() {
         setSubtitle("");
         setMarkdown("");
       })
-      .catch(() => {
-        setFailMessage("失敗，請再重新試試（如有問題可以向平台反映）。\n");
+      .catch((error: any) => {
+        const statusCode = error?.response?.data?.statusCode;
+        const errorMessages = error?.response?.data?.error || [];
+        const errorMessage =
+          statusCode === 400 && errorMessages.length > 0
+            ? errorMessages.join("\n")
+            : "失敗，請再重新試試（如有問題可以向平台反映）。\n";
+
+        setFailMessage(errorMessage);
         setFailAlert(true);
       });
   }
@@ -117,6 +124,7 @@ export default function Draft() {
   const [failMessage, setFailMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [alertDialogSlide, setAlertDialogSlide] = useState(false);
+  const [openHistoryDialog, setOpenHistoryDialog] = useState(false);
 
   const handleMarkdownChange = (event: any) => {
     setMarkdown(event.target.value);
@@ -320,6 +328,7 @@ export default function Draft() {
           }
         />
       )}
+      {openHistoryDialog && <AlertDialogSlide handlefunction={addArticleHistory} title={"存入區塊鏈" + title} />}
     </div>
   );
 }

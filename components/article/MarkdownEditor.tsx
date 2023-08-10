@@ -30,18 +30,17 @@ const MarkdownEditor = () => {
   const router = useRouter();
 
   async function ArticleCreate(release: boolean) {
-    try {
-      let jwt = "";
-      await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
-      const data = { title, subtitle, contents: markdown, release };
-      apiArticleCreate(jwt, data).then(async (res: any) => {
+    let jwt = "";
+    await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
+    const data = { title, subtitle, contents: markdown, release };
+    apiArticleCreate(jwt, data)
+      .then(async (res: any) => {
         if (release) {
           setSuccessMessage("上傳 ［" + title + " ］ 發布成功");
-          console.log("上傳 ［" + title + " ］ 發布成功");
           setIpfsHash(res.data.ipfsHash);
           setAid(res.data.aid);
           setupdateAt(res.data.updateAt.substring(0, 10));
-          await addArticleHistory();
+          setOpenHistoryDialog(true);
         } else {
           setSuccessMessage("另存 [" + title + " ] 為草稿成功");
           setAlertDialogSlide(true);
@@ -49,11 +48,18 @@ const MarkdownEditor = () => {
         setTitle("");
         setSubtitle("");
         setMarkdown("");
+      })
+      .catch((error: any) => {
+        const statusCode = error?.response?.data?.statusCode;
+        const errorMessages = error?.response?.data?.error || [];
+        const errorMessage =
+          statusCode === 400 && errorMessages.length > 0
+            ? errorMessages.join("\n")
+            : "失敗，請再重新試試（如有問題可以向平台反映）。\n";
+
+        setFailMessage(errorMessage);
+        setFailAlert(true);
       });
-    } catch {
-      setFailMessage("失敗，請再重新試試（如有問題可以向平台反映）。\n");
-      setFailAlert(true);
-    }
   }
   // TODO: 存文章歷史紀錄
   async function addArticleHistory() {
@@ -70,17 +76,18 @@ const MarkdownEditor = () => {
     const articleHistoryContractabi = ArticleHistoryFunction();
     const articleContract = new web3.eth.Contract(articleHistoryContractabi, accountAddress);
     if (web3) {
+      setIsLoading(true);
       await articleContract.methods
         .addArticle(articleId, ipfsHash, updateAt)
         .send({ from: address, gas: gasLimit })
         .then(() => {
-          console.log("有執行紀錄");
-          setSuccessMessage("儲存 ［" + title + " ］ 紀錄成功");
           setAlertDialogSlide(true);
+          setIsLoading(false);
         })
         .catch(() => {
           setFailMessage("歷史紀錄失敗，請再重新試試（如有問題可以向平台反映）。\n");
           setFailAlert(true);
+          setIsLoading(false);
         });
     }
   }
@@ -92,7 +99,8 @@ const MarkdownEditor = () => {
   const [failMessage, setFailMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [alertDialogSlide, setAlertDialogSlide] = useState(false);
-  const [isLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [openHistoryDialog, setOpenHistoryDialog] = useState(false);
 
   const handleMarkdownChange = (event: any) => {
     setMarkdown(event.target.value);
@@ -290,13 +298,14 @@ const MarkdownEditor = () => {
             <div>
               {ipfsHash != "" ? "IPFS節點：" + ipfsHash : null}
               <br />
-              {"文章編號：" + aid}
+              {aid != "" ? "文章編號：" + aid : null}
               <br />
               {"點擊 同意 後，即跳轉至 我的後台 確認文章"}
             </div>
           }
         />
       )}
+      {openHistoryDialog && <AlertDialogSlide handlefunction={addArticleHistory} title={"存入區塊鏈" + title} />}
     </div>
   );
 };

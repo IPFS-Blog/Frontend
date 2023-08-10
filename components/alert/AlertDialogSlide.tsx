@@ -30,8 +30,6 @@ export default function AlertDialogSlide(props: any) {
     handleClose();
   };
 
-  console.log("我開過了");
-
   return (
     <div>
       <Dialog
@@ -48,7 +46,9 @@ export default function AlertDialogSlide(props: any) {
       >
         <DialogTitle>{props.title}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">{props.message}</DialogContentText>
+          {props.message !== null ? (
+            <DialogContentText id="alert-dialog-slide-description">{props.message}</DialogContentText>
+          ) : null}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} className="bg-blue-500 text-white hover:bg-blue-700">

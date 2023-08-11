@@ -4,6 +4,7 @@ import "@/styles/NprogressCustom.css";
 
 import * as Sentry from "@sentry/node";
 import type { AppProps } from "next/app";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { ThemeProvider } from "next-themes";
 import NProgress from "nprogress";
@@ -46,6 +47,9 @@ function App({ Component, pageProps }: AppProps, err: any) {
 
   return (
     <Provider store={store}>
+      <Head>
+        <title>IPFS幣記</title>
+      </Head>
       <ThemeProvider attribute="class">
         <Layout>
           <Component {...modifiedPageProps} />

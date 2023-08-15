@@ -87,12 +87,15 @@ export default function Article(props: any) {
             </div>
           </div>
           {/* 輸入留言 */}
-          <CreateComment
-            username={User.profile.username}
-            picture={User.profile.picture}
-            articleid={props.ArticleUrl}
-            setComments={setComments}
-          ></CreateComment>
+          {User.profile.login ? (
+            <CreateComment
+              username={User.profile.username}
+              picture={User.profile.picture}
+              articleid={props.ArticleUrl}
+              setComments={setComments}
+            ></CreateComment>
+          ) : null}
+
           <div className="h-1 w-full border-b-2 border-blue-200"></div>
           {/* 顯示留言 */}
           <div className="my-2">
@@ -111,6 +114,8 @@ export default function Article(props: any) {
               );
             })}
           </div>
+          {/* 修改留言 */}
+          <div></div>
         </div>
       </div>
 

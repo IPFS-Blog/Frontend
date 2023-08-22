@@ -27,13 +27,13 @@ export default function Users(props: any) {
 
   return (
     <div className="my-2 h-auto w-full">
-      <div className="flex h-auto w-full justify-around">
+      <div className="flex h-full w-full flex-row justify-around">
         {/* FIXME:要 Card 縮小後要變另外一種*/}
-        <div className="px-5">
+        <div className="p-2 tablet:w-1/2 laptop:w-[750px]">
           <Card />
         </div>
-        <div className="w-auto flex-auto">
-          <dl className="mx-auto grid grid-cols-3 p-3 text-gray-900 sm:grid-cols-3 sm:px-1 xl:grid-cols-3">
+        <div className="invisible h-0 w-0 phone:visible phone:h-full phone:w-1/2 phone:flex-auto phone:p-2">
+          <dl className="mx-2 grid grid-cols-3 p-3 text-gray-900 sm:grid-cols-3 sm:px-1 xl:grid-cols-3">
             <div className="flex flex-col p-2 text-center">
               <dt className="select-none text-base dark:text-gray-200">所有文章</dt>
               <dd className="select-none text-gray-600 dark:text-gray-300">50</dd>
@@ -49,7 +49,7 @@ export default function Users(props: any) {
           </dl>
           <dl>
             <div className="flex flex-col p-2 text-center">
-              <div className="mx-10 flex min-w-fit items-center justify-center rounded-lg bg-gray-200 py-2 px-4">
+              <div className="flex items-center justify-center rounded-lg bg-gray-200 p-2">
                 <p className="select-all px-2 text">{props.createrData.address}</p>
                 <div
                   className="h-10 w-10 rounded-lg bg-gray-100 p-1 hover:bg-gray-300 dark:bg-gray-400 dark:text dark:hover:bg-gray-500"

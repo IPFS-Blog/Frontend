@@ -9,7 +9,7 @@ export default function ArticleItem(props: any) {
   return (
     <li className="group/item my-4 rounded-lg border-4 border-blue-200 first:mt-0">
       <a className="text no-underline" href={`/${props.username}/${props.id}`}>
-        <div className="grid h-auto w-full grid-cols-12 gap-x-16 rounded-lg p-2 hover:bg-slate-200 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700">
+        <div className="grid h-auto w-full  rounded-lg  p-2 hover:bg-slate-200 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700">
           <div className="col-span-8">
             <p className="mb-2 text-2xl font-bold tracking-tight text-slate-900 line-clamp-1 dark:text-white">
               {props.title}
@@ -23,16 +23,16 @@ export default function ArticleItem(props: any) {
             <p className="mb-2 text-base text-slate-500 line-clamp-2 dark:text-slate-400">{props.subtitle}</p>
           </div>
           {/* FIXME:灰底要改為圖片 */}
-          <div className="col-span-4 rounded-lg bg-gray-400">
+          {/* <div className="col-span-4 rounded-lg bg-gray-400">
             <img className="h-full w-full rounded-lg" src="" alt="Null"></img>
-          </div>
+          </div> */}
           {/* FIXME:Icon後的數字 */}
           <div className="col-span-12  flex items-center justify-between">
             <div className="flex items-center">
               <p className="ml-2">{props.updateAt.substring(0, 10)}</p>
               {/* TODO:喜歡 */}
-              <div className="ml-6">
-                <FavoriteBorderOutlinedIcon className="text-black" />
+              <div className="ml-2 rounded font-semibold text-red-500 phone:ml-6">
+                <FavoriteBorderOutlinedIcon />
               </div>
               <span className="ml-2">100</span>
               {/* TODO:打賞 */}

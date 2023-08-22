@@ -58,13 +58,13 @@ export default function Article(props: any) {
               {props.article.subtitle}
             </h3>
             <div
-              className={`whitespace-pre-line text-lg text-slate-600 ${styles["markdown-preview"]} dark:bg-gray-700 dark:text-slate-300`}
+              className={`whitespace-pre-line text-lg text-slate-600 ${styles["markdown-preview"]} break-all dark:bg-gray-700 dark:text-slate-300`}
               dangerouslySetInnerHTML={{ __html: renderedHTML }}
             />
           </div>
           {/* 文章內覽列 */}
-          {/* FIXME:針對文章喜歡、讚賞、分享、收藏 */}
-          {/* FIXME:響應式 table: phone: */}
+          {/* FIXME: 針對文章喜歡、讚賞、分享、收藏 */}
+          {/* FIXME: 響應式 table: phone: */}
           <div className="grid items-center gap-2 bg-gray-100 p-2 dark:bg-gray-800">
             <div className="col-start-1 col-end-3 tablet:col-span-1 tablet:col-start-1">
               {/* 喜歡 */}
@@ -72,6 +72,7 @@ export default function Article(props: any) {
                 <FavoriteBorderOutlinedIcon />
                 <span>like</span>
               </button>
+              {/* 打賞 */}
               {User.profile.login ? <DonateButton /> : null}
             </div>
             <div className="col-span-1 col-end-7 flex flex-row items-center">

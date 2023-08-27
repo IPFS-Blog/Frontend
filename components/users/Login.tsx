@@ -34,6 +34,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const router = useRouter();
   const dispatch = useDispatch();
+  const [showNetworkInstructions, setShowNetworkInstructions] = useState(true);
   useEffect(() => {
     const connect = async () => {
       //TODO: 登入狀態
@@ -46,9 +47,9 @@ export default function Login() {
         window.open("https://metamask.io/download/", "_blank");
       } else {
         const InChainId = await CheckChainIdFunction();
-        if (InChainId == false) {
-          // FIXME: Lin 要求加入我們的區塊鏈
+        if (InChainId == false && showNetworkInstructions) {
           window.alert("要求加入我們的網路");
+          setShowNetworkInstructions(false);
           router.push("/NetworkInstructions");
         } else if (InChainId == "Fix") {
           // FIXME: Lin 區塊鏈維修中
@@ -57,7 +58,7 @@ export default function Login() {
       }
     };
     connect();
-  }, [dispatch, router]);
+  }, [dispatch, router, showNetworkInstructions]);
 
   async function connectMetaMask() {
     if (typeof window.ethereum !== "undefined") {

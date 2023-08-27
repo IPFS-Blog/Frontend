@@ -1,4 +1,5 @@
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -20,13 +21,14 @@ const Navbar = () => {
     <>
       <div>
         <nav className="flex flex-row items-center bg-tertiary p-2">
-          <div className="flex items-center p-1"></div>
-          <div className="mr-2 flex shrink-0 items-center p-1">
-            <img src="/logo/48.png" alt="not found" />
-            <span className="flex select-none text-2xl font-semibold tracking-tight text-blue-400 dark:text-sky-500">
-              IPFS幣記
-            </span>
-          </div>
+          <Link href="/">
+            <div className="mr-2 flex shrink-0 items-center p-1">
+              <img src="/logo/48.png" alt="not found" />
+              <span className="flex select-none text-2xl font-semibold tracking-tight text-blue-400 dark:text-sky-500">
+                IPFS幣記
+              </span>
+            </div>
+          </Link>
           <form className="xs:invisible tablet:visible tablet:mx-20 tablet:flex-auto">
             <input
               type="text"

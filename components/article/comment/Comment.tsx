@@ -41,37 +41,23 @@ const Comment = (props: any) => {
   };
   /* 編輯留言 */
   const [articleid] = useState(props.articleid);
-  const [Comment, setComment] = useState("");
+  const [Comment, setComment] = useState(props.contents);
   const [success, setSuccess] = useState(false);
   const [fail, setFailure] = useState(false);
+  const [edit, setEdit] = useState(false);
   async function Edit() {
     let jwt = "";
     await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
     const id = Number(articleid);
     const cid = props.id;
-    apiArticleCommentEdit(jwt, id, cid)
-      .then(async res => {
-        const { comments } = res.data.article;
-        props.setComments(comments);
-        setComment("");
+    //console.log(id);
+    apiArticleCommentEdit(jwt, id, cid, Comment)
+      .then(() => {
         setFailure(false);
         setSuccess(true);
-        /* await apiArticleTakeAllArticle("?aid=" + props.articleid)
-          .then(async res => {
-            const { comments } = res.data.article;
-            props.setComments(comments);
-            setComment("");
-          })
-          .catch(() => {
-            return {
-              notFound: true,
-            };
-          }); */
+        setEdit(true);
       })
       .catch(() => {
-        return {
-          notFound: true,
-        };
         setSuccess(false);
         setFailure(true);
       });
@@ -133,7 +119,11 @@ const Comment = (props: any) => {
             </Menu>
           </div>
         </div>
-        <p className="-mt-4 text-gray-500">{props.contents}</p>
+        {edit ? (
+          <p className="-mt-4 text-gray-500">{Comment}</p>
+        ) : (
+          <p className="-mt-4 text-gray-500">{props.contents}</p>
+        )}
       </div>
       {/* 彈窗部分 */}
       <Dialog

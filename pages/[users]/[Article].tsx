@@ -110,6 +110,7 @@ export default function Article(props: any) {
                   updateAt={updateAt}
                   username={user.username}
                   picture={user.picture}
+                  articleid={props.ArticleUrl}
                 />
               );
             })}

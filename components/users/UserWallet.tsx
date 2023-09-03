@@ -185,14 +185,18 @@ export default function ResponsiveDialog() {
               </div>
               {/* 不同虛擬幣的圖案以及總額 */}
               <div className="flex w-full items-center rounded border-b-2 border-l-2 border-gray-600 py-2 text-base font-semibold hover:text-lg">
-                <div className="mx-2 h-9 w-9 border-r-2 bg-gray-300"></div>
+                <img src="/img/AC_Logo/AC2.png" className="mx-2 h-9 w-9 border-r-2 bg-gray-300" alt="not find Img" />
                 <div className="flex w-full justify-between">
                   <p>{AC}</p>
                   <p>AC</p>
                 </div>
               </div>
               <div className="flex w-full items-center rounded border-b-2 border-l-2 border-gray-600 py-2 text-base font-semibold hover:text-lg">
-                <div className="mx-2 h-9 w-9 border-r-2 bg-gray-300"></div>
+                <img
+                  src="/img/AC_Logo/Ethereum.png"
+                  className="mx-2 h-9 w-9 border-r-2 bg-gray-300"
+                  alt="not find Img"
+                />
                 <div className="flex w-full justify-between">
                   <p>{ETH}</p>
                   <p>ETH</p>

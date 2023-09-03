@@ -74,12 +74,8 @@ export default function JoinCoin() {
     <>
       <div>
         {/*  dialog部分皆為彈窗*/}
-        <button
-          className="items-center rounded-lg bg-gray-200 text hover:bg-gray-300 xs:p-2 tablet:py-2 tablet:px-20"
-          onClick={handleClickOpen}
-        >
-          加入 AC 貨幣
-        </button>
+        <button onClick={handleClickOpen}>加入 AC 貨幣</button>
+
         <Dialog
           fullScreen={fullScreen}
           maxWidth={maxWidth}

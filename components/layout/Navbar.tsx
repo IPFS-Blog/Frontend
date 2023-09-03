@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import React from "react";
 
 import ThemeSwitch from "../ThemeSwitch";
-import JoinCoin from "../users/JoinCoin";
 import Login from "../users/Login";
 
 const Navbar = () => {
@@ -24,7 +23,7 @@ const Navbar = () => {
           <Link href="/">
             <div className="mr-2 flex shrink-0 items-center p-1">
               <img src="/logo/48.png" alt="not found" />
-              <span className="flex select-none text-2xl font-semibold tracking-tight text-blue-400 dark:text-sky-500">
+              <span className="xs:hidden laptop:visible laptop:flex laptop:select-none laptop:px-2 laptop:text-2xl laptop:font-semibold laptop:tracking-tight laptop:text-blue-400 laptop:dark:text-sky-500">
                 IPFS幣記
               </span>
             </div>
@@ -47,9 +46,6 @@ const Navbar = () => {
           </div>
           <div className="m-1">
             <ThemeSwitch />
-          </div>
-          <div className="m-1">
-            <JoinCoin />
           </div>
           <Login />
         </nav>

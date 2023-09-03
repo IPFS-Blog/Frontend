@@ -2,7 +2,7 @@
 # BUILD FOR LOCAL DEVELOPMENT
 ###################
 
-FROM node:16-alpine AS development
+FROM node:18-alpine AS development
 RUN apk add --no-cache libc6-compat
 
 # 創建應用目錄
@@ -20,7 +20,7 @@ RUN  yarn install --production=true
 # BUILD FOR PRODUCTION
 ###################
 
-FROM node:16-alpine AS build
+FROM node:18-alpine AS build
 
 # 創建應用目錄
 WORKDIR /app
@@ -38,7 +38,7 @@ RUN yarn build
 # PRODUCTION
 ###################
 
-FROM node:16-alpine AS production
+FROM node:18-alpine AS production
 
 # 創建應用目錄
 WORKDIR /app

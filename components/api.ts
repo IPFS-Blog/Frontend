@@ -76,7 +76,11 @@ export const apiArticleCreate = (jwt: string, data: any) =>
     },
   }); // 創建文章
 
-export const apiArticleTakeAllArticle = (id: string) => articleRequest.get(`/${id}`, config); // 查詢所有文章
+export const apiArticleTakeAllArticle = (data: any) =>
+  articleRequest.get("", {
+    headers: { "Content-Type": "application/json" },
+    params: data,
+  }); // 查詢所有文章
 
 export const apiArticleTakeArticle = (jwt: string, id: number) =>
   articleRequest.get(`/${id}`, {
@@ -122,13 +126,25 @@ export const apiArticleCommentDelete = (jwt: string, id: string, cid: string) =>
       Authorization: `Bearer ${jwt}`,
     },
   }); //刪除指定文章的一條留言刪除
-
+export const apiArticleLikesRecord = (jwt: string) =>
+  articleRequest.get("/user/likes", {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  }); // 搜尋使用者自身喜愛的文章
 export const apiArticleLike = (jwt: string, id: string, data: any) =>
   articleRequest.patch(`/${id}/likeStatus?userLike=${data}`, null, {
     headers: {
       Authorization: `Bearer ${jwt}`,
     },
   }); //對文章按讚
+export const apiCommentLikesRecord = (jwt: string, data: any) =>
+  articleRequest.get(`/user/comments/likes`, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+    params: data,
+  }); // 搜尋使用者自身喜愛的文章
 export const apiCommentLike = (jwt: string, id: string, cid: string, data: any) =>
   articleRequest.patch(`/${id}/comment/${cid}/likeStatus?userLike=${data}`, null, {
     headers: {

@@ -6,7 +6,7 @@ import MarkdownIt from "markdown-it";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { _apiCheckJwt, apiArticleLike, apiArticleTakeAllArticle } from "@/components/api";
+import { _apiCheckJwt, apiArticleLike, apiArticleLikesRecord, apiArticleTakeAllArticle } from "@/components/api";
 import Comment from "@/components/article/comment/Comment";
 import CreateComment from "@/components/article/comment/CreateComment";
 import DonateButton from "@/components/users/DonateButton";
@@ -74,21 +74,34 @@ export default function Article(props: any) {
                 onClick={async () => {
                   let jwt = "";
                   await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
-                  // FIXME: 使用者是否按過讚 目前為測試資料
-                  apiArticleLike(jwt, props.ArticleUrl, true).then(res => {
-                    console.log("Success :", res);
-                  });
-
-                  await apiArticleTakeAllArticle("?aid=" + props.ArticleUrl)
-                    .then(async res => {
-                      const { likes } = res.data.article;
-                      setlikeNumber(likes);
-                    })
-                    .catch(() => {
-                      return {
-                        notFound: true,
-                      };
+                  if (jwt.trim() !== "" && props.ArticleUrl != null) {
+                    let ArticleLike = false;
+                    await apiArticleLikesRecord(jwt).then((res: any) => {
+                      const ArticleLikeRecord = res.data.article;
+                      if (ArticleLikeRecord !== null) {
+                        // 取得文章是否按過讚
+                        ArticleLike = ArticleLikeRecord.some((article: any) => {
+                          const isMatching = article.id.toString() === props.ArticleUrl;
+                          return isMatching;
+                        });
+                      }
                     });
+                    // FIXME: Lin 文章按讚/取消讚成功
+                    await apiArticleLike(jwt, props.ArticleUrl, !ArticleLike).then(res => {
+                      console.log("Success :", res);
+                    });
+                    const data = { aid: props.ArticleUrl };
+                    await apiArticleTakeAllArticle(data)
+                      .then(async res => {
+                        const { likes } = res.data.article;
+                        setlikeNumber(likes);
+                      })
+                      .catch(() => {
+                        return {
+                          notFound: true,
+                        };
+                      });
+                  }
                 }}
               >
                 <FavoriteBorderOutlinedIcon />
@@ -247,8 +260,8 @@ export const getServerSideProps = async (context: any) => {
   let createrData = { id: 0, username: "", address: "", email: "", picture: "" };
   let article = { title: "", subtitle: "", contents: "", updateAt: "", likes: 0 };
   const comment = [{ number: 0, likes: 0, contents: "", updateAt: "", user: {} }];
-
-  await apiArticleTakeAllArticle("?aid=" + ArticleUrl)
+  const data = { aid: ArticleUrl };
+  await apiArticleTakeAllArticle(data)
     .then(async res => {
       const { title, subtitle, contents, updateAt, user, comments, likes } = res.data.article;
       createrData = user;

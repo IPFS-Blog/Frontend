@@ -6,7 +6,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import * as React from "react";
 
-import { _apiCheckJwt, apiArticleTakeAllArticle, apiCommentLike } from "@/components/api";
+import { _apiCheckJwt, apiArticleTakeAllArticle, apiCommentLike, apiCommentLikesRecord } from "@/components/api";
 
 const options = ["Edit", "Delete"];
 
@@ -38,19 +38,36 @@ const Comment = (props: any) => {
               onClick={async () => {
                 let jwt = "";
                 await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
-                // FIXME: 使用者是否按過讚 目前為測試資料
-                await apiCommentLike(jwt, props.articleId, props.id, true);
-
-                await apiArticleTakeAllArticle("?aid=" + 1)
-                  .then(async res => {
-                    const { comments } = res.data.article;
-                    props.setComments(comments);
-                  })
-                  .catch(() => {
-                    return {
-                      notFound: true,
-                    };
+                if (jwt.trim() !== "") {
+                  let CommentLike = false;
+                  const data = { aid: props.articleId };
+                  await apiCommentLikesRecord(jwt, data).then((res: any) => {
+                    const CommentLikeRecord = res.data.comments;
+                    if (CommentLikeRecord !== null) {
+                      // 取得留言是否按過讚
+                      CommentLike = CommentLikeRecord.some((comment: any) => {
+                        const isMatching = comment.number === props.id;
+                        return isMatching;
+                      });
+                    }
                   });
+
+                  // FIXME: Lin 留言按讚/取消讚成功
+                  await apiCommentLike(jwt, props.articleId, props.id, !CommentLike).then((res: any) => {
+                    console.log(props.id);
+                    console.log(res);
+                  });
+                  await apiArticleTakeAllArticle(data)
+                    .then(async res => {
+                      const { comments } = res.data.article;
+                      props.setComments(comments);
+                    })
+                    .catch(() => {
+                      return {
+                        notFound: true,
+                      };
+                    });
+                }
               }}
             >
               <ThumbUpOutlinedIcon />

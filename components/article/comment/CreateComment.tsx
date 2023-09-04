@@ -19,7 +19,8 @@ const CreateComment = (props: any) => {
       .then(async () => {
         setFailure(false);
         setSuccess(true);
-        await apiArticleTakeAllArticle("?aid=" + props.articleid)
+        const data = { aid: articleId };
+        await apiArticleTakeAllArticle(data)
           .then(async res => {
             const { comments } = res.data.article;
             props.setComments(comments);

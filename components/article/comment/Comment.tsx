@@ -6,6 +6,8 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import * as React from "react";
 
+import { _apiCheckJwt, apiArticleTakeAllArticle, apiCommentLike, apiCommentLikesRecord } from "@/components/api";
+
 const options = ["Edit", "Delete"];
 
 const Comment = (props: any) => {
@@ -33,6 +35,43 @@ const Comment = (props: any) => {
             <button
               type="submit"
               className="inline-flex h-fit cursor-pointer justify-center rounded-full p-2 text-blue-600 hover:bg-gray-300 dark:text-blue-500 dark:hover:bg-gray-100"
+              onClick={async () => {
+                let jwt = "";
+                const data = { aid: props.articleId };
+                await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
+                if (jwt.trim() !== "") {
+                  let CommentLike = false;
+
+                  await apiCommentLikesRecord(jwt, data).then((res: any) => {
+                    const CommentLikeRecord = res.data.comments;
+                    if (CommentLikeRecord !== null) {
+                      // 取得留言是否按過讚
+                      CommentLike = CommentLikeRecord.some((comment: any) => {
+                        const isMatching = comment.number === props.id;
+                        return isMatching;
+                      });
+                    }
+                  });
+
+                  // FIXME: Lin 留言按讚/取消讚成功
+                  await apiCommentLike(jwt, props.articleId, props.id, !CommentLike)
+                    .then(() => window.alert("按讚成功"))
+                    .catch(() => window.alert("按讚失敗"));
+
+                  await apiArticleTakeAllArticle(data)
+                    .then(async res => {
+                      const { comments } = res.data.article;
+                      props.setComments(comments);
+                    })
+                    .catch(() => {
+                      return {
+                        notFound: true,
+                      };
+                    });
+                } else {
+                  window.alert("請先登入謝謝");
+                }
+              }}
             >
               <ThumbUpOutlinedIcon />
             </button>

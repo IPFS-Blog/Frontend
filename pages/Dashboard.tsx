@@ -56,10 +56,14 @@ export default function Dashboard() {
   const TakeArticle = useCallback(async (release: number, skip: number) => {
     try {
       let jwt = "";
-      await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
+      await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt || null));
       const params = { release, skip };
-      const res = await apiUserGetCreaterOwnArticle(jwt, params);
-      setArticles(res.data);
+      if (jwt != null) {
+        const res = await apiUserGetCreaterOwnArticle(jwt, params);
+        setArticles(res.data);
+      } else {
+        window.alert("請先登入謝謝");
+      }
     } catch (error) {}
   }, []);
 
@@ -84,15 +88,19 @@ export default function Dashboard() {
   const handleDelete = async () => {
     setOpenDeleteDialog(false);
     let jwt = "";
-    await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
-    apiArticleDeleteArticle(jwt, selectedArticleId)
-      .then(async () => {
-        try {
-          const res = await apiUserGetCreaterArticle(User.profile.username);
-          setArticles(res.data);
-        } catch {}
-      })
-      .catch();
+    await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt || null));
+    if (jwt != null) {
+      apiArticleDeleteArticle(jwt, selectedArticleId)
+        .then(async () => {
+          if (User.profile.username != null) {
+            const res = await apiUserGetCreaterArticle(User.profile.username);
+            if (res.data != null) setArticles(res.data);
+          }
+        })
+        .catch();
+    } else {
+      window.alert("請先登入謝謝");
+    }
   };
 
   function editArticle(articleId: any) {

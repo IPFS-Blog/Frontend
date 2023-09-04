@@ -43,14 +43,18 @@ export default function Draft() {
     const TakeArticle = async () => {
       try {
         let jwt = "";
-        await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
+        await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt || null));
         const id = Number(router.query.draft);
-        await apiArticleTakeArticle(jwt, id).then(async res => {
-          const { title, subtitle, contents } = res.data.article;
-          setTitle(title);
-          setSubtitle(subtitle);
-          setMarkdown(contents);
-        });
+        if (jwt != null) {
+          await apiArticleTakeArticle(jwt, id).then(async res => {
+            const { title, subtitle, contents } = res.data.article;
+            setTitle(title);
+            setSubtitle(subtitle);
+            setMarkdown(contents);
+          });
+        } else {
+          window.alert("請先登入謝謝");
+        }
       } catch (error) {}
     };
 
@@ -60,33 +64,37 @@ export default function Draft() {
 
   async function ArticleEdit(release: boolean) {
     let jwt = "";
-    await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
-    const aid = Number(router.query.draft);
-    const data = { title, subtitle, contents: markdown, release };
-    apiArticleEditArticle(jwt, aid, data)
-      .then(async (res: any) => {
-        if (release) {
-          setSuccessMessage("是否將 [" + title + " ] 存入區塊鏈的文章歷史紀錄");
-          setIpfsHash(res.data.ipfsHash);
-          setAid(res.data.aid);
-          setupdateAt(res.data.updateAt.substring(0, 10));
-          setOpenHistoryDialog(true);
-        } else {
-          setSuccessMessage("另存 [" + title + " ] 為草稿成功");
-          setAlertDialogSlide(true);
-        }
-      })
-      .catch((error: any) => {
-        const statusCode = error?.response?.data?.statusCode;
-        const errorMessages = error?.response?.data?.error || [];
-        const errorMessage =
-          statusCode === 400 && errorMessages.length > 0
-            ? errorMessages.join("\n")
-            : "失敗，請再重新試試（如有問題可以向平台反映）。\n";
+    await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt || null));
+    if (jwt != null) {
+      const aid = Number(router.query.draft);
+      const data = { title, subtitle, contents: markdown, release };
+      apiArticleEditArticle(jwt, aid, data)
+        .then(async (res: any) => {
+          if (release) {
+            setSuccessMessage("是否將 [" + title + " ] 存入區塊鏈的文章歷史紀錄");
+            setIpfsHash(res.data.ipfsHash);
+            setAid(res.data.aid);
+            setupdateAt(res.data.updateAt.substring(0, 10));
+            setOpenHistoryDialog(true);
+          } else {
+            setSuccessMessage("另存 [" + title + " ] 為草稿成功");
+            setAlertDialogSlide(true);
+          }
+        })
+        .catch((error: any) => {
+          const statusCode = error?.response?.data?.statusCode;
+          const errorMessages = error?.response?.data?.error || [];
+          const errorMessage =
+            statusCode === 400 && errorMessages.length > 0
+              ? errorMessages.join("\n")
+              : "失敗，請再重新試試（如有問題可以向平台反映）。\n";
 
-        setFailMessage(errorMessage);
-        setFailAlert(true);
-      });
+          setFailMessage(errorMessage);
+          setFailAlert(true);
+        });
+    } else {
+      window.alert("請先登入謝謝");
+    }
   }
   // TODO: 存文章歷史紀錄
   async function addArticleHistory() {

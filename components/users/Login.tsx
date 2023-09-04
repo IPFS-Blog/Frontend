@@ -92,21 +92,28 @@ export default function Login() {
     const signer = web3.eth.personal;
     const signature = await signer.sign(nonce, address, "");
     // 索取jwt
-    const data = { address, signature };
+    const data = { address: address || null, signature: signature || null };
+    if (data.address !== null && data.signature !== null) {
+      apiAuthTakeToken(data).then((res: any) => {
+        const jwt = res.data.access_token || null;
+        if (jwt != null) {
+          // 將JWT塞入 Cookie中
+          _apiAuthLogin({ jwt });
 
-    apiAuthTakeToken(data).then((res: any) => {
-      const jwt = res.data.access_token;
-      // 將JWT塞入 Cookie中
-      _apiAuthLogin({ jwt });
+          // 將傳回來的會員資料轉成json的字串模式
+          const UserData = JSON.stringify(res.data.userData);
 
-      // 將傳回來的會員資料轉成json的字串模式
-      const UserData = JSON.stringify(res.data.userData);
-
-      // 透過redux儲存會員資料
-      dispatch(setLogin(UserData));
-      // 將會員資料存在localStroage
-      localStorage.setItem("UserData", UserData);
-    });
+          // 透過redux儲存會員資料
+          dispatch(setLogin(UserData));
+          // 將會員資料存在localStroage
+          localStorage.setItem("UserData", UserData);
+        } else {
+          window.alert("請先登入謝謝");
+        }
+      });
+    } else {
+      window.alert("網站抓取資料錯誤");
+    }
   }
 
   function sendVerificationCode() {
@@ -115,24 +122,30 @@ export default function Login() {
   }
 
   async function Register() {
-    const data = { address, username, email };
-    apiUserRegister(data)
-      .then(() => {
-        registerSetOpen(false);
-        alertRegisterSetOpen(true);
-      })
-      .catch((error: any) => {
-        if (error.response && error.response.data.error) {
-          const errorMess = error.response.data.error;
-          for (let i = 0; i < errorMess.length; i++) {
-            if (errorMess[i].includes("email")) {
-              seterrorMessageEmail(JSON.stringify(errorMess[i]));
-            } else if (errorMess[i].includes("username")) {
-              seterrorMessageUsername(JSON.stringify(errorMess[i]));
+    const data = {
+      address: address || null,
+      username: username || null,
+      email: email || null,
+    };
+    if (data.address !== null && data.username !== null && data.email !== null) {
+      apiUserRegister(data)
+        .then(() => {
+          registerSetOpen(false);
+          alertRegisterSetOpen(true);
+        })
+        .catch((error: any) => {
+          if (error.response && error.response.data.error) {
+            const errorMess = error.response.data.error;
+            for (let i = 0; i < errorMess.length; i++) {
+              if (errorMess[i].includes("email")) {
+                seterrorMessageEmail(JSON.stringify(errorMess[i]));
+              } else if (errorMess[i].includes("username")) {
+                seterrorMessageUsername(JSON.stringify(errorMess[i]));
+              }
             }
           }
-        }
-      });
+        });
+    }
   }
 
   // TODO: UI function

@@ -13,28 +13,34 @@ const CreateComment = (props: any) => {
   const [fail, setFailure] = useState(false);
   async function Create() {
     let jwt = "";
-    await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
-    const articleId = Number(articleid);
-    apiArticleCommentCreate(jwt, articleId, Comment)
-      .then(async () => {
-        setFailure(false);
-        setSuccess(true);
-        await apiArticleTakeAllArticle("?aid=" + props.articleid)
-          .then(async res => {
-            const { comments } = res.data.article;
-            props.setComments(comments);
-            setComment("");
-          })
-          .catch(() => {
-            return {
-              notFound: true,
-            };
-          });
-      })
-      .catch(() => {
-        setSuccess(false);
-        setFailure(true);
-      });
+    await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt || null));
+    if (jwt != null) {
+      const articleId = Number(articleid);
+      apiArticleCommentCreate(jwt, articleId, Comment)
+        .then(async () => {
+          setFailure(false);
+          setSuccess(true);
+          const data = { aid: articleId };
+
+          await apiArticleTakeAllArticle(data)
+            .then(async res => {
+              const { comments } = res.data.article;
+              props.setComments(comments);
+              setComment("");
+            })
+            .catch(() => {
+              return {
+                notFound: true,
+              };
+            });
+        })
+        .catch(() => {
+          setSuccess(false);
+          setFailure(true);
+        });
+    } else {
+      window.alert("請先登入謝謝");
+    }
   }
 
   return (

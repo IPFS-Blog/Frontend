@@ -2,7 +2,7 @@ import { _apiCheckJwt, apiUserGetUserData } from "@/components/api";
 
 export const LoginFunction = async () => {
   const res = await _apiCheckJwt();
-  const jwt = res.data.jwt;
+  const jwt = res.data.jwt || null;
   if (jwt != null) {
     try {
       const response = await apiUserGetUserData(jwt);

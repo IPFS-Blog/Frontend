@@ -111,12 +111,11 @@ export default function Article(props: any) {
                   username={user.username}
                   picture={user.picture}
                   articleid={props.ArticleUrl}
+                  setComments={setComments}
                 />
               );
             })}
           </div>
-          {/* 修改留言 */}
-          <div></div>
         </div>
       </div>
 

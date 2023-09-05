@@ -11,11 +11,16 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useTheme } from "@mui/material/styles";
 import * as React from "react";
-import { useState } from "react";
+import { /* useEffect */ useState } from "react";
 
 import FailAlert from "@/components/alert/Fail";
 import SucessAlert from "@/components/alert/Sucess";
-import { _apiCheckJwt, apiArticleCommentEdit } from "@/components/api";
+import {
+  _apiCheckJwt,
+  apiArticleCommentDelete,
+  apiArticleCommentEdit,
+  apiArticleTakeAllArticle,
+} from "@/components/api";
 const options = ["Edit", "Delete"];
 
 const Comment = (props: any) => {
@@ -25,138 +30,222 @@ const Comment = (props: any) => {
   const [maxWidth] = useState<DialogProps["maxWidth"]>("md");
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [DeletedialogOpen, setDeleteDialogOpen] = useState(false);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  function handleOptionClick(option: any) {
+    if (option === "Edit") {
+      handleEditClick();
+    } else if (option === "Delete") {
+      handleDeleteClick();
+    } else {
+      handleClose();
+    }
+  }
   const handleEditClick = () => {
     handleClose();
     setDialogOpen(true);
   };
+  const handleDeleteClick = () => {
+    handleClose();
+    setDeleteDialogOpen(true);
+  };
 
   const handleDialogClose = () => {
     setDialogOpen(false);
+    setDeleteDialogOpen(false);
   };
-  /* 編輯留言 */
   const [articleid] = useState(props.articleid);
   const [Comment, setComment] = useState(props.contents);
   const [success, setSuccess] = useState(false);
   const [fail, setFailure] = useState(false);
+  const [Deletesuccess, setDeleteSuccess] = useState(false);
+  const [Deletefail, setDeleteFailure] = useState(false);
   const [edit, setEdit] = useState(false);
+  /* 編輯留言 */
   async function Edit() {
     let jwt = "";
-    await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
+    await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt || null));
     const id = Number(articleid);
     const cid = props.id;
-    //console.log(id);
-    apiArticleCommentEdit(jwt, id, cid, Comment)
-      .then(() => {
-        setFailure(false);
-        setSuccess(true);
-        setEdit(true);
-      })
-      .catch(() => {
-        setSuccess(false);
-        setFailure(true);
-      });
+    if (jwt != null) {
+      apiArticleCommentEdit(jwt, id, cid, Comment)
+        .then(() => {
+          setFailure(false);
+          setSuccess(true);
+          setEdit(true);
+          handleDialogClose();
+        })
+        .catch(() => {
+          setSuccess(false);
+          setFailure(true);
+          handleDialogClose();
+        });
+    } else {
+      window.alert("請先登入");
+    }
   }
+  /* 刪除留言 */
+  async function Delete() {
+    let jwt = "";
+    await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt || null));
+    const id = Number(articleid);
+    const cid = props.id;
+    if (jwt != null) {
+      apiArticleCommentDelete(jwt, id, cid)
+        .then(async () => {
+          setDeleteFailure(false);
+          setDeleteSuccess(true);
+          setEdit(true);
+          handleDialogClose();
+          await apiArticleTakeAllArticle("?aid=" + props.articleid)
+            .then(async res => {
+              const { comments } = res.data.article;
+              props.setComments(comments);
+            })
+            .catch(() => {
+              return {
+                notFound: true,
+              };
+            });
+        })
+        .catch(() => {
+          setDeleteSuccess(false);
+          setDeleteFailure(true);
+          handleDialogClose();
+        });
+    } else {
+      window.alert("請先登入");
+    }
+  }
+
+  /* 顯示留言 */
+  const showComment = () => {
+    if (edit) {
+      return <p className="-mt-4 text-gray-500">{Comment}</p>;
+    } else {
+      return <p className="-mt-4 text-gray-500">{props.contents}</p>;
+    }
+  };
   return (
     <div>
-      <div className="relative mb-8 grid grid-cols-1 gap-4 rounded-lg bg-white p-4 shadow-lg dark:bg-gray-700 dark:text-slate-300">
-        <div className="relative flex gap-4">
-          <Avatar className="h-10 w-10 rounded-full border" src={props.picture} alt="not found" />
-          <div className="flex w-full flex-col">
-            <div className="flex flex-row justify-between">
-              <p className="relative overflow-hidden truncate whitespace-nowrap text-xl">{props.username}</p>
+      <div>
+        <div className="relative mb-8 grid grid-cols-1 gap-4 rounded-lg bg-white p-4 shadow-lg dark:bg-gray-700 dark:text-slate-300">
+          <div className="relative flex gap-4">
+            <Avatar className="h-10 w-10 rounded-full border" src={props.picture} alt="not found" />
+            <div className="flex w-full flex-col">
+              <div className="flex flex-row justify-between">
+                <p className="relative overflow-hidden truncate whitespace-nowrap text-xl">{props.username}</p>
+              </div>
+              <p className="text-sm text-gray-400">{props.updateAt.substr(0, 10)}</p>
             </div>
-            <p className="text-sm text-gray-400">{props.updateAt.substr(0, 10)}</p>
+            <div className="grid grid-cols-2">
+              <button
+                type="submit"
+                className="inline-flex h-fit cursor-pointer justify-center rounded-full p-2 text-blue-600 hover:bg-gray-300 dark:text-blue-500 dark:hover:bg-gray-100"
+              >
+                <ThumbUpOutlinedIcon />
+              </button>
+              <p className="inline-flex justify-center p-2">{props.like}</p>
+            </div>
+            <div>
+              <IconButton
+                aria-label="more"
+                id="long-button"
+                aria-controls={open ? "long-menu" : undefined}
+                aria-expanded={open ? "true" : undefined}
+                aria-haspopup="true"
+                onClick={handleClick}
+              >
+                <MoreVertIcon />
+              </IconButton>
+              <Menu
+                id="long-menu"
+                MenuListProps={{
+                  "aria-labelledby": "long-button",
+                }}
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                PaperProps={{
+                  style: {
+                    width: "20ch",
+                  },
+                }}
+              >
+                {options.map(option => (
+                  <MenuItem key={option} selected={option === "Pyxis"} onClick={() => handleOptionClick(option)}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </Menu>
+            </div>
           </div>
-          <div className="grid grid-cols-2">
-            <button
-              type="submit"
-              className="inline-flex h-fit cursor-pointer justify-center rounded-full p-2 text-blue-600 hover:bg-gray-300 dark:text-blue-500 dark:hover:bg-gray-100"
-            >
-              <ThumbUpOutlinedIcon />
-            </button>
-            <p className="inline-flex justify-center p-2">{props.like}</p>
-          </div>
-          <div>
-            <IconButton
-              aria-label="more"
-              id="long-button"
-              aria-controls={open ? "long-menu" : undefined}
-              aria-expanded={open ? "true" : undefined}
-              aria-haspopup="true"
-              onClick={handleClick}
-            >
-              <MoreVertIcon />
-            </IconButton>
-            <Menu
-              id="long-menu"
-              MenuListProps={{
-                "aria-labelledby": "long-button",
-              }}
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              PaperProps={{
-                style: {
-                  width: "20ch",
-                },
-              }}
-            >
-              {options.map(option => (
-                <MenuItem
-                  key={option}
-                  selected={option === "Pyxis"}
-                  onClick={option === "Edit" ? handleEditClick : handleClose}
-                >
-                  {option}
-                </MenuItem>
-              ))}
-            </Menu>
-          </div>
+          {showComment()}
+          {/* {edit ? (
+            <p className="-mt-4 text-gray-500">{Comment}</p>
+          ) : (
+            <p className="-mt-4 text-gray-500">{props.contents}</p>
+          )} */}
         </div>
-        {edit ? (
-          <p className="-mt-4 text-gray-500">{Comment}</p>
-        ) : (
-          <p className="-mt-4 text-gray-500">{props.contents}</p>
-        )}
-      </div>
-      {/* 彈窗部分 */}
-      <Dialog
-        open={dialogOpen}
-        onClose={handleDialogClose}
-        fullScreen={fullScreen}
-        maxWidth={maxWidth}
-        aria-labelledby="responsive-dialog-title"
-        className="fixed h-screen w-screen "
-      >
-        {/* 變更留言 */}
-        <DialogTitle id="responsive-dialog-title" className="flex justify-center bg-gray-200 font-semibold">
-          變更留言
-        </DialogTitle>
-        <DialogContent className="flex bg-gray-200 md:w-full lg:w-96">
-          <textarea
-            id="chat"
-            className="mx-4  w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-            placeholder="輸入留言..."
-            value={Comment}
-            onChange={e => setComment(e.target.value)}
-          ></textarea>
-        </DialogContent>
-        <button
-          className="inline-flex cursor-pointer justify-center rounded-full p-2 text-blue-600 hover:bg-gray-300 dark:text-blue-500 dark:hover:bg-gray-100"
-          onClick={Edit}
+        {/* 彈窗部分 */}
+        <Dialog
+          open={dialogOpen}
+          onClose={handleDialogClose}
+          fullScreen={fullScreen}
+          maxWidth={maxWidth}
+          aria-labelledby="responsive-dialog-title"
+          className="fixed h-screen w-screen "
         >
-          <SendIcon />
-          <p>變更留言</p>
-        </button>
-      </Dialog>
-      {success && <SucessAlert message="留言成功" />}
-      {fail && <FailAlert message="留言失敗" />}
+          {/* 變更留言 */}
+          <DialogTitle id="responsive-dialog-title" className="flex justify-center bg-gray-200 font-semibold">
+            變更留言
+          </DialogTitle>
+          <DialogContent className="flex bg-gray-200 md:w-full lg:w-96">
+            <textarea
+              id="chat"
+              className="mx-4  w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              placeholder="輸入留言..."
+              value={Comment}
+              onChange={e => setComment(e.target.value)}
+            ></textarea>
+          </DialogContent>
+          <button
+            className="inline-flex cursor-pointer justify-center rounded-full p-2 text-blue-600 hover:bg-gray-300 dark:text-blue-500 dark:hover:bg-gray-100"
+            onClick={Edit}
+          >
+            <SendIcon />
+            <p>變更留言</p>
+          </button>
+        </Dialog>
+        {success && <SucessAlert message="留言成功" />}
+        {fail && <FailAlert message="留言失敗" />}
+      </div>
+      <div>
+        <Dialog
+          open={DeletedialogOpen}
+          onClose={handleDialogClose}
+          fullScreen={fullScreen}
+          maxWidth={maxWidth}
+          aria-labelledby="responsive-dialog-title"
+          className="fixed h-screen w-screen "
+        >
+          <DialogContent className="flex bg-gray-200 md:w-full lg:w-96"></DialogContent>
+          <button
+            className="inline-flex cursor-pointer justify-center rounded-full p-2 text-blue-600 hover:bg-gray-300 dark:text-blue-500 dark:hover:bg-gray-100"
+            onClick={Delete}
+          >
+            <p>確定刪除</p>
+          </button>
+        </Dialog>
+        {Deletesuccess && <SucessAlert message="刪除成功" />}
+        {Deletefail && <FailAlert message="刪除失敗" />}
+      </div>
     </div>
   );
 };

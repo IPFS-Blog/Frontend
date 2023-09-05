@@ -19,7 +19,7 @@ import AlertDialogSlide from "@/components/alert/AlertDialogSlide";
 import {
   _apiCheckJwt,
   apiArticleDeleteArticle,
-  apiUserGetCreaterArticle,
+  apiArticleGetCreaterArticle,
   apiUserGetCreaterOwnArticle,
 } from "@/components/api";
 import { LoginFunction } from "@/helpers/users/LoginFunction";
@@ -93,7 +93,7 @@ export default function Dashboard() {
       apiArticleDeleteArticle(jwt, selectedArticleId)
         .then(async () => {
           if (User.profile.username != null) {
-            const res = await apiUserGetCreaterArticle(User.profile.username);
+            const res = await apiArticleGetCreaterArticle(User.profile.username);
             if (res.data != null) setArticles(res.data);
           }
         })

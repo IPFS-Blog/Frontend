@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useClipboard } from "use-clipboard-copy";
 
-import { apiUserGetCreaterArticle, apiUserGetCreaterData } from "@/components/api";
+import { apiArticleGetCreaterArticle, apiUserGetCreaterData } from "@/components/api";
 import ArticleItem from "@/components/article/ArticleItem";
 import Card from "@/components/users/Card";
 import DonateButton from "@/components/users/DonateButton";
@@ -165,7 +165,7 @@ export const getServerSideProps = async (context: any) => {
   const url = context.req.url.substring(1) || null;
 
   let createrData = { id: 0, username: "", address: "", email: "", picture: "" };
-  if (url !== null) {
+  if (url !== null && !context.req.url.includes("favicon.ico")) {
     // 查詢創作者資料
     await apiUserGetCreaterData(url)
       .then(res => {
@@ -178,9 +178,9 @@ export const getServerSideProps = async (context: any) => {
         };
       });
     if (createrData.username !== "") {
-      const Articles = await apiUserGetCreaterArticle(createrData.username);
-
-      return { props: { createrData, Articles: Articles.data } };
+      const Articles = await apiArticleGetCreaterArticle(createrData.username);
+      return { props: { createrData, Articles: Articles.data.articles } };
     }
+    return { props: {} };
   }
 };

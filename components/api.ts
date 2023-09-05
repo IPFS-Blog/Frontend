@@ -53,8 +53,6 @@ export const apiUserEditProfile = (jwt: string, data: any) =>
 
 export const apiUserGetCreaterData = (username: any) => userRequest.get(`/${username}`, config); // 搜尋特定使用者
 
-export const apiUserGetCreaterArticle = (username: any) => userRequest.get(`/${username}/articles`, config); // 搜尋特定使用者的文章
-
 export const apiUserGetCreaterOwnArticle = (jwt: string, data: any) =>
   userRequest.get("/own/article", {
     headers: {
@@ -69,6 +67,8 @@ export const apiAuthTakeNonce = (address: any) => authRequest.get(`/login/${addr
 export const apiAuthTakeToken = (data: any) => authRequest.post("/login", data, config); // 登入驗證
 
 // TODO: Article相關的 api
+export const apiArticleGetCreaterArticle = (username: any) => articleRequest.get(`/users/${username}`, config); // 搜尋特定使用者的文章
+
 export const apiArticleCreate = (jwt: string, data: any) =>
   articleRequest.post("/", data, {
     headers: {

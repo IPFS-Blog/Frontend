@@ -260,26 +260,28 @@ export const getServerSideProps = async (context: any) => {
   let createrData = { id: 0, username: "", address: "", email: "", picture: "" };
   let article = { title: "", subtitle: "", contents: "", updateAt: "", likes: 0 };
   const comment = [{ number: 0, likes: 0, contents: "", updateAt: "", user: {} }];
-  const data = { aid: ArticleUrl };
-  await apiArticleTakeAllArticle(data)
-    .then(async res => {
-      const { title, subtitle, contents, updateAt, user, comments, likes } = res.data.article;
-      createrData = user;
-      const resarticle = {
-        title,
-        subtitle,
-        contents,
-        updateAt,
-        likes,
-      };
-      article = resarticle;
-      comment.push(...comments);
-    })
-    .catch(() => {
-      return {
-        notFound: true,
-      };
-    });
+  const data = { aid: ArticleUrl || null };
+  if (data.aid !== null && !context.req.url.includes("favicon.ico")) {
+    await apiArticleTakeAllArticle(data)
+      .then(async res => {
+        const { title, subtitle, contents, updateAt, user, comments, likes } = res.data.article;
+        createrData = user;
+        const resarticle = {
+          title,
+          subtitle,
+          contents,
+          updateAt,
+          likes,
+        };
+        article = resarticle;
+        comment.push(...comments);
+      })
+      .catch(() => {
+        return {
+          notFound: true,
+        };
+      });
 
-  return { props: { article, createrData, ArticleUrl, comment } };
+    return { props: { article, createrData, ArticleUrl, comment } };
+  } else return { props: {} };
 };

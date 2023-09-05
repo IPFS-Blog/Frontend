@@ -87,32 +87,36 @@ export default function Login() {
   }
 
   async function GetSignature(nonce: string, address: string) {
-    // 拿Nonce簽名
-    const web3 = new Web3(window.ethereum);
-    const signer = web3.eth.personal;
-    const signature = await signer.sign(nonce, address, "");
-    // 索取jwt
-    const data = { address: address || null, signature: signature || null };
-    if (data.address !== null && data.signature !== null) {
-      apiAuthTakeToken(data).then((res: any) => {
-        const jwt = res.data.access_token || null;
-        if (jwt != null) {
-          // 將JWT塞入 Cookie中
-          _apiAuthLogin({ jwt });
+    try {
+      // 拿Nonce簽名
+      const web3 = new Web3(window.ethereum);
+      const signer = web3.eth.personal;
+      const signature = await signer.sign(nonce, address, "");
+      // 索取jwt
+      const data = { address: address || null, signature: signature || null };
+      if (data.address !== null && data.signature !== null) {
+        apiAuthTakeToken(data).then((res: any) => {
+          const jwt = res.data.access_token || null;
+          if (jwt != null) {
+            // 將JWT塞入 Cookie中
+            _apiAuthLogin({ jwt });
 
-          // 將傳回來的會員資料轉成json的字串模式
-          const UserData = JSON.stringify(res.data.userData);
+            // 將傳回來的會員資料轉成json的字串模式
+            const UserData = JSON.stringify(res.data.userData);
 
-          // 透過redux儲存會員資料
-          dispatch(setLogin(UserData));
-          // 將會員資料存在localStroage
-          localStorage.setItem("UserData", UserData);
-        } else {
-          window.alert("請先登入謝謝");
-        }
-      });
-    } else {
-      window.alert("網站抓取資料錯誤");
+            // 透過redux儲存會員資料
+            dispatch(setLogin(UserData));
+            // 將會員資料存在localStroage
+            localStorage.setItem("UserData", UserData);
+          } else {
+            window.alert("請先登入謝謝");
+          }
+        });
+      } else {
+        window.alert("網站抓取資料錯誤");
+      }
+    } catch (error) {
+      alertRejectSetOpen(true);
     }
   }
 

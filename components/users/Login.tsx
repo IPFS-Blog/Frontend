@@ -182,7 +182,7 @@ export default function Login() {
         <Box sx={{ flexGrow: 0 }}>
           <Tooltip title="Open settings">
             <IconButton onClick={e => setAnchorElUser(e.currentTarget)} sx={{ p: 0 }}>
-              <Avatar src={`${User.profile.picture}`} alt="haha" />
+              <Avatar src={`${User.profile.picture}`} alt="not found img" className="" />
             </IconButton>
           </Tooltip>
           <Menu

@@ -7,15 +7,15 @@ export default function Home(props: any) {
   return (
     <>
       {/* FIXME: 要判斷熱門文章、最新文章 顯示 文章項目 */}
-      <div className="mb-4 border-b border-gray-400 dark:border-gray-700">
+      <div className="mb-4 mt-2 border-b border-gray-400 dark:border-gray-700">
         <ul className="-mb-px flex flex-wrap text-center text-sm font-medium">
           <li className="mr-2">
-            <button className="inline-block rounded-t-lg border-b-4 border-transparent p-4 hover:border-b-4 hover:border-gray-700 hover:text-gray-600 dark:hover:text-gray-300">
+            <button className="inline-block rounded-t-md border-b-4 border-transparent p-4 text-gray-700 hover:border-b-4 hover:border-gray-700 hover:bg-gray-300 dark:text-gray-200 dark:hover:bg-gray-500 dark:hover:text-gray-100">
               最熱門文章
             </button>
           </li>
           <li className="mr-2">
-            <button className="inline-block rounded-t-lg border-b-4 border-transparent p-4 hover:border-b-4 hover:border-gray-700 hover:text-gray-600 dark:hover:text-gray-300">
+            <button className="inline-block rounded-t-lg border-b-4 border-transparent p-4 text-gray-700 hover:border-b-4 hover:border-gray-700 hover:bg-gray-300 dark:text-gray-200 dark:hover:bg-gray-500 dark:hover:text-gray-100">
               最新文章
             </button>
           </li>
@@ -42,7 +42,7 @@ export default function Home(props: any) {
             })}
         </ul>
         {/* FIXME: Lin 右側欄考慮做成 components */}
-        <div className="col-span-4">
+        <div className="invisible laptop:visible laptop:col-span-4">
           {/* FIXME:推薦使用者資料 */}
           <div className="my-5 px-2">
             <div className="text-base font-semibold">推薦使用者</div>

@@ -13,6 +13,8 @@ import {
 } from "react-icons/ai";
 import { FaFaucet } from "react-icons/fa";
 
+import ThemeSwitch from "@/components/ThemeSwitch";
+
 import Users from "../Users";
 
 const menuItems = [
@@ -49,13 +51,15 @@ const Sidebar = () => {
 
   return (
     <div>
-      {/* //sidebar */}
-      <div className="m-2 flex w-auto flex-col justify-between rounded-lg bg-yellow-50 px-4 pt-8 pb-4">
+      <div className="m-2 flex w-auto flex-col justify-between rounded-lg bg-gray-200 px-4 pt-8 pb-4 dark:bg-slate-700">
         <div className="flex flex-col">
-          <button className={collapseIconClasses} onClick={handleSidebarToggle}>
-            <AiOutlineDoubleLeft />
+          <button
+            className={`${collapseIconClasses} rounded-md p-2 hover:bg-gray-300 hover:text-gray-700 dark:hover:bg-gray-500 dark:hover:text-gray-100`}
+            onClick={handleSidebarToggle}
+          >
+            <AiOutlineDoubleLeft className="text-gray-700 dark:text-gray-200" />
           </button>
-          <div className="mt-2 flex flex-col items-start">
+          <div className="mt-2 flex w-full flex-col">
             {/* TODO: 如果是Dashboard、articleHistory會換sidebar */}
             {!hideNavbar
               ? menuItems.map(({ icon: Icon, ...menu }) => {
@@ -63,12 +67,14 @@ const Sidebar = () => {
                   return (
                     <div key={menu.id} className={classes}>
                       <Link href={menu.link}>
-                        <div className="flex w-full items-center py-4 px-3">
+                        <div className="flex w-full items-center rounded-md py-4 px-3 hover:bg-gray-300 hover:text-gray-700 dark:hover:bg-gray-500 dark:hover:text-gray-100">
                           <div className="mr-2 w-auto">
-                            <Icon className="text-lg" />
+                            <Icon className="text-lg text-gray-700 dark:text-gray-200" />
                           </div>
                           {toggleCollapse && (
-                            <div className={classNames("font-medium text-dark w-max")}>{menu.label}</div>
+                            <div className={classNames("font-medium text-dark w-max dark:text-gray-300")}>
+                              {menu.label}
+                            </div>
                           )}
                         </div>
                       </Link>
@@ -80,12 +86,14 @@ const Sidebar = () => {
                   return (
                     <div key={menu.id} className={classes}>
                       <Link href={menu.link}>
-                        <div className="flex w-full items-center py-4 px-3">
+                        <div className="flex w-full items-center rounded-md py-4 px-3 hover:bg-gray-300 hover:text-gray-700 dark:hover:bg-gray-500 dark:hover:text-gray-100">
                           <div className="mr-2 w-auto">
-                            <Icon />
+                            <Icon className="text-lg text-gray-700 dark:text-gray-200" />
                           </div>
                           {toggleCollapse && (
-                            <div className={classNames("font-medium text-dark w-max")}>{menu.label}</div>
+                            <div className={classNames("font-medium text-dark w-max dark:text-gray-300")}>
+                              {menu.label}
+                            </div>
                           )}
                         </div>
                       </Link>
@@ -107,6 +115,9 @@ const Sidebar = () => {
             <div className="mt-1 flex w-full items-center px-3">
               <Users />
             </div>
+          </div>
+          <div>
+            <ThemeSwitch />
           </div>
         </div>
       </div>

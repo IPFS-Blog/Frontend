@@ -33,7 +33,7 @@ export default function Article(props: any) {
   const renderedHTML = md.render(contents);
   return (
     // 單一文章
-    <div className="my-2 grid w-full grid-cols-12 gap-x-16 px-2">
+    <div className="grid laptop:my-2 laptop:w-full laptop:grid-cols-12 laptop:gap-x-16 laptop:px-2">
       <div className="col-span-8 text-base">
         <a
           href={"/" + props.createrData.username}
@@ -116,7 +116,7 @@ export default function Article(props: any) {
       </div>
 
       {/* 右側欄 */}
-      <div className="col-span-4">
+      <div className="invisible tablet:col-span-3 laptop:visible laptop:col-span-4">
         {/* TODO: 文章擁有者資料 頭貼、名稱 */}
         <div className="col-span-2 flex justify-center">
           <Avatar className="h-auto w-1/2 rounded-full" src={props.createrData.picture} alt="not find Avatar" />

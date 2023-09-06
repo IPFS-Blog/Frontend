@@ -65,7 +65,7 @@ const Sidebar = () => {
                       <Link href={menu.link}>
                         <div className="flex w-full items-center py-4 px-3">
                           <div className="mr-2 w-auto">
-                            <Icon />
+                            <Icon className="text-lg" />
                           </div>
                           {toggleCollapse && (
                             <div className={classNames("font-medium text-dark w-max")}>{menu.label}</div>

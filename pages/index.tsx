@@ -1,5 +1,4 @@
 import { Avatar } from "@mui/material";
-import Head from "next/head";
 
 import { apiArticleTakeAllArticle } from "@/components/api";
 import ArticleItem from "@/components/article/ArticleItem";
@@ -7,19 +6,16 @@ import ArticleItem from "@/components/article/ArticleItem";
 export default function Home(props: any) {
   return (
     <>
-      <Head>
-        <title>Create Next App</title>
-      </Head>
       {/* FIXME: 要判斷熱門文章、最新文章 顯示 文章項目 */}
       <div className="mb-4 border-b border-gray-400 dark:border-gray-700">
         <ul className="-mb-px flex flex-wrap text-center text-sm font-medium">
           <li className="mr-2">
-            <button className="inline-block rounded-t-lg border-b-2 border-gray-400 p-4 hover:border-b-2 hover:border-gray-700 hover:text-gray-600 dark:border-gray-700 dark:hover:text-gray-300">
+            <button className="inline-block rounded-t-lg border-b-4 border-transparent p-4 hover:border-b-4 hover:border-gray-700 hover:text-gray-600 dark:hover:text-gray-300">
               最熱門文章
             </button>
           </li>
           <li className="mr-2">
-            <button className="inline-block rounded-t-lg border-b-2 border-transparent p-4 hover:border-b-2 hover:border-gray-700 hover:text-gray-600 dark:hover:text-gray-300">
+            <button className="inline-block rounded-t-lg border-b-4 border-transparent p-4 hover:border-b-4 hover:border-gray-700 hover:text-gray-600 dark:hover:text-gray-300">
               最新文章
             </button>
           </li>

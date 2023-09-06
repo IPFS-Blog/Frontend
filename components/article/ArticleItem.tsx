@@ -1,7 +1,5 @@
 import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
-import StarsOutlinedIcon from "@mui/icons-material/StarsOutlined";
-import { IconButton } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 
 export default function ArticleItem(props: any) {
@@ -34,16 +32,11 @@ export default function ArticleItem(props: any) {
                 <FavoriteBorderOutlinedIcon />
               </div>
               <span className="ml-2">100</span>
-              {/* TODO:打賞 */}
-              <div className="ml-6">
-                <StarsOutlinedIcon className="text-blue-500" />
-              </div>
-              <span className="ml-2">10</span>
             </div>
             <div className="flex items-center justify-end">
-              <IconButton className="mr-4">
+              <button className="mr-4 hover:translate-x-3">
                 <ArrowForwardOutlinedIcon className="text-slate-500" />
-              </IconButton>
+              </button>
             </div>
           </div>
         </div>

@@ -1,5 +1,4 @@
 import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
-import BookmarkAddOutlinedIcon from "@mui/icons-material/BookmarkAddOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import StarsOutlinedIcon from "@mui/icons-material/StarsOutlined";
 import { IconButton } from "@mui/material";
@@ -7,7 +6,7 @@ import Avatar from "@mui/material/Avatar";
 
 export default function ArticleItem(props: any) {
   return (
-    <li className="group/item my-4 rounded-lg border-4 border-blue-200 first:mt-0">
+    <li className="group/item my-4 rounded-lg border-2 border-blue-200 first:mt-0">
       <a className="text no-underline" href={`/${props.username}/${props.id}`}>
         <div className="grid h-auto w-full  rounded-lg  p-2 hover:bg-slate-200 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700">
           <div className="col-span-8">
@@ -37,17 +36,13 @@ export default function ArticleItem(props: any) {
               <span className="ml-2">100</span>
               {/* TODO:打賞 */}
               <div className="ml-6">
-                <StarsOutlinedIcon className="text-black" />
+                <StarsOutlinedIcon className="text-blue-500" />
               </div>
               <span className="ml-2">10</span>
             </div>
             <div className="flex items-center justify-end">
-              {/* TODO:收藏 */}
               <IconButton className="mr-4">
-                <BookmarkAddOutlinedIcon className="text-black" />
-              </IconButton>
-              <IconButton className="mr-4">
-                <ArrowForwardOutlinedIcon className="text-black" />
+                <ArrowForwardOutlinedIcon className="text-slate-500" />
               </IconButton>
             </div>
           </div>

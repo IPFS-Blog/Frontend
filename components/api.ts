@@ -109,13 +109,17 @@ export const apiArticleCommentCreate = (jwt: string, id: number, data: any) =>
       },
     },
   ); // 新增指定文章留言
-export const apiArticleCommentEdit = (jwt: string, id: string, cid: string) =>
-  articleRequest.patch(`/${id}/comment/${cid}`, {
-    headers: {
-      Authorization: `Bearer ${jwt}`,
+export const apiArticleCommentEdit = (jwt: string, id: number, cid: number, data: any) =>
+  articleRequest.patch(
+    `/${id}/comment/${cid}`,
+    { contents: data },
+    {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
     },
-  }); //修改留言
-export const apiArticleCommentDelete = (jwt: string, id: string, cid: string) =>
+  ); //修改留言
+export const apiArticleCommentDelete = (jwt: string, id: number, cid: number) =>
   articleRequest.delete(`/${id}/comment/${cid}`, {
     headers: {
       Authorization: `Bearer ${jwt}`,

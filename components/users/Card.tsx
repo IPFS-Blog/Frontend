@@ -14,9 +14,6 @@ const Card = () => {
 
   return (
     <div className="h-full w-full dark:text">
-      {/* tablet:768以上出現
-      phone:450消失
-      laptop:1024 */}
       <div className="tablet:h-full tablet:w-full">
         {isFlipped ? (
           <button

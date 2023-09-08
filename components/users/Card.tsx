@@ -17,28 +17,7 @@ const Card = () => {
       {/* tablet:768以上出現
       phone:450消失
       laptop:1024 */}
-      <div
-        className="h-full w-full rounded-lg bg-cover bg-center bg-no-repeat drop-shadow-xl tablet:hidden"
-        style={{
-          backgroundImage: `url(${Creater.profile.background})`,
-        }}
-      >
-        <div className="absolute inset-0 z-0 rounded-lg bg-gray-300 opacity-75 transition group-hover:opacity-75"></div>
-        <div className="z-20">
-          <div className=" flex h-auto w-2/6 flex-col items-center p-3">
-            <Avatar src={Creater.profile.picture} className="h-auto w-full rounded-full" alt="Picture of the author" />
-          </div>
-          <div className=" flex h-auto w-4/6 flex-col justify-start p-3 text-left ">
-            <h5 className="z-50 mb-2 text-3xl font-medium">{Creater.profile.username}</h5>
-          </div>
-          <div className="bark:text-red-200 z-50 mb-4 pt-2 text-base">
-            <p className="z-50">我喜歡貓咪</p>
-            <p>3D設計師</p>
-          </div>
-          <p className="">#cat#black#3D</p>
-        </div>
-      </div>
-      <div className="xs:invisible xs:h-0 xs:w-0 tablet:visible tablet:h-full tablet:w-full">
+      <div className="tablet:h-full tablet:w-full">
         {isFlipped ? (
           <button
             className="h-full rounded-lg bg-cover bg-center bg-no-repeat drop-shadow-xl"

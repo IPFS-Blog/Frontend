@@ -24,7 +24,7 @@ const Navbar = () => {
         <nav className="flex flex-row items-center justify-between bg-tertiary p-2">
           <div className="flex items-center">
             <Link href="/">
-              <div className="mr-2 flex shrink-0 items-center p-1">
+              <div className="flex shrink-0 items-center p-1 laptop:mr-2">
                 <img
                   src="/logo/48.png"
                   alt="not found"
@@ -35,7 +35,7 @@ const Navbar = () => {
                 </span>
               </div>
             </Link>
-            <form className="grid justify-items-start tablet:mx-20 tablet:w-auto">
+            <form className="grid justify-items-start tablet:w-auto laptop:mx-20">
               <div className="flex flex-col rounded-lg bg-gray-200 p-2 dark:bg-slate-700 tablet:flex-row tablet:space-x-2">
                 <div className="mb-1 flex items-center rounded-md bg-gray-100 dark:bg-slate-800">
                   <PersonSearchIcon className="hidden laptop:visible laptop:mx-1 laptop:flex laptop:w-fit laptop:text-gray-500 laptop:dark:text-gray-300" />

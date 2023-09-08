@@ -5,7 +5,6 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        <title>IPFS幣記</title>
         <link rel="icon" href="/logo/48.png" />
       </Head>
       <body className="bg-gray-100 dark:bg-gray-900">

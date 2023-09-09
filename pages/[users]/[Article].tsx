@@ -13,18 +13,20 @@ import DonateButton from "@/components/users/DonateButton";
 import { update } from "@/store/CreaterSlice";
 import styles from "@/styles/MarkdownEditor.module.css";
 export default function Article(props: any) {
-  // TODO: Handle funtion
+  // TODO: Handle function
   const dispatch = useDispatch();
   const User = useSelector((state: any) => state.User);
   const [comments, setComments] = useState(props.comment);
   const [likeNumber, setlikeNumber] = useState(props.article.likes);
+  const [articleLike, setArticleLike] = useState(false);
   useEffect(() => {
     // TODO: 文章創作者資料
     dispatch(update(JSON.stringify(props.createrData)));
   }, [dispatch, props.createrData]);
 
-  // TODO: UI funtion
+  // TODO: UI function
   const { contents } = props.article;
+  const [likeSuccess, setLikeSuccess] = useState(false);
   const md = new MarkdownIt({
     html: true,
     linkify: true,
@@ -67,10 +69,10 @@ export default function Article(props: any) {
           {/* FIXME:針對文章喜歡、讚賞、分享、收藏 */}
           {/* FIXME:響應式 table: phone: */}
           <div className="grid items-center gap-2 bg-gray-100 p-2 dark:bg-gray-800">
-            <div className="col-start-1 col-end-3 tablet:col-span-1 tablet:col-start-1">
+            <div className="col-start-1 col-end-3 flex tablet:col-span-1 tablet:col-start-1">
               {/* 喜歡 */}
               <button
-                className="rounded border border-red-500 py-2 px-10 font-semibold text-red-500 hover:bg-red-500 hover:text-white tablet:mx-2 tablet:px-5"
+                className="group relative flex rounded border border-red-500 py-2 px-10 font-semibold text-red-500 hover:bg-red-500 hover:text-white tablet:mx-2 tablet:px-5"
                 onClick={async () => {
                   let jwt = "";
                   await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
@@ -85,10 +87,14 @@ export default function Article(props: any) {
                           return isMatching;
                         });
                       }
+                      setArticleLike(ArticleLike);
                     });
-                    // FIXME: Lin 文章按讚/取消讚成功
-                    await apiArticleLike(jwt, props.ArticleUrl, !ArticleLike).then(res => {
-                      console.log("Success :", res);
+                    // 文章按讚/取消讚成功
+                    await apiArticleLike(jwt, props.ArticleUrl, !ArticleLike).then(() => {
+                      setLikeSuccess(true);
+                      setTimeout(() => {
+                        setLikeSuccess(false);
+                      }, 3000);
                     });
                     const data = { aid: props.ArticleUrl };
                     await apiArticleTakeAllArticle(data)
@@ -106,6 +112,15 @@ export default function Article(props: any) {
               >
                 <FavoriteBorderOutlinedIcon />
                 <span>like {likeNumber}</span>
+                {likeSuccess ? (
+                  <span
+                    className={`pointer-events-none absolute bottom-full -left-1/2 z-10 mb-2 ml-16 rounded-lg py-2 px-3 text-center text-xs ${
+                      articleLike ? " bg-gray-800 text-gray-100" : "bg-red-500 text-white"
+                    }`}
+                  >
+                    {articleLike ? "unLike" : "Like !"}
+                  </span>
+                ) : null}
               </button>
               {User.profile.login ? <DonateButton /> : null}
             </div>
@@ -136,7 +151,7 @@ export default function Article(props: any) {
               return (
                 <Comment
                   id={number}
-                  articleId={props.ArticleUrl}
+                  articleId={Number(props.ArticleUrl)}
                   key={number}
                   like={likes}
                   contents={contents}

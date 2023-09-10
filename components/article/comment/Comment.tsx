@@ -112,7 +112,7 @@ const Comment = (props: any) => {
           setDeleteSuccess(true);
           setEdit(true);
           handleDialogClose();
-          await apiArticleTakeAllArticle("?aid=" + props.articleid)
+          await apiArticleTakeAllArticle("?aid=" + articleid)
             .then(async res => {
               const { comments } = res.data.article;
               props.setComments(comments);
@@ -159,10 +159,10 @@ const Comment = (props: any) => {
                   type="submit"
                   onClick={async () => {
                     let jwt = "";
-                    await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
-                    if (jwt.trim() !== "") {
+                    await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt || null));
+                    if (jwt.trim() !== null) {
                       let CommentLike = false;
-                      const data = { aid: props.articleId };
+                      const data = { aid: articleid };
                       await apiCommentLikesRecord(jwt, data).then((res: any) => {
                         const CommentLikeRecord = res.data.comments;
                         if (CommentLikeRecord !== null) {
@@ -176,7 +176,7 @@ const Comment = (props: any) => {
                       });
 
                       // 留言按讚/取消讚成功
-                      await apiCommentLike(jwt, props.articleId, props.id, !CommentLike).then(() => {
+                      await apiCommentLike(jwt, articleid, props.id, !CommentLike).then(() => {
                         setLikeSuccess(true);
                         setTimeout(() => {
                           setLikeSuccess(false);

@@ -156,6 +156,7 @@ const Comment = (props: any) => {
             {User.profile.login ? (
               <div className="grid grid-cols-2 place-items-center">
                 <button
+                  className="relative"
                   type="submit"
                   onClick={async () => {
                     let jwt = "";
@@ -197,11 +198,11 @@ const Comment = (props: any) => {
                 >
                   {likeSuccess ? (
                     <span
-                      className={`pointer-events-none absolute bottom-full z-10 mb-2 ml-16 rounded-lg py-2 px-3 text-center text-xs ${
-                        commentLike ? " bg-gray-100 text-gray-800" : "bg-blue-500 text-white"
+                      className={`pointer-events-none absolute bottom-full right-0 z-10 mb-2 ml-16 flex rounded-lg p-2 text-xs${
+                        commentLike ? " bg-gray-100 text-gray-800" : " bg-blue-500 text-white"
                       }`}
                     >
-                      {commentLike ? "- 1" : "+ 1"}
+                      {commentLike ? "-1" : "+1"}
                     </span>
                   ) : null}
                   <ThumbUpOutlinedIcon className="m-1 inline-flex cursor-pointer justify-center rounded-full p-1 text-4xl text-blue-600 hover:bg-gray-300 dark:text-blue-500 dark:hover:bg-gray-100" />
@@ -250,38 +251,6 @@ const Comment = (props: any) => {
                 </Menu>
               </div>
             ) : null}
-            <div>
-              <IconButton
-                aria-label="more"
-                id="long-button"
-                aria-controls={open ? "long-menu" : undefined}
-                aria-expanded={open ? "true" : undefined}
-                aria-haspopup="true"
-                onClick={handleClick}
-              >
-                <MoreVertIcon />
-              </IconButton>
-              <Menu
-                id="long-menu"
-                MenuListProps={{
-                  "aria-labelledby": "long-button",
-                }}
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                PaperProps={{
-                  style: {
-                    width: "20ch",
-                  },
-                }}
-              >
-                {options.map(option => (
-                  <MenuItem key={option} selected={option === "Pyxis"} onClick={handleClose}>
-                    {option}
-                  </MenuItem>
-                ))}
-              </Menu>
-            </div>
           </div>
           {showComment()}
         </div>

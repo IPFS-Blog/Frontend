@@ -153,61 +153,69 @@ const Comment = (props: any) => {
               </div>
               <p className="text-sm text-gray-400">{props.updateAt.substr(0, 10)}</p>
             </div>
-            <div className="grid grid-cols-2">
-              <button
-                type="submit"
-                className="inline-flex cursor-pointer justify-center rounded-full p-2 text-blue-600 hover:bg-gray-300 dark:text-blue-500 dark:hover:bg-gray-100"
-                onClick={async () => {
-                  let jwt = "";
-                  await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
-                  if (jwt.trim() !== "") {
-                    let CommentLike = false;
-                    const data = { aid: props.articleId };
-                    await apiCommentLikesRecord(jwt, data).then((res: any) => {
-                      const CommentLikeRecord = res.data.comments;
-                      if (CommentLikeRecord !== null) {
-                        // 取得留言是否按過讚
-                        CommentLike = CommentLikeRecord.some((comment: any) => {
-                          const isMatching = comment.number === props.id;
-                          return isMatching;
-                        });
-                      }
-                      setCommentLike(CommentLike);
-                    });
-
-                    // 留言按讚/取消讚成功
-                    await apiCommentLike(jwt, props.articleId, props.id, !CommentLike).then(() => {
-                      setLikeSuccess(true);
-                      setTimeout(() => {
-                        setLikeSuccess(false);
-                      }, 3000);
-                    });
-                    await apiArticleTakeAllArticle(data)
-                      .then(async res => {
-                        const { comments } = res.data.article;
-                        props.setComments(comments);
-                      })
-                      .catch(() => {
-                        return {
-                          notFound: true,
-                        };
+            {User.profile.login ? (
+              <div className="grid grid-cols-2 place-items-center">
+                <button
+                  type="submit"
+                  onClick={async () => {
+                    let jwt = "";
+                    await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
+                    if (jwt.trim() !== "") {
+                      let CommentLike = false;
+                      const data = { aid: props.articleId };
+                      await apiCommentLikesRecord(jwt, data).then((res: any) => {
+                        const CommentLikeRecord = res.data.comments;
+                        if (CommentLikeRecord !== null) {
+                          // 取得留言是否按過讚
+                          CommentLike = CommentLikeRecord.some((comment: any) => {
+                            const isMatching = comment.number === props.id;
+                            return isMatching;
+                          });
+                        }
+                        setCommentLike(CommentLike);
                       });
-                  }
-                }}
-              >
-                {likeSuccess ? (
-                  <span
-                    className={`pointer-events-none absolute bottom-full z-10 mb-2 ml-16 rounded-lg py-2 px-3 text-center text-xs ${
-                      commentLike ? " bg-gray-100 text-gray-800" : "bg-blue-500 text-white"
-                    }`}
-                  >
-                    {commentLike ? "- 1" : "+ 1"}
-                  </span>
-                ) : null}
-                <ThumbUpOutlinedIcon />
-              </button>
-              <p className="inline-flex justify-center p-2">{props.like}</p>
-            </div>
+
+                      // 留言按讚/取消讚成功
+                      await apiCommentLike(jwt, props.articleId, props.id, !CommentLike).then(() => {
+                        setLikeSuccess(true);
+                        setTimeout(() => {
+                          setLikeSuccess(false);
+                        }, 3000);
+                      });
+                      await apiArticleTakeAllArticle(data)
+                        .then(async res => {
+                          const { comments } = res.data.article;
+                          props.setComments(comments);
+                        })
+                        .catch(() => {
+                          return {
+                            notFound: true,
+                          };
+                        });
+                    }
+                  }}
+                >
+                  {likeSuccess ? (
+                    <span
+                      className={`pointer-events-none absolute bottom-full z-10 mb-2 ml-16 rounded-lg py-2 px-3 text-center text-xs ${
+                        commentLike ? " bg-gray-100 text-gray-800" : "bg-blue-500 text-white"
+                      }`}
+                    >
+                      {commentLike ? "- 1" : "+ 1"}
+                    </span>
+                  ) : null}
+                  <ThumbUpOutlinedIcon className="m-1 inline-flex cursor-pointer justify-center rounded-full p-1 text-4xl text-blue-600 hover:bg-gray-300 dark:text-blue-500 dark:hover:bg-gray-100" />
+                </button>
+                <p className="inline-flex justify-center p-2">{props.like}</p>
+              </div>
+            ) : (
+              <div className="flex">
+                <div className="inline-flex cursor-pointer justify-center rounded-full p-2 text-blue-600 dark:text-blue-500">
+                  <ThumbUpOutlinedIcon />
+                </div>
+                <p className="inline-flex justify-center p-2">{props.like}</p>
+              </div>
+            )}
             {User.profile.username == props.username ? (
               <div>
                 <IconButton

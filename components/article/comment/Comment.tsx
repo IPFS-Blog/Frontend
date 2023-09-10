@@ -12,6 +12,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { useTheme } from "@mui/material/styles";
 import * as React from "react";
 import { /* useEffect */ useState } from "react";
+import { useSelector } from "react-redux";
 
 import FailAlert from "@/components/alert/Fail";
 import SucessAlert from "@/components/alert/Sucess";
@@ -20,7 +21,10 @@ import {
   apiArticleCommentDelete,
   apiArticleCommentEdit,
   apiArticleTakeAllArticle,
+  apiCommentLike,
+  apiCommentLikesRecord,
 } from "@/components/api";
+
 const options = ["Edit", "Delete"];
 
 const Comment = (props: any) => {
@@ -31,6 +35,7 @@ const Comment = (props: any) => {
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
   const [dialogOpen, setDialogOpen] = useState(false);
   const [DeletedialogOpen, setDeleteDialogOpen] = useState(false);
+  const User = useSelector((state: any) => state.User);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -148,44 +153,85 @@ const Comment = (props: any) => {
               <button
                 type="submit"
                 className="inline-flex h-fit cursor-pointer justify-center rounded-full p-2 text-blue-600 hover:bg-gray-300 dark:text-blue-500 dark:hover:bg-gray-100"
+                onClick={async () => {
+                  let jwt = "";
+                  const data = { aid: articleid };
+                  await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
+                  if (jwt.trim() !== "") {
+                    let CommentLike = false;
+
+                    await apiCommentLikesRecord(jwt, data).then((res: any) => {
+                      const CommentLikeRecord = res.data.comments;
+                      if (CommentLikeRecord !== null) {
+                        // 取得留言是否按過讚
+                        CommentLike = CommentLikeRecord.some((comment: any) => {
+                          const isMatching = comment.number === props.id;
+                          return isMatching;
+                        });
+                      }
+                    });
+
+                    // FIXME: Lin 留言按讚/取消讚成功
+                    await apiCommentLike(jwt, articleid, props.id, !CommentLike)
+                      .then(() => window.alert("按讚成功"))
+                      .catch(() => window.alert("按讚失敗"));
+
+                    await apiArticleTakeAllArticle(data)
+                      .then(async res => {
+                        const { comments } = res.data.article;
+                        props.setComments(comments);
+                      })
+                      .catch(() => {
+                        return {
+                          notFound: true,
+                        };
+                      });
+                  } else {
+                    window.alert("請先登入謝謝");
+                  }
+                }}
               >
                 <ThumbUpOutlinedIcon />
               </button>
               <p className="inline-flex justify-center p-2">{props.like}</p>
             </div>
-            <div>
-              <IconButton
-                aria-label="more"
-                id="long-button"
-                aria-controls={open ? "long-menu" : undefined}
-                aria-expanded={open ? "true" : undefined}
-                aria-haspopup="true"
-                onClick={handleClick}
-              >
-                <MoreVertIcon />
-              </IconButton>
-              <Menu
-                id="long-menu"
-                MenuListProps={{
-                  "aria-labelledby": "long-button",
-                }}
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                PaperProps={{
-                  style: {
-                    width: "20ch",
-                  },
-                }}
-              >
-                {options.map(option => (
-                  <MenuItem key={option} selected={option === "Pyxis"} onClick={() => handleOptionClick(option)}>
-                    {option}
-                  </MenuItem>
-                ))}
-              </Menu>
-            </div>
+            {User.profile.username == props.username ? (
+              <div>
+                <IconButton
+                  aria-label="more"
+                  id="long-button"
+                  aria-controls={open ? "long-menu" : undefined}
+                  aria-expanded={open ? "true" : undefined}
+                  aria-haspopup="true"
+                  onClick={handleClick}
+                >
+                  <MoreVertIcon />
+                </IconButton>
+                <Menu
+                  id="long-menu"
+                  MenuListProps={{
+                    "aria-labelledby": "long-button",
+                  }}
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  PaperProps={{
+                    style: {
+                      width: "20ch",
+                    },
+                  }}
+                >
+                  {options.map(option => (
+                    <MenuItem key={option} selected={option === "Pyxis"} onClick={() => handleOptionClick(option)}>
+                      {option}
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </div>
+            ) : null}
+            <p className="text-sm text-gray-400">{props.updateAt.substr(0, 10)}</p>
           </div>
+
           {showComment()}
           {/* {edit ? (
             <p className="-mt-4 text-gray-500">{Comment}</p>

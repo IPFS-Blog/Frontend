@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useClipboard } from "use-clipboard-copy";
 
-import { apiUserGetCreaterArticle, apiUserGetCreaterData } from "@/components/api";
+import { apiArticleGetCreaterArticle, apiUserGetCreaterData } from "@/components/api";
 import ArticleItem from "@/components/article/ArticleItem";
 import Card from "@/components/users/Card";
 import DonateButton from "@/components/users/DonateButton";
@@ -18,8 +18,12 @@ export default function Users(props: any) {
   const User = useSelector((state: any) => state.User);
   useEffect(() => {
     // TODO: 創作者狀態
-    if (props.createrData.username == User.profile.username) SetIsPrivate(true);
-    dispatch(update(JSON.stringify(props.createrData)));
+    if (props.createrData != null) {
+      if (props.createrData.username == User.profile.username) SetIsPrivate(true);
+      dispatch(update(JSON.stringify(props.createrData)));
+    } else {
+      window.alert("網站抓取資料錯誤");
+    }
   }, [User.profile.username, dispatch, props.IsCreater, props.createrData]);
 
   //TODO: UI function
@@ -158,23 +162,25 @@ export default function Users(props: any) {
 }
 
 export const getServerSideProps = async (context: any) => {
-  const url = context.req.url.substring(1);
+  const url = context.req.url.substring(1) || null;
 
   let createrData = { id: 0, username: "", address: "", email: "", picture: "" };
-
-  // 查詢創作者資料
-  await apiUserGetCreaterData(url)
-    .then(res => {
-      createrData = res.data.userData;
-    })
-    .catch(() => {
-      // 找不到使用者
-      return {
-        notFound: true,
-      };
-    });
-
-  const Articles = await apiUserGetCreaterArticle(createrData.username);
-
-  return { props: { createrData, Articles: Articles.data } };
+  if (url !== null && !context.req.url.includes("favicon.ico")) {
+    // 查詢創作者資料
+    await apiUserGetCreaterData(url)
+      .then(res => {
+        createrData = res.data.userData;
+      })
+      .catch(() => {
+        // 找不到使用者
+        return {
+          notFound: true,
+        };
+      });
+    if (createrData.username !== "") {
+      const Articles = await apiArticleGetCreaterArticle(createrData.username);
+      return { props: { createrData, Articles: Articles.data.articles } };
+    }
+    return { props: {} };
+  }
 };

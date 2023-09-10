@@ -6,7 +6,7 @@ import MarkdownIt from "markdown-it";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { apiArticleTakeAllArticle } from "@/components/api";
+import { _apiCheckJwt, apiArticleLike, apiArticleLikesRecord, apiArticleTakeAllArticle } from "@/components/api";
 import Comment from "@/components/article/comment/Comment";
 import CreateComment from "@/components/article/comment/CreateComment";
 import DonateButton from "@/components/users/DonateButton";
@@ -17,6 +17,7 @@ export default function Article(props: any) {
   const dispatch = useDispatch();
   const User = useSelector((state: any) => state.User);
   const [comments, setComments] = useState(props.comment);
+  const [likeNumber, setlikeNumber] = useState(props.article.likes);
   useEffect(() => {
     // TODO: 文章創作者資料
     dispatch(update(JSON.stringify(props.createrData)));
@@ -68,9 +69,43 @@ export default function Article(props: any) {
           <div className="grid items-center gap-2 bg-gray-100 p-2 dark:bg-gray-800">
             <div className="col-start-1 col-end-3 tablet:col-span-1 tablet:col-start-1">
               {/* 喜歡 */}
-              <button className="rounded border border-red-500 py-2 px-10 font-semibold text-red-500 hover:bg-red-500 hover:text-white tablet:mx-2 tablet:px-5">
+              <button
+                className="rounded border border-red-500 py-2 px-10 font-semibold text-red-500 hover:bg-red-500 hover:text-white tablet:mx-2 tablet:px-5"
+                onClick={async () => {
+                  let jwt = "";
+                  await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
+                  if (jwt.trim() !== "" && props.ArticleUrl != null) {
+                    let ArticleLike = false;
+                    await apiArticleLikesRecord(jwt).then((res: any) => {
+                      const ArticleLikeRecord = res.data.article;
+                      if (ArticleLikeRecord !== null) {
+                        // 取得文章是否按過讚
+                        ArticleLike = ArticleLikeRecord.some((article: any) => {
+                          const isMatching = article.id.toString() === props.ArticleUrl;
+                          return isMatching;
+                        });
+                      }
+                    });
+                    // FIXME: Lin 文章按讚/取消讚成功
+                    await apiArticleLike(jwt, props.ArticleUrl, !ArticleLike).then(res => {
+                      console.log("Success :", res);
+                    });
+                    const data = { aid: props.ArticleUrl };
+                    await apiArticleTakeAllArticle(data)
+                      .then(async res => {
+                        const { likes } = res.data.article;
+                        setlikeNumber(likes);
+                      })
+                      .catch(() => {
+                        return {
+                          notFound: true,
+                        };
+                      });
+                  }
+                }}
+              >
                 <FavoriteBorderOutlinedIcon />
-                <span>like</span>
+                <span>like {likeNumber}</span>
               </button>
               {User.profile.login ? <DonateButton /> : null}
             </div>
@@ -101,6 +136,7 @@ export default function Article(props: any) {
           <div className="my-2">
             {comments.slice(1).map((comment: any) => {
               const { number, likes, contents, updateAt, user } = comment;
+              console.log(comment);
               return (
                 <Comment
                   id={number}
@@ -226,27 +262,30 @@ export const getServerSideProps = async (context: any) => {
   // 查詢文章
   const ArticleUrl = context.req.url.split("/")[2];
   let createrData = { id: 0, username: "", address: "", email: "", picture: "" };
-  let article = { title: "", subtitle: "", contents: "", updateAt: "" };
+  let article = { title: "", subtitle: "", contents: "", updateAt: "", likes: 0 };
   const comment = [{ number: 0, likes: 0, contents: "", updateAt: "", user: {} }];
+  const data = { aid: ArticleUrl || null };
+  if (data.aid !== null && !context.req.url.includes("favicon.ico")) {
+    await apiArticleTakeAllArticle(data)
+      .then(async res => {
+        const { title, subtitle, contents, updateAt, user, comments, likes } = res.data.article;
+        createrData = user;
+        const resarticle = {
+          title,
+          subtitle,
+          contents,
+          updateAt,
+          likes,
+        };
+        article = resarticle;
+        comment.push(...comments);
+      })
+      .catch(() => {
+        return {
+          notFound: true,
+        };
+      });
 
-  await apiArticleTakeAllArticle("?aid=" + ArticleUrl)
-    .then(async res => {
-      const { title, subtitle, contents, updateAt, user, comments } = res.data.article;
-      createrData = user;
-      const resarticle = {
-        title,
-        subtitle,
-        contents,
-        updateAt,
-      };
-      article = resarticle;
-      comment.push(...comments);
-    })
-    .catch(() => {
-      return {
-        notFound: true,
-      };
-    });
-
-  return { props: { article, createrData, ArticleUrl, comment } };
+    return { props: { article, createrData, ArticleUrl, comment } };
+  } else return { props: {} };
 };

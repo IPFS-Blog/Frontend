@@ -151,7 +151,6 @@ export default function Article(props: any) {
           <div className="my-2">
             {comments.slice(1).map((comment: any) => {
               const { number, likes, contents, updateAt, user } = comment;
-              console.log(comment);
               return (
                 <Comment
                   id={number}

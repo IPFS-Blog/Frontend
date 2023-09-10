@@ -113,14 +113,18 @@ export const apiArticleCommentCreate = (jwt: string, id: number, data: any) =>
       },
     },
   ); // 新增指定文章留言
-export const apiArticleCommentEdit = (jwt: string, id: string, cid: string) =>
-  articleRequest.patch(`/${id}/comment/${cid}`, {
-    headers: {
-      Authorization: `Bearer ${jwt}`,
+export const apiArticleCommentEdit = (jwt: string, id: number, cid: number, data: any) =>
+  articleRequest.patch(
+    `/${id}/comment/${cid}`,
+    { contents: data },
+    {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
     },
-  }); //修改留言
+  ); //修改留言
 
-export const apiArticleCommentDelete = (jwt: string, id: string, cid: string) =>
+export const apiArticleCommentDelete = (jwt: string, id: number, cid: number) =>
   articleRequest.delete(`/${id}/comment/${cid}`, {
     headers: {
       Authorization: `Bearer ${jwt}`,
@@ -131,7 +135,7 @@ export const apiArticleLikesRecord = (jwt: string) =>
     headers: {
       Authorization: `Bearer ${jwt}`,
     },
-  }); // 搜尋使用者自身喜愛的文章
+  }); // 搜尋使用者自身按讚的文章
 export const apiArticleLike = (jwt: string, id: string, data: any) =>
   articleRequest.patch(`/${id}/likeStatus?userLike=${data}`, null, {
     headers: {
@@ -144,7 +148,7 @@ export const apiCommentLikesRecord = (jwt: string, data: any) =>
       Authorization: `Bearer ${jwt}`,
     },
     params: data,
-  }); // 搜尋使用者自身喜愛的文章
+  }); // 搜尋使用者自身按讚的留言
 export const apiCommentLike = (jwt: string, id: string, cid: string, data: any) =>
   articleRequest.patch(`/${id}/comment/${cid}/likeStatus?userLike=${data}`, null, {
     headers: {

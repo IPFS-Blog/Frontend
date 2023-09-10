@@ -23,7 +23,6 @@ export default function ArticleItem(props: any) {
           {/* <div className="col-span-4 rounded-lg bg-gray-400">
             <img className="h-full w-full rounded-lg" src="" alt="Null"></img>
           </div> */}
-          {/* FIXME:Icon後的數字 */}
           <div className="col-span-12  flex items-center justify-between">
             <div className="flex items-center">
               <p className="ml-2">{props.updateAt.substring(0, 10)}</p>
@@ -31,7 +30,7 @@ export default function ArticleItem(props: any) {
               <div className="ml-2 rounded font-semibold text-red-500 phone:ml-6">
                 <FavoriteBorderOutlinedIcon />
               </div>
-              <span className="ml-2">100</span>
+              <span className="ml-2">{props.likes}</span>
             </div>
             <div className="flex items-center justify-end">
               <button className="mr-4 hover:translate-x-3">

@@ -25,7 +25,7 @@ export default function Home(props: any) {
         <ul className="col-span-8" role="list">
           {props.Articles != null &&
             props.Articles.articles.map((item: any) => {
-              const { id, title, subtitle, updateAt } = item;
+              const { id, title, subtitle, updateAt, likes } = item;
               const { username, picture } = item.user;
               return (
                 <ArticleItem
@@ -36,6 +36,7 @@ export default function Home(props: any) {
                   title={title}
                   subtitle={subtitle}
                   updateAt={updateAt}
+                  likes={likes}
                 />
               );
             })}

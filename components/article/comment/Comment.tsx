@@ -11,7 +11,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useTheme } from "@mui/material/styles";
 import * as React from "react";
-import { /* useEffect */ useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 
 import FailAlert from "@/components/alert/Fail";
@@ -42,6 +42,10 @@ const Comment = (props: any) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  //UI function
+  const [likeSuccess, setLikeSuccess] = useState(false);
+  const [commentLike, setCommentLike] = useState(false);
 
   function handleOptionClick(option: any) {
     if (option === "Edit") {
@@ -108,7 +112,7 @@ const Comment = (props: any) => {
           setDeleteSuccess(true);
           setEdit(true);
           handleDialogClose();
-          await apiArticleTakeAllArticle("?aid=" + props.articleid)
+          await apiArticleTakeAllArticle("?aid=" + articleid)
             .then(async res => {
               const { comments } = res.data.article;
               props.setComments(comments);
@@ -149,52 +153,69 @@ const Comment = (props: any) => {
               </div>
               <p className="text-sm text-gray-400">{props.updateAt.substr(0, 10)}</p>
             </div>
-            <div className="grid grid-cols-2">
-              <button
-                type="submit"
-                className="inline-flex h-fit cursor-pointer justify-center rounded-full p-2 text-blue-600 hover:bg-gray-300 dark:text-blue-500 dark:hover:bg-gray-100"
-                onClick={async () => {
-                  let jwt = "";
-                  const data = { aid: articleid };
-                  await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
-                  if (jwt.trim() !== "") {
-                    let CommentLike = false;
-
-                    await apiCommentLikesRecord(jwt, data).then((res: any) => {
-                      const CommentLikeRecord = res.data.comments;
-                      if (CommentLikeRecord !== null) {
-                        // 取得留言是否按過讚
-                        CommentLike = CommentLikeRecord.some((comment: any) => {
-                          const isMatching = comment.number === props.id;
-                          return isMatching;
-                        });
-                      }
-                    });
-
-                    // FIXME: Lin 留言按讚/取消讚成功
-                    await apiCommentLike(jwt, articleid, props.id, !CommentLike)
-                      .then(() => window.alert("按讚成功"))
-                      .catch(() => window.alert("按讚失敗"));
-
-                    await apiArticleTakeAllArticle(data)
-                      .then(async res => {
-                        const { comments } = res.data.article;
-                        props.setComments(comments);
-                      })
-                      .catch(() => {
-                        return {
-                          notFound: true,
-                        };
+            {User.profile.login ? (
+              <div className="grid grid-cols-2 place-items-center">
+                <button
+                  type="submit"
+                  onClick={async () => {
+                    let jwt = "";
+                    await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt || null));
+                    if (jwt.trim() !== null) {
+                      let CommentLike = false;
+                      const data = { aid: articleid };
+                      await apiCommentLikesRecord(jwt, data).then((res: any) => {
+                        const CommentLikeRecord = res.data.comments;
+                        if (CommentLikeRecord !== null) {
+                          // 取得留言是否按過讚
+                          CommentLike = CommentLikeRecord.some((comment: any) => {
+                            const isMatching = comment.number === props.id;
+                            return isMatching;
+                          });
+                        }
+                        setCommentLike(CommentLike);
                       });
-                  } else {
-                    window.alert("請先登入謝謝");
-                  }
-                }}
-              >
-                <ThumbUpOutlinedIcon />
-              </button>
-              <p className="inline-flex justify-center p-2">{props.like}</p>
-            </div>
+
+                      // 留言按讚/取消讚成功
+                      await apiCommentLike(jwt, articleid, props.id, !CommentLike).then(() => {
+                        setLikeSuccess(true);
+                        setTimeout(() => {
+                          setLikeSuccess(false);
+                        }, 3000);
+                      });
+                      await apiArticleTakeAllArticle(data)
+                        .then(async res => {
+                          const { comments } = res.data.article;
+                          props.setComments(comments);
+                        })
+                        .catch(() => {
+                          return {
+                            notFound: true,
+                          };
+                        });
+                    }
+                  }}
+                >
+                  {likeSuccess ? (
+                    <span
+                      className={`pointer-events-none absolute bottom-full z-10 mb-2 ml-16 rounded-lg py-2 px-3 text-center text-xs ${
+                        commentLike ? " bg-gray-100 text-gray-800" : "bg-blue-500 text-white"
+                      }`}
+                    >
+                      {commentLike ? "- 1" : "+ 1"}
+                    </span>
+                  ) : null}
+                  <ThumbUpOutlinedIcon className="m-1 inline-flex cursor-pointer justify-center rounded-full p-1 text-4xl text-blue-600 hover:bg-gray-300 dark:text-blue-500 dark:hover:bg-gray-100" />
+                </button>
+                <p className="inline-flex justify-center p-2">{props.like}</p>
+              </div>
+            ) : (
+              <div className="flex">
+                <div className="inline-flex cursor-pointer justify-center rounded-full p-2 text-blue-600 dark:text-blue-500">
+                  <ThumbUpOutlinedIcon />
+                </div>
+                <p className="inline-flex justify-center p-2">{props.like}</p>
+              </div>
+            )}
             {User.profile.username == props.username ? (
               <div>
                 <IconButton
@@ -229,15 +250,40 @@ const Comment = (props: any) => {
                 </Menu>
               </div>
             ) : null}
-            <p className="text-sm text-gray-400">{props.updateAt.substr(0, 10)}</p>
+            <div>
+              <IconButton
+                aria-label="more"
+                id="long-button"
+                aria-controls={open ? "long-menu" : undefined}
+                aria-expanded={open ? "true" : undefined}
+                aria-haspopup="true"
+                onClick={handleClick}
+              >
+                <MoreVertIcon />
+              </IconButton>
+              <Menu
+                id="long-menu"
+                MenuListProps={{
+                  "aria-labelledby": "long-button",
+                }}
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                PaperProps={{
+                  style: {
+                    width: "20ch",
+                  },
+                }}
+              >
+                {options.map(option => (
+                  <MenuItem key={option} selected={option === "Pyxis"} onClick={handleClose}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </Menu>
+            </div>
           </div>
-
           {showComment()}
-          {/* {edit ? (
-            <p className="-mt-4 text-gray-500">{Comment}</p>
-          ) : (
-            <p className="-mt-4 text-gray-500">{props.contents}</p>
-          )} */}
         </div>
         {/* 彈窗部分 */}
         <Dialog

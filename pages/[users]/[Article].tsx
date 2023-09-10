@@ -13,7 +13,7 @@ import DonateButton from "@/components/users/DonateButton";
 import { update } from "@/store/CreaterSlice";
 import styles from "@/styles/MarkdownEditor.module.css";
 export default function Article(props: any) {
-  // TODO: Handle funtion
+  // TODO: Handle function
   const dispatch = useDispatch();
   const User = useSelector((state: any) => state.User);
   const [comments, setComments] = useState(props.comment);
@@ -23,8 +23,10 @@ export default function Article(props: any) {
     dispatch(update(JSON.stringify(props.createrData)));
   }, [dispatch, props.createrData]);
 
-  // TODO: UI funtion
+  // TODO: UI function
   const { contents } = props.article;
+  const [likeSuccess, setLikeSuccess] = useState(false);
+  const [articleLike, setArticleLike] = useState(false);
   const md = new MarkdownIt({
     html: true,
     linkify: true,
@@ -67,46 +69,72 @@ export default function Article(props: any) {
           {/* FIXME:針對文章喜歡、讚賞、分享、收藏 */}
           {/* FIXME:響應式 table: phone: */}
           <div className="grid items-center gap-2 bg-gray-100 p-2 dark:bg-gray-800">
-            <div className="col-start-1 col-end-3 tablet:col-span-1 tablet:col-start-1">
+            <div className="col-start-1 col-end-3 flex tablet:col-span-1 tablet:col-start-1">
               {/* 喜歡 */}
-              <button
-                className="rounded border border-red-500 py-2 px-10 font-semibold text-red-500 hover:bg-red-500 hover:text-white tablet:mx-2 tablet:px-5"
-                onClick={async () => {
-                  let jwt = "";
-                  await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
-                  if (jwt.trim() !== "" && props.ArticleUrl != null) {
-                    let ArticleLike = false;
-                    await apiArticleLikesRecord(jwt).then((res: any) => {
-                      const ArticleLikeRecord = res.data.article;
-                      if (ArticleLikeRecord !== null) {
-                        // 取得文章是否按過讚
-                        ArticleLike = ArticleLikeRecord.some((article: any) => {
-                          const isMatching = article.id.toString() === props.ArticleUrl;
-                          return isMatching;
-                        });
-                      }
-                    });
-                    // FIXME: Lin 文章按讚/取消讚成功
-                    await apiArticleLike(jwt, props.ArticleUrl, !ArticleLike).then(res => {
-                      console.log("Success :", res);
-                    });
-                    const data = { aid: props.ArticleUrl };
-                    await apiArticleTakeAllArticle(data)
-                      .then(async res => {
-                        const { likes } = res.data.article;
-                        setlikeNumber(likes);
-                      })
-                      .catch(() => {
-                        return {
-                          notFound: true,
-                        };
+              {User.profile.login ? (
+                <button
+                  className="group relative flex rounded border border-red-500 py-2 px-10 font-semibold text-red-500 hover:bg-red-500 hover:text-white tablet:mx-2 tablet:px-5"
+                  onClick={async () => {
+                    let jwt = "";
+                    await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
+                    if (jwt.trim() !== "" && props.ArticleUrl != null) {
+                      let ArticleLike = false;
+                      await apiArticleLikesRecord(jwt).then((res: any) => {
+                        const ArticleLikeRecord = res.data.article;
+                        if (ArticleLikeRecord !== null) {
+                          // 取得文章是否按過讚
+                          ArticleLike = ArticleLikeRecord.some((article: any) => {
+                            const isMatching = article.id.toString() === props.ArticleUrl;
+                            return isMatching;
+                          });
+                        }
+                        setArticleLike(ArticleLike);
                       });
-                  }
-                }}
-              >
-                <FavoriteBorderOutlinedIcon />
-                <span>like {likeNumber}</span>
-              </button>
+                      // 文章按讚/取消讚成功
+                      await apiArticleLike(jwt, props.ArticleUrl, !ArticleLike).then(() => {
+                        setLikeSuccess(true);
+                        setTimeout(() => {
+                          setLikeSuccess(false);
+                        }, 3000);
+                      });
+                      const data = { aid: props.ArticleUrl };
+                      await apiArticleTakeAllArticle(data)
+                        .then(async res => {
+                          const { likes } = res.data.article;
+                          setlikeNumber(likes);
+                        })
+                        .catch(() => {
+                          return {
+                            notFound: true,
+                          };
+                        });
+                    }
+                  }}
+                >
+                  <FavoriteBorderOutlinedIcon />
+                  <span>Like {likeNumber}</span>
+                  {likeSuccess ? (
+                    <span
+                      className={`pointer-events-none absolute bottom-full -left-1/2 z-10 mb-2 ml-16 rounded-lg py-2 px-3 text-center text-xs ${
+                        articleLike ? " bg-gray-800 text-gray-100" : "bg-red-500 text-white"
+                      }`}
+                    >
+                      {articleLike ? "unLike" : "Like !"}
+                    </span>
+                  ) : null}
+                </button>
+              ) : (
+                <button className="group relative flex rounded border border-red-500 py-2 px-10 font-semibold text-red-500 hover:bg-red-500 hover:text-white tablet:mx-2 tablet:px-5">
+                  <FavoriteBorderOutlinedIcon />
+                  <span>Like {likeNumber}</span>
+                  <span
+                    className="pointer-events-none absolute bottom-full -left-1/2 z-10 mb-2 ml-16 rounded-lg bg-gray-300 py-2 px-3 text-center text-xs text-gray-800 opacity-0
+                      group-hover:opacity-100"
+                  >
+                    想點擊 Like 給創作者，請先登入
+                  </span>
+                </button>
+              )}
               {User.profile.login ? <DonateButton /> : null}
             </div>
             <div className="col-span-1 col-end-7 flex flex-row items-center">
@@ -136,17 +164,16 @@ export default function Article(props: any) {
           <div className="my-2">
             {comments.slice(1).map((comment: any) => {
               const { number, likes, contents, updateAt, user } = comment;
-              console.log(comment);
               return (
                 <Comment
                   id={number}
+                  articleId={props.ArticleUrl}
                   key={number}
                   like={likes}
                   contents={contents}
                   updateAt={updateAt}
                   username={user.username}
                   picture={user.picture}
-                  articleid={props.ArticleUrl}
                   setComments={setComments}
                 />
               );

@@ -18,7 +18,6 @@ export default function Article(props: any) {
   const User = useSelector((state: any) => state.User);
   const [comments, setComments] = useState(props.comment);
   const [likeNumber, setlikeNumber] = useState(props.article.likes);
-  const [articleLike, setArticleLike] = useState(false);
   useEffect(() => {
     // TODO: 文章創作者資料
     dispatch(update(JSON.stringify(props.createrData)));
@@ -27,6 +26,7 @@ export default function Article(props: any) {
   // TODO: UI function
   const { contents } = props.article;
   const [likeSuccess, setLikeSuccess] = useState(false);
+  const [articleLike, setArticleLike] = useState(false);
   const md = new MarkdownIt({
     html: true,
     linkify: true,
@@ -111,7 +111,7 @@ export default function Article(props: any) {
                 }}
               >
                 <FavoriteBorderOutlinedIcon />
-                <span>like {likeNumber}</span>
+                <span>Like {likeNumber}</span>
                 {likeSuccess ? (
                   <span
                     className={`pointer-events-none absolute bottom-full -left-1/2 z-10 mb-2 ml-16 rounded-lg py-2 px-3 text-center text-xs ${

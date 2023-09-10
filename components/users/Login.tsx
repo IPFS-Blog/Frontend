@@ -33,9 +33,9 @@ export default function Login() {
   const [address, setAddress] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [firstRemind, setFirstRemind] = useState(true);
   const router = useRouter();
   const dispatch = useDispatch();
-  const [showNetworkInstructions, setShowNetworkInstructions] = useState(true);
   useEffect(() => {
     const connect = async () => {
       //TODO: 登入狀態
@@ -48,10 +48,11 @@ export default function Login() {
         window.open("https://metamask.io/download/", "_blank");
       } else {
         const InChainId = await CheckChainIdFunction();
-        if (InChainId == false && showNetworkInstructions) {
+        if (InChainId == false && firstRemind) {
+          // FIXME: Lin 要求加入我們的區塊鏈
           window.alert("要求加入我們的網路");
-          setShowNetworkInstructions(false);
-          router.push("/docs/NetworkInstructions");
+          router.push("/NetworkInstructions");
+          setFirstRemind(false);
         } else if (InChainId == "Fix") {
           // FIXME: Lin 區塊鏈維修中
           window.alert("區塊鏈維修中");
@@ -59,7 +60,7 @@ export default function Login() {
       }
     };
     connect();
-  }, [dispatch, router, showNetworkInstructions]);
+  }, [dispatch, firstRemind, router]);
 
   async function connectMetaMask() {
     if (typeof window.ethereum !== "undefined") {
@@ -87,26 +88,37 @@ export default function Login() {
   }
 
   async function GetSignature(nonce: string, address: string) {
-    // 拿Nonce簽名
-    const web3 = new Web3(window.ethereum);
-    const signer = web3.eth.personal;
-    const signature = await signer.sign(nonce, address, "");
-    // 索取jwt
-    const data = { address, signature };
+    try {
+      // 拿Nonce簽名
+      const web3 = new Web3(window.ethereum);
+      const signer = web3.eth.personal;
+      const signature = await signer.sign(nonce, address, "");
+      // 索取jwt
+      const data = { address: address || null, signature: signature || null };
+      if (data.address !== null && data.signature !== null) {
+        apiAuthTakeToken(data).then((res: any) => {
+          const jwt = res.data.access_token || null;
+          if (jwt != null) {
+            // 將JWT塞入 Cookie中
+            _apiAuthLogin({ jwt });
 
-    apiAuthTakeToken(data).then((res: any) => {
-      const jwt = res.data.access_token;
-      // 將JWT塞入 Cookie中
-      _apiAuthLogin({ jwt });
+            // 將傳回來的會員資料轉成json的字串模式
+            const UserData = JSON.stringify(res.data.userData);
 
-      // 將傳回來的會員資料轉成json的字串模式
-      const UserData = JSON.stringify(res.data.userData);
-
-      // 透過redux儲存會員資料
-      dispatch(setLogin(UserData));
-      // 將會員資料存在localStroage
-      localStorage.setItem("UserData", UserData);
-    });
+            // 透過redux儲存會員資料
+            dispatch(setLogin(UserData));
+            // 將會員資料存在localStroage
+            localStorage.setItem("UserData", UserData);
+          } else {
+            window.alert("請先登入謝謝");
+          }
+        });
+      } else {
+        window.alert("網站抓取資料錯誤");
+      }
+    } catch (error) {
+      alertRejectSetOpen(true);
+    }
   }
 
   function sendVerificationCode() {
@@ -115,24 +127,30 @@ export default function Login() {
   }
 
   async function Register() {
-    const data = { address, username, email };
-    apiUserRegister(data)
-      .then(() => {
-        registerSetOpen(false);
-        alertRegisterSetOpen(true);
-      })
-      .catch((error: any) => {
-        if (error.response && error.response.data.error) {
-          const errorMess = error.response.data.error;
-          for (let i = 0; i < errorMess.length; i++) {
-            if (errorMess[i].includes("email")) {
-              seterrorMessageEmail(JSON.stringify(errorMess[i]));
-            } else if (errorMess[i].includes("username")) {
-              seterrorMessageUsername(JSON.stringify(errorMess[i]));
+    const data = {
+      address: address || null,
+      username: username || null,
+      email: email || null,
+    };
+    if (data.address !== null && data.username !== null && data.email !== null) {
+      apiUserRegister(data)
+        .then(() => {
+          registerSetOpen(false);
+          alertRegisterSetOpen(true);
+        })
+        .catch((error: any) => {
+          if (error.response && error.response.data.error) {
+            const errorMess = error.response.data.error;
+            for (let i = 0; i < errorMess.length; i++) {
+              if (errorMess[i].includes("email")) {
+                seterrorMessageEmail(JSON.stringify(errorMess[i]));
+              } else if (errorMess[i].includes("username")) {
+                seterrorMessageUsername(JSON.stringify(errorMess[i]));
+              }
             }
           }
-        }
-      });
+        });
+    }
   }
 
   // TODO: UI function

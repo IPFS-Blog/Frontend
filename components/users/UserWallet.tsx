@@ -9,6 +9,7 @@ import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import * as React from "react";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import Web3 from "web3";
 
 import { MyTokenFunction } from "@/helpers/Contract/MyTokenFunction";
@@ -16,7 +17,8 @@ import { GetACFunction } from "@/helpers/users/GetACFunction";
 import Mining from "@/pages/loading/mining";
 
 export default function ResponsiveDialog() {
-  // TODO: Handle funtion
+  // TODO: Handle function
+  const Creater = useSelector((state: any) => state.Creater);
   const [address, setAddress] = useState("");
   const [ETH, setETH] = useState("");
   const [AC, setAC] = useState("");
@@ -117,7 +119,7 @@ export default function ResponsiveDialog() {
     }
   }
 
-  // TODO: UI funtion
+  // TODO: UI function
   const [open, setOpen] = useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -179,9 +181,14 @@ export default function ResponsiveDialog() {
             <div>
               <div className="flex flex-row justify-between">
                 <p className="mx-2 text-xl font-semibold">資產總覽</p>
-                <button className="rounded border border-gray-400 bg-white py-2 px-4 font-semibold text-gray-800 shadow hover:bg-gray-100">
+                <a
+                  href={`http://192.168.1.87:4000/address/${Creater.profile.address}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded border border-gray-400 bg-white py-2 px-4 font-semibold text-gray-800 shadow hover:bg-gray-100"
+                >
                   交易紀錄
-                </button>
+                </a>
               </div>
               {/* 不同虛擬幣的圖案以及總額 */}
               <div className="flex w-full items-center rounded border-b-2 border-l-2 border-gray-600 py-2 text-base font-semibold hover:text-lg">

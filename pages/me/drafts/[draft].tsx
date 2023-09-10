@@ -10,11 +10,14 @@ import MarkdownIt from "markdown-it";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import Web3 from "web3";
 
+import AlertDialogSlide from "@/components/alert/AlertDialogSlide";
 import FailAlert from "@/components/alert/Fail";
-import SucessAlert from "@/components/alert/Sucess";
 import { _apiCheckJwt, apiArticleEditArticle, apiArticleTakeArticle } from "@/components/api";
+import { ArticleHistoryFunction } from "@/helpers/Contract/ArticleHistoryFunction";
 import { LoginFunction } from "@/helpers/users/LoginFunction";
+import Mining from "@/pages/loading/mining";
 import { setLogin } from "@/store/UserSlice";
 import styles from "@/styles/MarkdownEditor.module.css";
 
@@ -23,7 +26,9 @@ export default function Draft() {
   const [title, setTitle] = useState(""); // 標題
   const [subtitle, setSubtitle] = useState(""); // 副標題
   const [markdown, setMarkdown] = useState(""); // 內文
-  const [release, setrelease] = useState(false); // release狀態
+  const [aid, setAid] = useState(""); //回傳文章編號
+  const [ipfsHash, setIpfsHash] = useState(""); //回傳IPFSHash
+  const [updateAt, setupdateAt] = useState(""); //回傳updateAt
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -38,14 +43,18 @@ export default function Draft() {
     const TakeArticle = async () => {
       try {
         let jwt = "";
-        await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
+        await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt || null));
         const id = Number(router.query.draft);
-        await apiArticleTakeArticle(jwt, id).then(async res => {
-          const { title, subtitle, contents } = res.data.article;
-          setTitle(title);
-          setSubtitle(subtitle);
-          setMarkdown(contents);
-        });
+        if (jwt != null) {
+          await apiArticleTakeArticle(jwt, id).then(async res => {
+            const { title, subtitle, contents } = res.data.article;
+            setTitle(title);
+            setSubtitle(subtitle);
+            setMarkdown(contents);
+          });
+        } else {
+          window.alert("請先登入謝謝");
+        }
       } catch (error) {}
     };
 
@@ -53,43 +62,84 @@ export default function Draft() {
     TakeArticle();
   }, [dispatch, router]);
 
-  function changerelease(release: any) {
-    setrelease(!release);
-    ArticleEdit();
-  }
-
-  const ArticleEdit = async () => {
+  async function ArticleEdit(release: boolean) {
     let jwt = "";
-    await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
-    const aid = Number(router.query.draft);
-    const data = { title, subtitle, contents: markdown, release };
-    apiArticleEditArticle(jwt, aid, data)
-      .then(() => {
-        if (release) {
-          setSuccessMessage("上傳 " + title + " 編輯並發布成功");
-        } else {
-          setSuccessMessage("儲存 " + title + " 編輯並為草稿成功");
-        }
-        setSuccessAlert(true);
-        router.push("../../Dashboard");
-      })
-      .catch(() => {
-        if (release) {
-          setFailMessage("上傳 " + title + " 編輯並發布失敗");
-        } else {
-          setFailMessage("儲存 " + title + " 編輯並為草稿失敗");
-        }
-        setFailAlert(true);
-      });
-  };
+    await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt || null));
+    if (jwt != null) {
+      const aid = Number(router.query.draft);
+      const data = { title, subtitle, contents: markdown, release };
+      apiArticleEditArticle(jwt, aid, data)
+        .then(async (res: any) => {
+          if (release) {
+            setSuccessMessage("是否將 [" + title + " ] 存入區塊鏈的文章歷史紀錄");
+            setIpfsHash(res.data.ipfsHash);
+            setAid(res.data.aid);
+            setupdateAt(res.data.updateAt.substring(0, 10));
+            setOpenHistoryDialog(true);
+          } else {
+            setSuccessMessage("另存 [" + title + " ] 為草稿成功");
+            setAlertDialogSlide(true);
+          }
+        })
+        .catch((error: any) => {
+          const statusCode = error?.response?.data?.statusCode;
+          const errorMessages = error?.response?.data?.error || [];
+          const errorMessage =
+            statusCode === 400 && errorMessages.length > 0
+              ? errorMessages.join("\n")
+              : "失敗，請再重新試試（如有問題可以向平台反映）。\n";
+
+          setFailMessage(errorMessage);
+          setFailAlert(true);
+        });
+    } else {
+      window.alert("請先登入謝謝");
+    }
+  }
+  // TODO: 存文章歷史紀錄
+  async function addArticleHistory() {
+    const web3 = new Web3(window && window.ethereum);
+    const articleId = parseInt(aid);
+    // TODO:拿取帳號
+    const accounts = await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
+    const address = accounts[0];
+    const gasLimit = 3000000;
+    // TODO:合約
+    const accountAddress = process.env.NEXT_PUBLIC_ArticlesHistoryAddress;
+    const articleHistoryContractabi = ArticleHistoryFunction();
+    const articleContract = new web3.eth.Contract(articleHistoryContractabi, accountAddress);
+    if (web3) {
+      setIsLoading(true);
+      await articleContract.methods
+        .addArticle(articleId, ipfsHash, updateAt)
+        .send({ from: address, gas: gasLimit })
+        .then(() => {
+          setSuccessMessage("上傳 ［" + title + " ］ 發布成功");
+          setAlertDialogSlide(true);
+          setIsLoading(false);
+          setTitle("");
+          setSubtitle("");
+          setMarkdown("");
+        })
+        .catch(() => {
+          setFailMessage("歷史紀錄失敗，請再重新試試（如有問題可以向平台反映）。\n");
+          setFailAlert(true);
+          setIsLoading(false);
+        });
+    }
+  }
 
   //TODO: UI function
   const [edit, setedit] = useState(true);
   const [preview, setpreview] = useState(true);
   const [fail, setFailAlert] = useState(false);
   const [failMessage, setFailMessage] = useState("");
-  const [success, setSuccessAlert] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const [alertDialogSlide, setAlertDialogSlide] = useState(false);
+  const [openHistoryDialog, setOpenHistoryDialog] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleMarkdownChange = (event: any) => {
     setMarkdown(event.target.value);
@@ -102,6 +152,10 @@ export default function Draft() {
   });
 
   const renderedHTML = md.render(markdown);
+
+  function jumpPage() {
+    router.push("/Dashboard");
+  }
 
   return (
     <div
@@ -170,11 +224,12 @@ export default function Draft() {
           </div>
         </div>
         <div>
+          {isLoading ? <Mining /> : null}
           <button
             type="submit"
             className="mx-1 inline-flex items-center rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-bold text-white hover:bg-blue-800 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900"
             onClick={() => {
-              changerelease(release);
+              ArticleEdit(true);
             }}
           >
             發布
@@ -183,7 +238,7 @@ export default function Draft() {
             type="submit"
             className="mx-1 inline-flex items-center rounded-lg bg-blue-400 px-5 py-2.5 text-center text-sm font-bold text-white hover:bg-blue-500 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900"
             onClick={() => {
-              changerelease(release);
+              ArticleEdit(false);
             }}
           >
             草稿
@@ -273,8 +328,36 @@ export default function Draft() {
           />
         </div>
       )}
-      {success && <SucessAlert message={successMessage} />}
       {fail && <FailAlert message={failMessage} />}
+      {alertDialogSlide && (
+        <AlertDialogSlide
+          handlefunction={jumpPage}
+          title={successMessage}
+          message={
+            <div>
+              {ipfsHash != "" ? "IPFS節點：" + ipfsHash : null}
+              <br />
+              {aid != "" ? "文章編號：" + aid : null}
+              <br />
+              {"點擊 同意 後，即跳轉至 我的後台 確認文章"}
+            </div>
+          }
+        />
+      )}
+      {openHistoryDialog && (
+        <AlertDialogSlide
+          handlefunction={addArticleHistory}
+          title={successMessage}
+          message={
+            <div>
+              {ipfsHash != "" ? "IPFS節點：" + ipfsHash : null}
+              <br />
+              {aid != "" ? "文章編號：" + aid : null}
+              <br />
+            </div>
+          }
+        />
+      )}
     </div>
   );
 }

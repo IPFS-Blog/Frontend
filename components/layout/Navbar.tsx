@@ -19,10 +19,13 @@ const Navbar = () => {
   return (
     <>
       <div>
-        <nav className="flex flex-row items-center bg-tertiary p-2">
+        <nav className="flex flex-row items-center p-2">
           <div className="flex items-center p-1"></div>
           <div className="mr-2 flex shrink-0 items-center p-1">
-            <span className="select-none font-semibold tracking-tight text-blue-100">IPFS 幣記</span>
+            <img src="/logo/48.png" alt="not found" />
+            <span className="flex select-none text-2xl font-semibold tracking-tight text-blue-400 dark:text-sky-500">
+              IPFS幣記
+            </span>
           </div>
           <form className="mx-20 flex-auto">
             <input

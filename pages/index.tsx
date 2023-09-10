@@ -1,5 +1,4 @@
 import { Avatar } from "@mui/material";
-import Head from "next/head";
 
 import { apiArticleTakeAllArticle } from "@/components/api";
 import ArticleItem from "@/components/article/ArticleItem";
@@ -7,9 +6,6 @@ import ArticleItem from "@/components/article/ArticleItem";
 export default function Home(props: any) {
   return (
     <>
-      <Head>
-        <title>Create Next App</title>
-      </Head>
       {/* FIXME: 要判斷熱門文章、最新文章 顯示 文章項目 */}
       <menu className="my-5 mx-2 flex justify-between bg-blue-200 py-3">
         <ul className="flex h-full items-center">

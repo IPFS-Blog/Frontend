@@ -137,27 +137,31 @@ export default function Article(props: any) {
             </div>
           </div>
           {/* 輸入留言 */}
-          <CreateComment
-            username={User.profile.username}
-            picture={User.profile.picture}
-            articleid={props.ArticleUrl}
-            setComments={setComments}
-          ></CreateComment>
+          {User.profile.login ? (
+            <CreateComment
+              username={User.profile.username}
+              picture={User.profile.picture}
+              articleid={props.ArticleUrl}
+              setComments={setComments}
+            ></CreateComment>
+          ) : null}
+
           <div className="h-1 w-full border-b-2 border-blue-200"></div>
           {/* 顯示留言 */}
           <div className="my-2">
             {comments.slice(1).map((comment: any) => {
               const { number, likes, contents, updateAt, user } = comment;
+              console.log(comment);
               return (
                 <Comment
                   id={number}
-                  articleId={Number(props.ArticleUrl)}
                   key={number}
                   like={likes}
                   contents={contents}
                   updateAt={updateAt}
                   username={user.username}
                   picture={user.picture}
+                  articleid={props.ArticleUrl}
                   setComments={setComments}
                 />
               );
@@ -275,26 +279,28 @@ export const getServerSideProps = async (context: any) => {
   let createrData = { id: 0, username: "", address: "", email: "", picture: "" };
   let article = { title: "", subtitle: "", contents: "", updateAt: "", likes: 0 };
   const comment = [{ number: 0, likes: 0, contents: "", updateAt: "", user: {} }];
-  const data = { aid: ArticleUrl };
-  await apiArticleTakeAllArticle(data)
-    .then(async res => {
-      const { title, subtitle, contents, updateAt, user, comments, likes } = res.data.article;
-      createrData = user;
-      const resarticle = {
-        title,
-        subtitle,
-        contents,
-        updateAt,
-        likes,
-      };
-      article = resarticle;
-      comment.push(...comments);
-    })
-    .catch(() => {
-      return {
-        notFound: true,
-      };
-    });
+  const data = { aid: ArticleUrl || null };
+  if (data.aid !== null && !context.req.url.includes("favicon.ico")) {
+    await apiArticleTakeAllArticle(data)
+      .then(async res => {
+        const { title, subtitle, contents, updateAt, user, comments, likes } = res.data.article;
+        createrData = user;
+        const resarticle = {
+          title,
+          subtitle,
+          contents,
+          updateAt,
+          likes,
+        };
+        article = resarticle;
+        comment.push(...comments);
+      })
+      .catch(() => {
+        return {
+          notFound: true,
+        };
+      });
 
-  return { props: { article, createrData, ArticleUrl, comment } };
+    return { props: { article, createrData, ArticleUrl, comment } };
+  } else return { props: {} };
 };

@@ -31,13 +31,16 @@ export default function Editprofile() {
 
   const address = User.profile.address !== undefined ? User.profile.address : "";
   async function EditProfile() {
-    let jwt = "";
-    await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
+    let jwt = null;
+    await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt || null));
     const data = { username, email, picture, background };
-
-    apiUserEditProfile(jwt, data)
-      .then(() => setalertEditSucess(true))
-      .catch(() => setalertEditFail(true));
+    if (jwt != null) {
+      apiUserEditProfile(jwt, data)
+        .then(() => setalertEditSucess(true))
+        .catch(() => setalertEditFail(true));
+    } else {
+      window.alert("請先登入謝謝");
+    }
     setOpen(false);
   }
 

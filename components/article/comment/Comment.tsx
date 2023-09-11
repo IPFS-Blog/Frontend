@@ -69,7 +69,7 @@ const Comment = (props: any) => {
     setDialogOpen(false);
     setDeleteDialogOpen(false);
   };
-  const [articleid] = useState(props.articleid);
+  const [articleId] = useState(props.articleId);
   const [Comment, setComment] = useState(props.contents);
   const [success, setSuccess] = useState(false);
   const [fail, setFailure] = useState(false);
@@ -80,7 +80,7 @@ const Comment = (props: any) => {
   async function Edit() {
     let jwt = "";
     await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt || null));
-    const id = Number(articleid);
+    const id = Number(articleId);
     const cid = props.id;
     if (jwt != null) {
       apiArticleCommentEdit(jwt, id, cid, Comment)
@@ -103,7 +103,7 @@ const Comment = (props: any) => {
   async function Delete() {
     let jwt = "";
     await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt || null));
-    const id = Number(articleid);
+    const id = Number(articleId);
     const cid = props.id;
     if (jwt != null) {
       apiArticleCommentDelete(jwt, id, cid)
@@ -112,7 +112,8 @@ const Comment = (props: any) => {
           setDeleteSuccess(true);
           setEdit(true);
           handleDialogClose();
-          await apiArticleTakeAllArticle("?aid=" + articleid)
+          const data = { aid: articleId };
+          await apiArticleTakeAllArticle(data)
             .then(async res => {
               const { comments } = res.data.article;
               props.setComments(comments);
@@ -163,7 +164,7 @@ const Comment = (props: any) => {
                     await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt || null));
                     if (jwt.trim() !== null) {
                       let CommentLike = false;
-                      const data = { aid: articleid };
+                      const data = { aid: articleId };
                       await apiCommentLikesRecord(jwt, data).then((res: any) => {
                         const CommentLikeRecord = res.data.comments;
                         if (CommentLikeRecord !== null) {
@@ -177,7 +178,7 @@ const Comment = (props: any) => {
                       });
 
                       // 留言按讚/取消讚成功
-                      await apiCommentLike(jwt, articleid, props.id, !CommentLike).then(() => {
+                      await apiCommentLike(jwt, articleId, props.id, !CommentLike).then(() => {
                         setLikeSuccess(true);
                         setTimeout(() => {
                           setLikeSuccess(false);

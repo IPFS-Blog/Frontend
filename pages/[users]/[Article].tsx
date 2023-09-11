@@ -167,7 +167,7 @@ export default function Article(props: any) {
               return (
                 <Comment
                   id={number}
-                  articleid={props.ArticleUrl}
+                  articleId={props.ArticleUrl}
                   key={number}
                   like={likes}
                   contents={contents}

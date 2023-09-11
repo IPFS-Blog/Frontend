@@ -32,7 +32,6 @@ export default function Login() {
   const [address, setAddress] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [firstRemind, setFirstRemind] = useState(true);
   const router = useRouter();
   const dispatch = useDispatch();
   useEffect(() => {
@@ -47,19 +46,15 @@ export default function Login() {
         window.open("https://metamask.io/download/", "_blank");
       } else {
         const InChainId = await CheckChainIdFunction();
-        if (InChainId == false && firstRemind) {
-          // FIXME: Lin 要求加入我們的區塊鏈
-          window.alert("要求加入我們的網路");
+        if (InChainId == false) {
           router.push("/NetworkInstructions");
-          setFirstRemind(false);
         } else if (InChainId == "Fix") {
-          // FIXME: Lin 區塊鏈維修中
           window.alert("區塊鏈維修中");
         }
       }
     };
     connect();
-  }, [dispatch, firstRemind, router]);
+  }, [dispatch, router]);
 
   async function connectMetaMask() {
     if (typeof window.ethereum !== "undefined") {

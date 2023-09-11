@@ -5,7 +5,7 @@ export default function Error() {
     <div className="flex items-center justify-center">
       <img
         className="mx-2 my-3 h-1/3 w-1/3 bg-cover bg-center bg-no-repeat drop-shadow-xl"
-        src="/img/error/404.png"
+        src="/img/error/500.png"
         alt="not found Img"
       />
       <div className="mx-2 my-3 font-sans text-3xl">

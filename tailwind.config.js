@@ -29,6 +29,7 @@ module.exports = {
       },
       screens: {
         //TODO:響應式斷點，手機、平板、筆電
+        xs: "400px",
         phone: "450px",
         // => @media (min-width: 450px) { ... }
         tablet: "768px",

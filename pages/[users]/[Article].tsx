@@ -36,7 +36,7 @@ export default function Article(props: any) {
   const renderedHTML = md.render(contents);
   return (
     // 單一文章
-    <div className="my-2 grid w-full grid-cols-12 gap-x-16 px-2">
+    <div className="grid laptop:my-2 laptop:w-full laptop:grid-cols-12 laptop:gap-x-16 laptop:px-2">
       <div className="col-span-8 text-base">
         <a
           href={"/" + props.createrData.username}
@@ -61,19 +61,19 @@ export default function Article(props: any) {
               {props.article.subtitle}
             </h3>
             <div
-              className={`whitespace-pre-line text-lg text-slate-600 ${styles["markdown-preview"]} dark:bg-gray-700 dark:text-slate-300`}
+              className={`whitespace-pre-line text-lg text-slate-600 ${styles["markdown-preview"]} break-all dark:bg-gray-700 dark:text-slate-300`}
               dangerouslySetInnerHTML={{ __html: renderedHTML }}
             />
           </div>
           {/* 文章內覽列 */}
-          {/* FIXME:針對文章喜歡、讚賞、分享、收藏 */}
-          {/* FIXME:響應式 table: phone: */}
+          {/* FIXME: 針對文章喜歡、讚賞、分享、收藏 */}
+          {/* FIXME: 響應式 table: phone: */}
           <div className="grid items-center gap-2 bg-gray-100 p-2 dark:bg-gray-800">
             <div className="col-start-1 col-end-3 flex tablet:col-span-1 tablet:col-start-1">
               {/* 喜歡 */}
               {User.profile.login ? (
                 <button
-                  className="group relative flex rounded border border-red-500 py-2 px-10 font-semibold text-red-500 hover:bg-red-500 hover:text-white tablet:mx-2 tablet:px-5"
+                  className="tabelet:my-0 tabelet:py-2 tabelet:px-10 relative my-2 mr-2 rounded border border-red-500 px-2 font-semibold text-red-500 hover:bg-red-500 hover:text-white tablet:mx-2 tablet:px-5"
                   onClick={async () => {
                     let jwt = "";
                     await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
@@ -183,9 +183,9 @@ export default function Article(props: any) {
       </div>
 
       {/* 右側欄 */}
-      <div className="col-span-4">
+      <div className="hidden tablet:col-span-3 tablet:flex tablet:flex-col laptop:col-span-4">
         {/* TODO: 文章擁有者資料 頭貼、名稱 */}
-        <div className="col-span-2 flex justify-center">
+        <div className="flex justify-center">
           <Avatar className="h-auto w-1/2 rounded-full" src={props.createrData.picture} alt="not find Avatar" />
         </div>
         <div className="text-center">

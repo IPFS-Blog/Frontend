@@ -26,6 +26,7 @@ import { LoginFunction } from "@/helpers/users/LoginFunction";
 import { setLogin, setLogout } from "@/store/UserSlice";
 
 import { _apiAuthLogin, _apiAuthLogout, apiAuthTakeNonce, apiAuthTakeToken, apiUserRegister } from "../api";
+import JoinCoin from "./JoinCoin";
 
 export default function Login() {
   // TODO: Handle funcion
@@ -187,14 +188,14 @@ export default function Login() {
             connectMetaMask();
           }}
         >
-          <img src="/MetaMask.png" alt="Null" width={35} height={35}></img>
+          <img src="/MetaMask.png" alt="Null" width={35} height={35} />
           連線
         </Button>
       ) : (
         <Box sx={{ flexGrow: 0 }}>
           <Tooltip title="Open settings">
             <IconButton onClick={e => setAnchorElUser(e.currentTarget)} sx={{ p: 0 }}>
-              <Avatar src={`${User.profile.picture}`} alt="haha" />
+              <Avatar src={`${User.profile.picture}`} alt="not found img" className="" />
             </IconButton>
           </Tooltip>
           <Menu
@@ -218,6 +219,9 @@ export default function Login() {
                 <Typography textAlign="center">{User.profile.username}</Typography>
               </MenuItem>
             </a>
+            <MenuItem>
+              <JoinCoin />
+            </MenuItem>
             <MenuItem
               onClick={() => {
                 _apiAuthLogout();

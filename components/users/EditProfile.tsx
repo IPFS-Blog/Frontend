@@ -1,5 +1,6 @@
 import { Edit } from "@mui/icons-material";
 import { AlertProps, Box, IconButton, Snackbar, TextField } from "@mui/material";
+import { Avatar } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import Dialog, { DialogProps } from "@mui/material/Dialog";
@@ -88,24 +89,28 @@ export default function Editprofile() {
             {Introduction}
             {Label}
             {SocialMedia}
-            <div className={styles.all}>
+            <div className="w-full">
               <div className="h-auto w-full">
                 <div className="w-full flex-col">
-                  {/* 左上角 卡片與大頭貼 */}
-                  <div className={styles.roundedcard}>
-                    <div className={styles.photostickers}></div>
+                  <div className="flex">
+                    {/* 背景 */}
+                    <div className="flex w-1/2 items-center">
+                      <div
+                        style={{ backgroundImage: `url(${User.profile.background})` }}
+                        className="mr-2 h-full w-full rounded-md bg-cover bg-center bg-no-repeat drop-shadow-xl"
+                      >
+                        <div className="inset-0 h-full w-full rounded-lg bg-gray-300 opacity-75 transition group-hover:opacity-75"></div>
+                        {/* 頭貼 */}
+                        <Avatar
+                          src={User.profile.picture}
+                          className="m-2 h-auto w-1/3 -translate-y-40 rounded-lg"
+                          alt="Picture of the author"
+                        />
+                      </div>
+                    </div>
                     {/* 右上角 4個長方形提示框 */}
-                    <Box
-                      display="flex"
-                      flexDirection="column"
-                      justifyContent="center"
-                      pl={60}
-                      pt={1}
-                      mt={1}
-                      width="100%"
-                    >
-                      <Box alignItems="center" bgcolor="#F0F0F0" borderRadius={5} mt={1} width="600px">
-                        {/* FIXME:IconButton需要寫功能 */}
+                    <div className="w-1/2">
+                      <Box alignItems="center" bgcolor="#F0F0F0" borderRadius={5} mt={1}>
                         <CldUploadWidget
                           uploadPreset="user-picture"
                           onUpload={(result: any) => setPicture(result.info.url)}
@@ -125,7 +130,7 @@ export default function Editprofile() {
                         </CldUploadWidget>
                       </Box>
                       <Box className={styles.promptbox}>推薦:正方形.JPG.PNG, 至少1,000像素</Box>
-                      <Box bgcolor="#F0F0F0" borderRadius={5} width="600px" mt={1}>
+                      <Box bgcolor="#F0F0F0" borderRadius={5} mt={1}>
                         <CldUploadWidget
                           uploadPreset="user-picture"
                           onUpload={(result: any) => setBackground(result.info.url)}
@@ -145,7 +150,7 @@ export default function Editprofile() {
                         </CldUploadWidget>
                       </Box>
                       <Box className={styles.promptbox}>推薦:長方形.JPG.PNG, 至少1,000像素</Box>
-                    </Box>
+                    </div>
                   </div>
                   {/*錢包地址(不可更改) FIXME:後續需要錢包地址*/}
                   <div className="mt-12">

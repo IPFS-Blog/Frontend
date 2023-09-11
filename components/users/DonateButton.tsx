@@ -87,7 +87,7 @@ export default function DonationForm() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="mx-5 rounded border border-blue-500 py-2 px-10 font-semibold text-blue-500 hover:bg-blue-500 hover:text-white tablet:mx-2 tablet:px-5"
+        className="tabelet:my-0 tabelet:py-2 tabelet:px-10 my-2 rounded border border-blue-500 p-2 font-semibold text-blue-500 hover:bg-blue-500 hover:text-white tablet:mx-2 tablet:px-5"
       >
         <StarsOutlinedIcon />
         <span>打賞</span>

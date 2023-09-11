@@ -60,17 +60,13 @@ export default function CustomizedTables() {
           const articleContract = new web3.eth.Contract(contractABI, accountAddress);
           const result = await articleContract.methods.getArticle(articleId).call({ from: SupperAccounts.address });
 
-          console.log("SupperAccounts.address", SupperAccounts.address);
-
           const articlesData = result.map((article: any) => ({
             hashCode: article.hashCode,
             creationTime: new Date(article.creationTime).toLocaleDateString(), // 將日期轉換為年月日格式
           }));
           setRows(articlesData);
         }
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     };
     if (typeof router.query.id === "string") {
       try {

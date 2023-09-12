@@ -25,7 +25,14 @@ import { CheckChainIdFunction } from "@/helpers/users/CheckChainIdFunction";
 import { LoginFunction } from "@/helpers/users/LoginFunction";
 import { setLogin, setLogout } from "@/store/UserSlice";
 
-import { _apiAuthLogin, _apiAuthLogout, apiAuthTakeNonce, apiAuthTakeToken, apiUserRegister } from "../api";
+import {
+  _apiAuthLogin,
+  _apiAuthLogout,
+  apiAuthEmailConfirm,
+  apiAuthRegister,
+  apiAuthTakeNonce,
+  apiAuthTakeToken,
+} from "../api";
 import JoinCoin from "./JoinCoin";
 
 export default function Login() {
@@ -33,6 +40,8 @@ export default function Login() {
   const [address, setAddress] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [confirmCode, setConfirmCode] = useState("");
+  const [firstRemind, setFirstRemind] = useState(true);
   const router = useRouter();
   const dispatch = useDispatch();
   useEffect(() => {
@@ -47,15 +56,17 @@ export default function Login() {
         window.open("https://metamask.io/download/", "_blank");
       } else {
         const InChainId = await CheckChainIdFunction();
-        if (InChainId == false) {
+        if (InChainId == false && firstRemind) {
+          window.alert("要求加入我們的網路");
           router.push("/NetworkInstructions");
+          setFirstRemind(false);
         } else if (InChainId == "Fix") {
           window.alert("區塊鏈維修中");
         }
       }
     };
     connect();
-  }, [dispatch, router]);
+  }, [dispatch, firstRemind, router]);
 
   async function connectMetaMask() {
     if (typeof window.ethereum !== "undefined") {
@@ -71,10 +82,10 @@ export default function Login() {
           })
           .catch(
             // 不是會員跳轉註冊
-            () => registerSetOpen(true),
+            () => setRegisterOpen(true),
           );
       } catch (error) {
-        alertRejectSetOpen(true);
+        setAlertRejectOpen(true);
       }
     } else {
       window.alert("Please download MetaMask");
@@ -102,7 +113,7 @@ export default function Login() {
 
             // 透過redux儲存會員資料
             dispatch(setLogin(UserData));
-            // 將會員資料存在localStroage
+            // 將會員資料存在localStorage
             localStorage.setItem("UserData", UserData);
           } else {
             window.alert("請先登入謝謝");
@@ -112,13 +123,24 @@ export default function Login() {
         window.alert("網站抓取資料錯誤");
       }
     } catch (error) {
-      alertRejectSetOpen(true);
+      setAlertRejectOpen(true);
     }
   }
 
   function sendVerificationCode() {
-    //先檢查信箱
-    //確認無誤後發送信箱
+    //驗證信箱
+    const data = {
+      email: email || null,
+      confirmCode: confirmCode || null,
+    };
+    apiAuthEmailConfirm(data)
+      .then(() => {
+        setRegisterOpen(false);
+        setAlertRegisterOpen(true);
+      })
+      .catch(() => {
+        setMessageConfirmCode("驗證失敗");
+      });
   }
 
   async function Register() {
@@ -128,19 +150,18 @@ export default function Login() {
       email: email || null,
     };
     if (data.address !== null && data.username !== null && data.email !== null) {
-      apiUserRegister(data)
+      apiAuthRegister(data)
         .then(() => {
-          registerSetOpen(false);
-          alertRegisterSetOpen(true);
+          window.alert("發送驗證碼");
         })
         .catch((error: any) => {
           if (error.response && error.response.data.error) {
             const errorMess = error.response.data.error;
             for (let i = 0; i < errorMess.length; i++) {
               if (errorMess[i].includes("email")) {
-                seterrorMessageEmail(JSON.stringify(errorMess[i]));
+                setErrorMessageEmail(JSON.stringify(errorMess[i]));
               } else if (errorMess[i].includes("username")) {
-                seterrorMessageUsername(JSON.stringify(errorMess[i]));
+                setErrorMessageUsername(JSON.stringify(errorMess[i]));
               }
             }
           }
@@ -149,12 +170,13 @@ export default function Login() {
   }
 
   // TODO: UI function
-  const [registerOpen, registerSetOpen] = useState(false);
-  const [alertRejectOpen, alertRejectSetOpen] = useState(false);
-  const [alertRegisterOpen, alertRegisterSetOpen] = useState(false);
-  const [errorMessageUsername, seterrorMessageUsername] = useState("");
-  const [errorMessageEmail, seterrorMessageEmail] = useState("");
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const [registerOpen, setRegisterOpen] = useState(false);
+  const [alertRejectOpen, setAlertRejectOpen] = useState(false);
+  const [alertRegisterOpen, setAlertRegisterOpen] = useState(false);
+  const [errorMessageUsername, setErrorMessageUsername] = useState("");
+  const [errorMessageEmail, setErrorMessageEmail] = useState("");
+  const [messageConfirmCode, setMessageConfirmCode] = useState("");
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("xs"));
@@ -164,15 +186,15 @@ export default function Login() {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
   const registerHandleClose = () => {
-    registerSetOpen(false);
+    setRegisterOpen(false);
   };
 
   const alertHandleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === "clickaway") {
       return;
     }
-    alertRejectSetOpen(false);
-    alertRegisterSetOpen(false);
+    setAlertRejectOpen(false);
+    setAlertRegisterOpen(false);
   };
 
   const handleAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -237,6 +259,7 @@ export default function Login() {
           </Menu>
         </Box>
       )}
+      {/* 註冊彈跳視窗 */}
       <Dialog
         fullScreen={fullScreen}
         open={registerOpen}
@@ -253,6 +276,29 @@ export default function Login() {
               <span>ID：</span>
               <DialogContentText onChange={handleAddressChange}> {address} </DialogContentText>
             </div>
+            {errorMessageUsername === "" ? (
+              <TextField
+                autoFocus
+                margin="dense"
+                id="name"
+                label="使用者名稱"
+                placeholder="輸入使用者名稱"
+                variant="standard"
+                required
+                value={username}
+                onChange={e => setUsername(e.target.value)}
+              />
+            ) : (
+              <TextField
+                error
+                id="standard-error-helper-text"
+                label="Error"
+                defaultValue={username}
+                helperText={errorMessageUsername}
+                variant="standard"
+                onChange={() => setErrorMessageUsername("")}
+              />
+            )}
             {errorMessageEmail === "" ? (
               <TextField
                 autoFocus
@@ -275,53 +321,49 @@ export default function Login() {
                 defaultValue={email}
                 helperText={errorMessageEmail}
                 variant="standard"
-                onChange={() => seterrorMessageEmail("")}
+                onChange={() => setErrorMessageEmail("")}
               />
             )}
             <div className="flex flex-row">
-              <TextField
-                autoFocus
-                margin="dense"
-                id="name"
-                label="驗證碼"
-                placeholder="輸入六碼"
-                multiline
-                variant="standard"
-              />
-              <Button className="m-2" onClick={sendVerificationCode} color="primary">
+              {messageConfirmCode === "" ? (
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="code"
+                  label="驗證碼"
+                  placeholder="輸入六碼"
+                  multiline
+                  variant="standard"
+                  value={confirmCode}
+                  onChange={e => {
+                    setConfirmCode(e.target.value);
+                  }}
+                />
+              ) : (
+                <TextField
+                  error
+                  margin="dense"
+                  id="name"
+                  label="驗證錯誤，請重新輸入"
+                  placeholder="輸入六碼"
+                  variant="standard"
+                  value={confirmCode}
+                  onChange={e => {
+                    setConfirmCode(e.target.value);
+                  }}
+                />
+              )}
+              <Button className="m-2" onClick={Register} color="primary">
                 發送驗證碼
               </Button>
             </div>
-            {errorMessageUsername === "" ? (
-              <TextField
-                autoFocus
-                margin="dense"
-                id="name"
-                label="使用者名稱"
-                placeholder="輸入使用者名稱"
-                variant="standard"
-                required
-                value={username}
-                onChange={e => setUsername(e.target.value)}
-              />
-            ) : (
-              <TextField
-                error
-                id="standard-error-helper-text"
-                label="Error"
-                defaultValue={username}
-                helperText={errorMessageUsername}
-                variant="standard"
-                onChange={() => seterrorMessageUsername("")}
-              />
-            )}
           </div>
         </DialogContent>
         <DialogActions>
           <Button color="primary" onClick={registerHandleClose}>
-            取消
+            返回
           </Button>
-          <Button onClick={Register} color="primary" autoFocus>
+          <Button onClick={sendVerificationCode} color="primary" autoFocus>
             註冊
           </Button>
         </DialogActions>

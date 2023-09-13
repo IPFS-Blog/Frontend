@@ -8,7 +8,7 @@ import Sidebar from "./Sidebar";
 
 const Layout = (props: PropsWithChildren) => {
   // TODO: UI function
-  const [sidebarOpen, sidebarSetOpen] = useState(false);
+  const [sidebarOpen, sidebarSetOpen] = useState(true);
 
   const handleSidebarOpen = () => {
     sidebarSetOpen(!sidebarOpen);

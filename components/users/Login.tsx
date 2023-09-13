@@ -130,14 +130,16 @@ export default function Login() {
       email: email || null,
       confirmCode: confirmCode || null,
     };
-    apiAuthEmailConfirm(data)
-      .then(() => {
-        setRegisterOpen(false);
-        setAlertRegisterOpen(true);
-      })
-      .catch(() => {
-        setMessageConfirmCode("驗證失敗");
-      });
+    if (data.email != null && data.confirmCode != null) {
+      apiAuthEmailConfirm(data)
+        .then(() => {
+          setRegisterOpen(false);
+          setAlertRegisterOpen(true);
+        })
+        .catch(() => {
+          setMessageConfirmCode("驗證失敗");
+        });
+    }
   }
 
   async function Register() {

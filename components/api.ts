@@ -54,9 +54,13 @@ export const apiUserEditProfile = (jwt: string, data: any) =>
 export const apiUserGetCreaterData = (username: any) => userRequest.get(`/${username}`, config); // 搜尋特定使用者
 
 // TODO: Auth相關的 api
+export const apiAuthRegister = (data: any) => authRequest.post("/register", data, config); // 使用者註冊
+
 export const apiAuthTakeNonce = (address: any) => authRequest.get(`/login/${address}`, config); // 確認使用者
 
 export const apiAuthTakeToken = (data: any) => authRequest.post("/login", data, config); // 登入驗證
+
+export const apiAuthEmailConfirm = (data: any) => authRequest.post("/confirm", data, config); // 信箱驗證
 
 // TODO: Article相關的 api
 export const apiArticleGetCreaterOwnArticle = (jwt: string, data: any) =>

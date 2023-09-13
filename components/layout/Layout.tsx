@@ -1,5 +1,6 @@
 import CloseIcon from "@mui/icons-material/Close";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
+import { useRouter } from "next/router";
 import React, { PropsWithChildren, useState } from "react";
 
 import Navbar from "./Navbar";
@@ -12,17 +13,23 @@ const Layout = (props: PropsWithChildren) => {
   const handleSidebarOpen = () => {
     sidebarSetOpen(!sidebarOpen);
   };
+  const router = useRouter();
+  const routerPath = router.asPath;
+
+  const hideNavbar = routerPath.startsWith("/docs");
 
   return (
     <div className="flex w-full flex-col justify-items-stretch">
-      <div className="flex">
-        <button className="bg-tertiary" onClick={handleSidebarOpen}>
-          {sidebarOpen ? <CloseIcon className="h-10 w-10 px-1" /> : <DragHandleIcon className="h-10 w-10 px-1" />}
-        </button>
-        <div className="w-full">
-          <Navbar />
+      {!hideNavbar ? (
+        <div className="flex">
+          <button className="bg-tertiary" onClick={handleSidebarOpen}>
+            {sidebarOpen ? <CloseIcon className="h-10 w-10 px-1" /> : <DragHandleIcon className="h-10 w-10 px-1" />}
+          </button>
+          <div className="w-full">
+            <Navbar />
+          </div>
         </div>
-      </div>
+      ) : null}
 
       <div className="flex flex-row">
         {sidebarOpen ? <Sidebar /> : null}

@@ -1,5 +1,5 @@
 export default function NetworkInstructions() {
-  // TODO: UI funtion
+  // TODO: UI function
   return (
     <div>
       {/* TODO: 加入錢幣到metamask */}

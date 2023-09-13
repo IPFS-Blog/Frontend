@@ -36,12 +36,11 @@ import {
 import JoinCoin from "./JoinCoin";
 
 export default function Login() {
-  // TODO: Handle funcion
+  // TODO: Handle function
   const [address, setAddress] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [confirmCode, setConfirmCode] = useState("");
-  const [firstRemind, setFirstRemind] = useState(true);
   const router = useRouter();
   const dispatch = useDispatch();
   useEffect(() => {
@@ -56,17 +55,15 @@ export default function Login() {
         window.open("https://metamask.io/download/", "_blank");
       } else {
         const InChainId = await CheckChainIdFunction();
-        if (InChainId == false && firstRemind) {
-          window.alert("要求加入我們的網路");
+        if (InChainId == false) {
           router.push("/NetworkInstructions");
-          setFirstRemind(false);
         } else if (InChainId == "Fix") {
           window.alert("區塊鏈維修中");
         }
       }
     };
     connect();
-  }, [dispatch, firstRemind, router]);
+  }, [dispatch, router]);
 
   async function connectMetaMask() {
     if (typeof window.ethereum !== "undefined") {

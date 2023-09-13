@@ -56,7 +56,7 @@ export default function Login() {
       } else {
         const InChainId = await CheckChainIdFunction();
         if (InChainId == false) {
-          router.push("/NetworkInstructions");
+          router.push("/docs/NetworkInstructions");
         } else if (InChainId == "Fix") {
           window.alert("區塊鏈維修中");
         }

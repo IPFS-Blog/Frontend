@@ -24,15 +24,15 @@ const config = { headers: { "Content-Type": "application/json" } };
 
 // User相關的 api
 const userRequest = axios.create({
-  baseURL: `http://${process.env.NEXT_PUBLIC_API}/users`,
+  baseURL: `${process.env.NEXT_PUBLIC_API}/users`,
 });
 // Auth相關的 api
 const authRequest = axios.create({
-  baseURL: `http://${process.env.NEXT_PUBLIC_API}/auth`,
+  baseURL: `${process.env.NEXT_PUBLIC_API}/auth`,
 });
 // Article相關的 api
 const articleRequest = axios.create({
-  baseURL: `http://${process.env.NEXT_PUBLIC_API}/articles`,
+  baseURL: `${process.env.NEXT_PUBLIC_API}/articles`,
 });
 
 // TODO: User 相關的 api

@@ -5,13 +5,30 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useTheme } from "@mui/material/styles";
-//TODO: 響應式
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { useRouter } from "next/router";
 import * as React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+import AlertDialogSlide from "@/components/alert/AlertDialogSlide";
+import { CheckChainIdFunction } from "@/helpers/users/CheckChainIdFunction";
 
 export default function JoinCoin() {
-  // TODO: Handle funtion
+  // TODO: Handle function
+  const [isInChainId, setIsInChainId] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const connect = async () => {
+      const InChainId = await CheckChainIdFunction();
+      if (InChainId == true) {
+        setIsInChainId(true);
+      } else if (InChainId == "Fix") {
+        window.alert("區塊鏈維修中");
+      }
+    };
+    connect();
+  }, []);
 
   // TODO: 加入錢幣到metamask
   // FIXME: Lin AC 圖片設計
@@ -41,11 +58,12 @@ export default function JoinCoin() {
       });
   }
 
-  // TODO: UI funtion
+  // TODO: UI function
   const [open, setOpen] = useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("lg"));
   const [maxWidth] = useState<DialogProps["maxWidth"]>("lg");
+  const [alertDialogSlide, setAlertDialogSlide] = useState(false);
 
   const [alertJoinCoinFail, setalertJoinCoinFail] = useState(false);
 
@@ -62,9 +80,16 @@ export default function JoinCoin() {
   const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
+  function jumpPage() {
+    router.push("./docs/NetworkInstructions");
+  }
 
   const handleClickOpen = () => {
-    setOpen(true);
+    if (isInChainId) {
+      setOpen(true);
+    } else {
+      setAlertDialogSlide(true);
+    }
   };
 
   const handleClose = () => {
@@ -110,6 +135,18 @@ export default function JoinCoin() {
             加入 AC 失敗
           </Alert>
         </Snackbar>
+        {alertDialogSlide ? (
+          <AlertDialogSlide
+            handlefunction={jumpPage}
+            title={<p>請加入 IPFS 幣記 網路</p>}
+            message={
+              <div>
+                <div>因本功能需 加入 IPFS幣記 網路</div>
+                <div>點擊 同意 將可以觀看我們提供的文件 &Prime;如何加入我們的Network&Prime;</div>
+              </div>
+            }
+          />
+        ) : null}
       </div>
     </>
   );

@@ -21,6 +21,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Web3 from "web3";
 
+import AlertDialogSlide from "@/components/alert/AlertDialogSlide";
 import { CheckChainIdFunction } from "@/helpers/users/CheckChainIdFunction";
 import { LoginFunction } from "@/helpers/users/LoginFunction";
 import { setLogin, setLogout } from "@/store/UserSlice";
@@ -46,20 +47,22 @@ export default function Login() {
   useEffect(() => {
     const connect = async () => {
       //TODO: 登入狀態
-      LoginFunction().then(userData => {
-        if (userData != null) dispatch(setLogin(userData));
+      LoginFunction().then(async userData => {
+        if (userData != null) {
+          const InChainId = await CheckChainIdFunction();
+          if (InChainId == false) {
+            setAlertDialogSlide(true);
+          } else if (InChainId == "Fix") {
+            window.alert("區塊鏈維修中");
+          }
+          dispatch(setLogin(userData));
+        }
       });
       if (typeof window.ethereum === "undefined") {
         // TODO: 未安裝MetaMask導向官網
         window.alert("Please download MetaMask");
         window.open("https://metamask.io/download/", "_blank");
       } else {
-        const InChainId = await CheckChainIdFunction();
-        if (InChainId == false) {
-          router.push("/docs/NetworkInstructions");
-        } else if (InChainId == "Fix") {
-          window.alert("區塊鏈維修中");
-        }
       }
     };
     connect();
@@ -176,10 +179,14 @@ export default function Login() {
   const [errorMessageEmail, setErrorMessageEmail] = useState("");
   const [messageConfirmCode, setMessageConfirmCode] = useState("");
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+  const [alertDialogSlide, setAlertDialogSlide] = useState(false);
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("xs"));
   const User = useSelector((state: any) => state.User);
+  function jumpPage() {
+    router.push("./docs/NetworkInstructions");
+  }
   //material ui toast
   const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -377,6 +384,19 @@ export default function Login() {
           註冊成功!
         </Alert>
       </Snackbar>
+      {alertDialogSlide ? (
+        <AlertDialogSlide
+          handlefunction={jumpPage}
+          title={<p>請加入 IPFS 幣記 網路</p>}
+          message={
+            <div>
+              <div>因本網站有部分功能需 加入 IPFS幣記 網路</div>
+              <div>所以在登入後要求須加入IPFS幣記網路</div>
+              <div>點擊 同意 將可以觀看我們提供的文件 &Prime;如何加入我們的Network&Prime;</div>
+            </div>
+          }
+        />
+      ) : null}
     </div>
   );
 }

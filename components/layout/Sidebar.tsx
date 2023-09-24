@@ -1,7 +1,8 @@
+import Avatar from "@mui/material/Avatar";
 import classNames from "classnames";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   AiOutlineBarChart,
   AiOutlineDoubleLeft,
@@ -13,9 +14,8 @@ import {
 } from "react-icons/ai";
 import { FaFaucet } from "react-icons/fa";
 
+import { _apiCheckJwt, apiUserGetCreatorOwnSubscribers } from "@/components/api";
 import ThemeSwitch from "@/components/ThemeSwitch";
-
-import Users from "../Users";
 
 const menuItems = [
   { id: 1, label: "首頁", icon: AiOutlineHome, link: "/" },
@@ -31,7 +31,35 @@ const dashboardSidebar = [
   { id: 5, label: "瀏覽文章數據", icon: AiOutlineBarChart, link: "/SimpleFaucet" },
 ];
 
+interface User {
+  id: number;
+  username: string;
+  picture: string;
+}
+
 const Sidebar = () => {
+  const [users, setUsers] = useState<User[]>([]);
+  useEffect(() => {
+    async function follow() {
+      let jwt = "";
+      await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt || null));
+      if (jwt != null) {
+        apiUserGetCreatorOwnSubscribers(jwt)
+          .then((res: any) => {
+            console.log(res);
+            setUsers(res.data.subscribers);
+            // const subscribersData = res.data.subscribers;
+            // dispatch(updatedSubscribers(subscribersData));
+            // dispatch(updatedSubscribers(res.data.subscribers));
+          })
+          .catch((error: any) => {
+            console.log(error);
+          });
+      }
+    }
+    follow();
+  }, []);
+
   const router = useRouter();
   const routerPath = router.asPath;
   const [toggleCollapse, setToggleCollapse] = useState(false);
@@ -86,7 +114,7 @@ const Sidebar = () => {
                   return (
                     <div key={menu.id} className={classes}>
                       <Link href={menu.link}>
-                        <div className="flex w-full items-center rounded-md py-4 px-3 hover:bg-gray-300 hover:text-gray-700 dark:hover:bg-gray-500 dark:hover:text-gray-100">
+                        <div className="flex w-full items-center rounded-md py-4 hover:bg-gray-300 hover:text-gray-700 dark:hover:bg-gray-500 dark:hover:text-gray-100">
                           <div className="mr-2 w-auto">
                             <Icon className="text-lg text-gray-700 dark:text-gray-200" />
                           </div>
@@ -106,14 +134,27 @@ const Sidebar = () => {
               hidden: !toggleCollapse,
             })}
           >
-            <div className="mt-5 flex w-full items-center py-4 px-3">
+            <div className="mt-5 flex w-full items-center py-4">
               <div className="w-8">
                 <AiOutlineUsergroupDelete />
               </div>
               <div className="select-none font-medium">已追蹤</div>
             </div>
-            <div className="mt-1 flex w-full items-center px-3">
-              <Users />
+            <div className="mt-1 flex w-full items-center">
+              <ul>
+                {users.map(user => (
+                  <li key={user.id}>
+                    <a href={"/" + user.username}>
+                      <div className="flex h-fit w-full items-center rounded-md px-2 hover:bg-gray-300 hover:text-gray-700 dark:hover:bg-gray-500 dark:hover:text-gray-100">
+                        <div className="my-2 w-auto">
+                          <Avatar className="h-auto w-6 rounded-full" src={user.picture} alt="not find Avatar" />
+                        </div>
+                        <div className="ml-2">{user.username}</div>
+                      </div>
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
           <div>

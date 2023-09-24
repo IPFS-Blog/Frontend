@@ -2,7 +2,7 @@ import { Avatar } from "@mui/material";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
-const Card = () => {
+const Card = (props: any) => {
   const Creater = useSelector((state: any) => state.Creater);
 
   //ui function
@@ -44,7 +44,6 @@ const Card = () => {
             </div>
           </button>
         ) : (
-          //FIXME: 更改上傳圖片後的背景
           <button
             className="h-full rounded-lg bg-cover bg-center bg-no-repeat drop-shadow-xl"
             style={{
@@ -67,15 +66,15 @@ const Card = () => {
                 <dl className="mx-auto grid grid-cols-3 p-3 text-gray-900 sm:grid-cols-3 sm:p-2 xl:grid-cols-3">
                   <div className="flex flex-col p-2 text-center">
                     <dt className="text-base">所有文章</dt>
-                    <dd className="text-gray-800 ">50</dd>
+                    <dd className="text-gray-800 ">{props.menuList}</dd>
                   </div>
                   <div className="flex flex-col p-2 text-center">
                     <dt className="text-base">粉絲</dt>
-                    <dd className="text-gray-800 ">40</dd>
+                    <dd className="text-gray-800 ">{props.followers}</dd>
                   </div>
                   <div className="flex flex-col p-2 text-center">
                     <dt className="text-base">追蹤中</dt>
-                    <dd className="text-gray-800 ">20</dd>
+                    <dd className="text-gray-800 ">{props.subscribers}</dd>
                   </div>
                 </dl>
                 {/* FIXME:社群關係*/}

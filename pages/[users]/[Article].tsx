@@ -6,7 +6,15 @@ import MarkdownIt from "markdown-it";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { _apiCheckJwt, apiArticleLike, apiArticleLikesRecord, apiArticleTakeAllArticle } from "@/components/api";
+import FailAlert from "@/components/alert/Fail";
+import SucessAlert from "@/components/alert/Sucess";
+import {
+  _apiCheckJwt,
+  apiArticleLike,
+  apiArticleLikesRecord,
+  apiArticleTakeAllArticle,
+  apiUserGetCreatorSubscribers,
+} from "@/components/api";
 import Comment from "@/components/article/comment/Comment";
 import CreateComment from "@/components/article/comment/CreateComment";
 import DonateButton from "@/components/users/DonateButton";
@@ -23,10 +31,31 @@ export default function Article(props: any) {
     dispatch(update(JSON.stringify(props.createrData)));
   }, [dispatch, props.createrData]);
 
+  async function follow() {
+    let jwt = "";
+    await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt || null));
+    const uid = props.createrData.id;
+    if (jwt != null) {
+      apiUserGetCreatorSubscribers(jwt, uid)
+        .then(() => {
+          setFailure(false);
+          setSuccess(true);
+        })
+        .catch(() => {
+          setSuccess(false);
+          setFailure(true);
+        });
+    } else {
+      window.alert("請先登入");
+    }
+  }
+
   // TODO: UI function
   const { contents } = props.article;
   const [likeSuccess, setLikeSuccess] = useState(false);
   const [articleLike, setArticleLike] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [fail, setFailure] = useState(false);
   const md = new MarkdownIt({
     html: true,
     linkify: true,
@@ -189,98 +218,17 @@ export default function Article(props: any) {
           <Avatar className="h-auto w-1/2 rounded-full" src={props.createrData.picture} alt="not find Avatar" />
         </div>
         <div className="text-center">
-          {/* ${Username} */}
           <div className="my-2 px-2">{props.createrData.username}</div>
-          {/* FIXME: 標籤 */}
-          {/*Label*/}
-          {/* <span className="inline-grid grid-cols-3 gap-1">{label}</span> */}
-          <button className="my-2 rounded border border-red-500 py-2 px-20 font-semibold text-red-500 hover:bg-red-500 hover:text-white">
+          <button
+            className="my-2 rounded border border-red-500 py-2 px-20 font-semibold text-red-500 hover:bg-red-500 hover:text-white"
+            onClick={follow}
+          >
             追蹤
           </button>
         </div>
-        {/* FIXME:推薦使用者資料 */}
-        <div className="my-5 px-2">
-          <div className="text-base font-semibold">推薦使用者</div>
-          <ul className="divide-y divide-blue-200">
-            <li className="grid w-full grid-cols-4 py-1">
-              <div className="col-span-3 flex">
-                <Avatar></Avatar>
-                <div className="px-2">
-                  <p>Lin</p>
-                  <p className="line-clamp-2">Hello</p>
-                </div>
-              </div>
-              <button className="my-2 h-8 rounded-full border border-red-500 px-2 font-semibold text-red-500 hover:bg-red-500 hover:text-white">
-                追蹤
-              </button>
-            </li>
-            <li className="grid w-full grid-cols-4 py-1">
-              <div className="col-span-3 flex">
-                <Avatar></Avatar>
-                <div className="px-2">
-                  <p>Rj</p>
-                  <p className="line-clamp-2">
-                    ng duis excepteur esse in duis nostrud occaecat mollit incididunt desaccaecat
-                  </p>
-                </div>
-              </div>
-              <button className="my-2 h-8  rounded-full border border-red-500 px-2 font-semibold text-red-500 hover:bg-red-500 hover:text-white">
-                追蹤
-              </button>
-            </li>
-            <li className="grid w-full grid-cols-4 py-1">
-              <div className="col-span-3 flex">
-                <Avatar></Avatar>
-                <div className="px-2">
-                  <p>Amy</p>
-                  <p className="line-clamp-2">我是一位熱愛設計的設計師</p>
-                </div>
-              </div>
-              <button className="my-2 h-8 rounded-full border border-red-500 px-2 font-semibold text-red-500 hover:bg-red-500 hover:text-white">
-                追蹤
-              </button>
-            </li>
-          </ul>
-        </div>
-        {/* FIXME:熱門標籤資料 10筆 */}
-        <div className="my-5 px-2">
-          <div className="text-base font-semibold">熱門標籤</div>
-          <div className="flex flex-wrap gap-2 py-2">
-            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">前端</p>
-            </div>
-            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">狗狗</p>
-            </div>
-            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-              <p className="inline-block pr-1 align-middle">#</p>
-              <p className="inline-block align-middle">網頁設計</p>
-            </div>
-            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">家庭</p>
-            </div>
-            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-              <p className="inline-block pr-1 align-middle">#</p>{" "}
-              <p className="inline-block align-middle">家庭旅遊好去處</p>
-            </div>
-            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">新生季</p>
-            </div>
-            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">Chatgpt</p>
-            </div>
-            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">Java</p>
-            </div>
-            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">C++</p>
-            </div>
-            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">後端</p>
-            </div>
-          </div>
-        </div>
       </div>
+      {success && <SucessAlert message="追蹤成功" />}
+      {fail && <FailAlert message="追蹤失敗" />}
     </div>
   );
 }

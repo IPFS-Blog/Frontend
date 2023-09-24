@@ -53,6 +53,31 @@ export const apiUserEditProfile = (jwt: string, data: any) =>
 
 export const apiUserGetCreaterData = (username: any) => userRequest.get(`/${username}`, config); // 搜尋特定使用者
 
+export const apiUserGetCreatorSubscribers = (jwt: string, uid: any) =>
+  userRequest.post(`/${uid}/subscribers`, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  }); // 新增訂閱指定使用者
+export const apiUserDeleteCreatorData = (jwt: string, uid: any) =>
+  userRequest.delete(`/${uid}/subscribers`, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  }); // 取消訂閱指定使用者
+export const apiUserGetCreatorOwnSubscribers = (jwt: string) =>
+  userRequest.get(`/own/subscribers`, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  }); // 獲取本人訂閱的創作者們
+export const apiUserGetCreatorOwnFollowers = (jwt: string) =>
+  userRequest.get(`/own/followers`, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  }); // 獲取訂閱本人的使用者
+
 // TODO: Auth相關的 api
 export const apiAuthRegister = (data: any) => authRequest.post("/register", data, config); // 使用者註冊
 

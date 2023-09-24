@@ -3,7 +3,12 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useClipboard } from "use-clipboard-copy";
 
-import { apiArticleGetCreaterArticle, apiUserGetCreaterData } from "@/components/api";
+import {
+  _apiCheckJwt,
+  apiArticleGetCreaterArticle,
+  apiArticleLikesRecord,
+  apiUserGetCreaterData,
+} from "@/components/api";
 import ArticleItem from "@/components/article/ArticleItem";
 import Card from "@/components/users/Card";
 import DonateButton from "@/components/users/DonateButton";
@@ -14,6 +19,8 @@ import { update } from "@/store/CreaterSlice";
 export default function Users(props: any) {
   // TODO: Handle function
   const [IsPrivate, SetIsPrivate] = useState(false);
+  const [menuList, setmenuList] = useState(props.Articles || null);
+  const [createrData, setCreaterData] = useState(props.createrData || null);
   const dispatch = useDispatch();
   const User = useSelector((state: any) => state.User);
   useEffect(() => {
@@ -26,6 +33,43 @@ export default function Users(props: any) {
     }
   }, [User.profile.username, dispatch, props.IsCreater, props.createrData]);
 
+  const menu = async (menuID: any) => {
+    let jwt = "";
+    await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt || null));
+    //所有
+    if (menuID == 1) {
+      const url = props.url;
+      if (url !== null) {
+        // 查詢創作者資料
+        await apiUserGetCreaterData(url)
+          .then(res => {
+            setCreaterData(res.data.userData);
+          })
+          .catch(() => {
+            // 找不到使用者
+          });
+        if (createrData.username !== "") {
+          const Articles = await apiArticleGetCreaterArticle(createrData.username);
+          setmenuList(Articles.data.articles);
+        }
+      }
+    }
+    //收藏
+    else if (jwt != null) {
+      if (menuID == 2) {
+      }
+      //瀏覽紀錄
+      else if (menuID == 3) {
+      }
+      //按讚紀錄
+      else if (menuID == 4) {
+        await apiArticleLikesRecord(jwt).then((res: any) => {
+          setmenuList(res.data.article);
+          console.log(res.data.article);
+        });
+      }
+    }
+  };
   //TODO: UI function
   const { copy } = useClipboard();
 
@@ -94,36 +138,36 @@ export default function Users(props: any) {
         <menu className="my-5 mx-2 flex justify-between bg-blue-200 px-1 text-lg">
           <ul className="my-2 flex h-full items-center">
             <li className="w-28 text-center">
-              <a
-                href="#"
+              <button
+                onClick={() => menu(1)}
                 className="ml-4 select-none rounded-md px-3 py-2 text-gray-300 hover:bg-gray-700 hover:text-white"
               >
                 所有
-              </a>
+              </button>
             </li>
             <li className="w-28 text-center">
-              <a
-                href="#"
+              <button
+                onClick={() => menu(2)}
                 className="ml-4 select-none rounded-md px-3 py-2 text-gray-300 hover:bg-gray-700 hover:text-white"
               >
                 收藏
-              </a>
+              </button>
             </li>
             <li className="w-28 text-center">
-              <a
-                href="#"
+              <button
+                onClick={() => menu(3)}
                 className="ml-4 select-none rounded-md px-3 py-2 text-gray-300 hover:bg-gray-700 hover:text-white"
               >
                 瀏覽紀錄
-              </a>
+              </button>
             </li>
             <li className="w-28 text-center">
-              <a
-                href="#"
+              <button
+                onClick={() => menu(4)}
                 className="ml-4 select-none rounded-md px-3 py-2 text-gray-300 hover:bg-gray-700 hover:text-white"
               >
                 按讚紀錄
-              </a>
+              </button>
             </li>
           </ul>
         </menu>
@@ -140,9 +184,10 @@ export default function Users(props: any) {
       )}
       <main className="my-2 w-full px-2">
         <ul role="list">
-          {props.Articles.length != 0 &&
-            props.Articles.map((item: any) => {
-              const { id, title, subtitle, updateAt } = item;
+          {menuList != null &&
+            menuList.length != 0 &&
+            menuList.map((item: any) => {
+              const { id, title, subtitle, updateAt, likes } = item;
               return (
                 <ArticleItem
                   username={props.createrData.username}
@@ -152,6 +197,7 @@ export default function Users(props: any) {
                   title={title}
                   subtitle={subtitle}
                   updateAt={updateAt}
+                  likes={likes}
                 />
               );
             })}
@@ -179,7 +225,7 @@ export const getServerSideProps = async (context: any) => {
       });
     if (createrData.username !== "") {
       const Articles = await apiArticleGetCreaterArticle(createrData.username);
-      return { props: { createrData, Articles: Articles.data.articles } };
+      return { props: { createrData, Articles: Articles.data.articles, url } };
     }
     return { props: {} };
   }

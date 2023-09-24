@@ -21,6 +21,14 @@
       "@/styles/*": ["styles/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "middleware.js",
+    "pages/api/auth/login.ts",
+    "pages/error.tsx"
+  ],
   "exclude": ["node_modules"]
 }

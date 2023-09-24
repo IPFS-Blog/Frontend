@@ -1,7 +1,54 @@
 import "@/styles/globals.css";
+import "nprogress/nprogress.css";
+import "@/styles/NprogressCustom.css";
 
 import type { AppProps } from "next/app";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { ThemeProvider } from "next-themes";
+import NProgress from "nprogress";
+import { useEffect } from "react";
+import { Provider } from "react-redux";
+import { store } from "store";
 
-export default function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />;
+import Layout from "@/components/layout/Layout";
+
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
 }
+
+NProgress.configure({ showSpinner: false });
+
+function App({ Component, pageProps }: AppProps, err: any) {
+  const modifiedPageProps = { ...pageProps, err };
+
+  const router = useRouter();
+
+  useEffect(() => {
+    router.events.on("routeChangeStart", () => NProgress.start());
+    router.events.on("routeChangeComplete", () => NProgress.done());
+    router.events.on("routeChangeError", () => NProgress.done());
+  });
+
+  // 判斷當前頁面是否為 404,500 頁面
+  if (router.isFallback || router.pathname === "/404" || router.pathname === "/500") {
+    return <Component {...pageProps} />;
+  }
+
+  return (
+    <Provider store={store}>
+      <Head>
+        <title>IPFS幣記</title>
+      </Head>
+      <ThemeProvider attribute="class">
+        <Layout>
+          <Component {...modifiedPageProps} />
+        </Layout>
+      </ThemeProvider>
+    </Provider>
+  );
+}
+
+export default App;

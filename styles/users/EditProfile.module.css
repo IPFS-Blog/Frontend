@@ -1,0 +1,51 @@
+.promptbox {
+  background-color: #ccc;
+  margin-top: 5px;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: " 0 0 10px rgba(0, 0, 0, 0.2)";
+  display: flex;
+  justify-content: center;
+}
+.walletaddress {
+  background-color: #ccc;
+  padding: 1px;
+  border-radius: 10px;
+  max-width: 400px;
+  box-shadow: " 0 0 10px rgba(0, 0, 0, 0.2)";
+  display: flex;
+  justify-content: "center";
+}
+.addresswidth {
+  width: 400px;
+}
+.wordsizediv {
+  max-width: 42rem;
+  padding: 0.5rem;
+  font-size: 16px;
+}
+.wordsize {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  font-weight: bold;
+  font-size: 20px;
+}
+.buttondiv {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  margin-right: 40px;
+}
+.resetbutton {
+  border-radius: 10px;
+  height: 40px;
+  width: 40px;
+  background-color: #ccc;
+}
+.surebutton {
+  margin-left: 10px;
+  border-radius: 10px;
+  height: 40px;
+  width: 40px;
+  background-color: #ccc;
+}

@@ -155,7 +155,7 @@ export default function Users(props: any) {
                 onClick={() => menu(2)}
                 className="ml-4 select-none rounded-md px-3 py-2 text-gray-300 hover:bg-gray-700 hover:text-white"
               >
-                收藏
+                收藏紀錄
               </button>
             </li>
             <li className="w-28 text-center">
@@ -163,7 +163,7 @@ export default function Users(props: any) {
                 onClick={() => menu(3)}
                 className="ml-4 select-none rounded-md px-3 py-2 text-gray-300 hover:bg-gray-700 hover:text-white"
               >
-                收藏紀錄
+                瀏覽紀錄
               </button>
             </li>
             <li className="w-28 text-center">

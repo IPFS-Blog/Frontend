@@ -24,15 +24,15 @@ const config = { headers: { "Content-Type": "application/json" } };
 
 // User相關的 api
 const userRequest = axios.create({
-  baseURL: `http://${process.env.NEXT_PUBLIC_API}/users`,
+  baseURL: `${process.env.NEXT_PUBLIC_API}/users`,
 });
 // Auth相關的 api
 const authRequest = axios.create({
-  baseURL: `http://${process.env.NEXT_PUBLIC_API}/auth`,
+  baseURL: `${process.env.NEXT_PUBLIC_API}/auth`,
 });
 // Article相關的 api
 const articleRequest = axios.create({
-  baseURL: `http://${process.env.NEXT_PUBLIC_API}/articles`,
+  baseURL: `${process.env.NEXT_PUBLIC_API}/articles`,
 });
 
 // TODO: User 相關的 api
@@ -159,3 +159,21 @@ export const apiCommentLike = (jwt: string, id: string, cid: string, data: any) 
       Authorization: `Bearer ${jwt}`,
     },
   }); //對留言按讚
+export const apiBookMarkAdd = (jwt: string, id: string) =>
+  articleRequest.post(`/${id}/favorite`, "", {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  }); //收藏文章
+export const apiBookMarkDelete = (jwt: string, id: string) =>
+  articleRequest.delete(`/${id}/favorite`, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  }); //刪除收藏文章
+export const apiBookMarkAddReord = (jwt: string) =>
+  articleRequest.get(`/own/favorite`, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  }); //收藏文章紀錄

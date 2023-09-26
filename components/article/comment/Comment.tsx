@@ -83,17 +83,21 @@ const Comment = (props: any) => {
     const id = Number(articleId);
     const cid = props.id;
     if (jwt != null) {
-      apiArticleCommentEdit(jwt, id, cid, Comment)
+      await apiArticleCommentEdit(jwt, id, cid, Comment)
         .then(() => {
-          setFailure(false);
-          setSuccess(true);
-          setEdit(true);
           handleDialogClose();
+          setSuccess(true);
+          setTimeout(() => {
+            setSuccess(false);
+          }, 2000);
+          setEdit(true);
         })
         .catch(() => {
-          setSuccess(false);
-          setFailure(true);
           handleDialogClose();
+          setFailure(true);
+          setTimeout(() => {
+            setFailure(false);
+          }, 3000);
         });
     } else {
       window.alert("請先登入");
@@ -106,14 +110,12 @@ const Comment = (props: any) => {
     const id = Number(articleId);
     const cid = props.id;
     if (jwt != null) {
-      apiArticleCommentDelete(jwt, id, cid)
+      await apiArticleCommentDelete(jwt, id, cid)
         .then(async () => {
-          setDeleteFailure(false);
-          setDeleteSuccess(true);
-          setEdit(true);
           handleDialogClose();
+          setDeleteSuccess(true);
           const data = { aid: articleId };
-          await apiArticleTakeAllArticle(data)
+          apiArticleTakeAllArticle(data)
             .then(async res => {
               const { comments } = res.data.article;
               props.setComments(comments);
@@ -123,11 +125,15 @@ const Comment = (props: any) => {
                 notFound: true,
               };
             });
+
+          setEdit(true);
         })
         .catch(() => {
-          setDeleteSuccess(false);
-          setDeleteFailure(true);
           handleDialogClose();
+          setDeleteFailure(true);
+          setTimeout(() => {
+            setDeleteFailure(false);
+          }, 2000);
         });
     } else {
       window.alert("請先登入");
@@ -285,8 +291,8 @@ const Comment = (props: any) => {
             <p>變更留言</p>
           </button>
         </Dialog>
-        {success && <SucessAlert message="留言成功" />}
-        {fail && <FailAlert message="留言失敗" />}
+        {success && <SucessAlert message="變更留言成功" />}
+        {fail && <FailAlert message="變更留言失敗" />}
       </div>
       <div>
         <Dialog

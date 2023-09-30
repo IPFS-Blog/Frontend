@@ -45,9 +45,12 @@ export default function Article(props: any) {
         >
           {/* TODO: 文章擁有者資料 頭貼、名稱 */}
           <div className="flex flex-row items-center">
-            <Avatar className="h-auto w-10 rounded-full" src={props.createrData.picture} alt="not find Avatar" />
+            <Avatar src={props.createrData.picture} alt="not find Avatar" />
             <div className="px-2">
               <div>{props.createrData.username}</div>
+            </div>
+            <div className="ml-10">
+              {props.createrData.id != User.profile.id ? <Follow subscriberId={props.createrData.id} /> : null}
             </div>
           </div>
           <button>
@@ -181,21 +184,6 @@ export default function Article(props: any) {
             })}
           </div>
         </div>
-      </div>
-      {/* 右側欄 */}
-      <div className="hidden tablet:col-span-3 tablet:flex tablet:flex-col laptop:col-span-4">
-        {props.createrData.id != User.profile.id ? (
-          <>
-            {/* TODO: 文章擁有者資料 頭貼、名稱 */}
-            <div className="flex justify-center">
-              <Avatar className="h-auto w-1/2 rounded-full" src={props.createrData.picture} alt="not find Avatar" />
-            </div>
-            <div className="text-center">
-              <div className="my-2 px-2">{props.createrData.username}</div>
-              <Follow subscriberId={props.createrData.id} />
-            </div>
-          </>
-        ) : null}
       </div>
     </div>
   );

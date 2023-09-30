@@ -2,6 +2,7 @@ import { Avatar } from "@mui/material";
 
 import { apiArticleTakeAllArticle } from "@/components/api";
 import ArticleItem from "@/components/article/ArticleItem";
+import Follow from "@/components/users/Follow";
 
 export default function Home(props: any) {
   return (
@@ -50,41 +51,45 @@ export default function Home(props: any) {
             <ul className="divide-y divide-blue-200">
               <li className="grid w-full grid-cols-4 py-1">
                 <div className="col-span-3 flex">
-                  <Avatar></Avatar>
+                  <Avatar src="https://i.imgur.com/Rkrp9tt.jpg" alt="not find Avatar" />
                   <div className="px-2">
-                    <p>Lin</p>
+                    <p>John</p>
                     <p className="line-clamp-2">Hello</p>
                   </div>
                 </div>
-                <button className="my-2 h-8 rounded-full border border-red-500 px-2 font-semibold text-red-500 hover:bg-red-500 hover:text-white">
-                  追蹤
-                </button>
+                <div className="text-sm">
+                  <Follow subscriberId={1} />
+                </div>
               </li>
               <li className="grid w-full grid-cols-4 py-1">
                 <div className="col-span-3 flex">
-                  <Avatar></Avatar>
+                  <Avatar
+                    src="http://res.cloudinary.com/dwgpqlaji/image/upload/v1687358609/user-picture/ewvqsnpltmcyf0xnxhx2.png"
+                    alt="not find Avatar"
+                  />
                   <div className="px-2">
-                    <p>Rj</p>
-                    <p className="line-clamp-2">
-                      ng duis excepteur esse in duis nostrud occaecat mollit incididunt desaccaecat
-                    </p>
+                    <p>RURU</p>
+                    <p className="line-clamp-2">我喜歡貓咪，要來我家看ㄇㄠˇ咪嗎</p>
                   </div>
                 </div>
-                <button className="my-2 h-8  rounded-full border border-red-500 px-2 font-semibold text-red-500 hover:bg-red-500 hover:text-white">
-                  追蹤
-                </button>
+                <div className="text-sm">
+                  <Follow subscriberId={20} />
+                </div>
               </li>
               <li className="grid w-full grid-cols-4 py-1">
                 <div className="col-span-3 flex">
-                  <Avatar></Avatar>
+                  <Avatar
+                    src="http://res.cloudinary.com/dwgpqlaji/image/upload/v1684649718/user-picture/ufwa94aulilfe7ula1w4.png"
+                    alt="not find Avatar"
+                  />
                   <div className="px-2">
-                    <p>Amy</p>
+                    <p>Andya</p>
                     <p className="line-clamp-2">我是一位熱愛設計的設計師</p>
                   </div>
                 </div>
-                <button className="my-2 h-8 rounded-full border border-red-500 px-2 font-semibold text-red-500 hover:bg-red-500 hover:text-white">
-                  追蹤
-                </button>
+                <div className="text-sm">
+                  <Follow subscriberId={4} />
+                </div>
               </li>
             </ul>
           </div>

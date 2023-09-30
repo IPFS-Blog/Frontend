@@ -113,8 +113,8 @@ export default function Follow(props: any) {
     <>
       <button
         className={`tabelet:my-0 tabelet:py-2 tabelet:px-10 relative ${
-          isSubscribers ? "bg-red-500 text-white " : "border-red-500 text-red-500 "
-        }m-2 rounded border p-2 px-20 font-semibold  hover:bg-red-500 hover:text-white tablet:mx-2 tablet:px-5`}
+          isSubscribers ? "bg-red-500 text-white " : " border border-red-500 text-red-500 "
+        }m-2 rounded p-2 px-20 font-semibold  hover:bg-red-500 hover:text-white tablet:mx-2 tablet:px-5`}
         onClick={follow}
       >
         <PersonAddAlt1Icon className="mr-1" />

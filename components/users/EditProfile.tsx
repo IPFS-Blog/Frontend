@@ -183,12 +183,11 @@ export default function Editprofile() {
                     {/* email 部分 */}
                     <div className={styles.wordsizediv}>
                       <div className="flex items-center justify-between">
-                        <div className={styles.wordsize}>電子信箱</div>
+                        <div className={styles.wordsize}>電子信箱(不可更改)</div>
                       </div>
                       <TextField
                         fullWidth
                         id="outlined-basic"
-                        label="請輸入電子信箱"
                         variant="outlined"
                         defaultValue={email}
                         onChange={e => setemail(e.target.value)}

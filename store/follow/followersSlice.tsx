@@ -1,8 +1,12 @@
+// 訂閱本人的使用者們
 import { createSlice } from "@reduxjs/toolkit";
 
 interface follower {
   id: number;
-  name: string;
+  username: string;
+  email: string;
+  address: string;
+  picture: string | null;
 }
 
 const initialState: follower[] = [];

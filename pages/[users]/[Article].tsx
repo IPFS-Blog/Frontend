@@ -6,18 +6,11 @@ import MarkdownIt from "markdown-it";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import FailAlert from "@/components/alert/Fail";
-import SucessAlert from "@/components/alert/Sucess";
-import {
-  _apiCheckJwt,
-  apiArticleLike,
-  apiArticleLikesRecord,
-  apiArticleTakeAllArticle,
-  apiUserGetCreatorSubscribers,
-} from "@/components/api";
+import { _apiCheckJwt, apiArticleLike, apiArticleLikesRecord, apiArticleTakeAllArticle } from "@/components/api";
 import Comment from "@/components/article/comment/Comment";
 import CreateComment from "@/components/article/comment/CreateComment";
 import DonateButton from "@/components/users/DonateButton";
+import Follow from "@/components/users/Follow";
 import { update } from "@/store/CreaterSlice";
 import styles from "@/styles/MarkdownEditor.module.css";
 export default function Article(props: any) {
@@ -31,31 +24,10 @@ export default function Article(props: any) {
     dispatch(update(JSON.stringify(props.createrData)));
   }, [dispatch, props.createrData]);
 
-  async function follow() {
-    let jwt = "";
-    await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt || null));
-    const uid = props.createrData.id;
-    if (jwt != null) {
-      apiUserGetCreatorSubscribers(jwt, uid)
-        .then(() => {
-          setFailure(false);
-          setSuccess(true);
-        })
-        .catch(() => {
-          setSuccess(false);
-          setFailure(true);
-        });
-    } else {
-      window.alert("請先登入");
-    }
-  }
-
   // TODO: UI function
   const { contents } = props.article;
   const [likeSuccess, setLikeSuccess] = useState(false);
   const [articleLike, setArticleLike] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [fail, setFailure] = useState(false);
   const md = new MarkdownIt({
     html: true,
     linkify: true,
@@ -210,25 +182,21 @@ export default function Article(props: any) {
           </div>
         </div>
       </div>
-
       {/* 右側欄 */}
       <div className="hidden tablet:col-span-3 tablet:flex tablet:flex-col laptop:col-span-4">
-        {/* TODO: 文章擁有者資料 頭貼、名稱 */}
-        <div className="flex justify-center">
-          <Avatar className="h-auto w-1/2 rounded-full" src={props.createrData.picture} alt="not find Avatar" />
-        </div>
-        <div className="text-center">
-          <div className="my-2 px-2">{props.createrData.username}</div>
-          <button
-            className="my-2 rounded border border-red-500 py-2 px-20 font-semibold text-red-500 hover:bg-red-500 hover:text-white"
-            onClick={follow}
-          >
-            追蹤
-          </button>
-        </div>
+        {props.createrData.id != User.profile.id ? (
+          <>
+            {/* TODO: 文章擁有者資料 頭貼、名稱 */}
+            <div className="flex justify-center">
+              <Avatar className="h-auto w-1/2 rounded-full" src={props.createrData.picture} alt="not find Avatar" />
+            </div>
+            <div className="text-center">
+              <div className="my-2 px-2">{props.createrData.username}</div>
+              <Follow subscriberId={props.createrData.id} />
+            </div>
+          </>
+        ) : null}
       </div>
-      {success && <SucessAlert message="追蹤成功" />}
-      {fail && <FailAlert message="追蹤失敗" />}
     </div>
   );
 }

@@ -13,9 +13,11 @@ import {
   AiOutlineUsergroupDelete,
 } from "react-icons/ai";
 import { FaFaucet } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
 
 import { _apiCheckJwt, apiUserGetCreatorOwnSubscribers } from "@/components/api";
 import ThemeSwitch from "@/components/ThemeSwitch";
+import { updatedSubscribers } from "@/store/follow/SubscribersSlice";
 
 const menuItems = [
   { id: 1, label: "首頁", icon: AiOutlineHome, link: "/" },
@@ -31,34 +33,21 @@ const dashboardSidebar = [
   { id: 5, label: "瀏覽文章數據", icon: AiOutlineBarChart, link: "/SimpleFaucet" },
 ];
 
-interface User {
-  id: number;
-  username: string;
-  picture: string;
-}
-
 const Sidebar = () => {
-  const [users, setUsers] = useState<User[]>([]);
+  const Subscribers = useSelector((state: any) => state.Subscribers);
+  const dispatch = useDispatch();
   useEffect(() => {
     async function follow() {
       let jwt = "";
       await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt || null));
       if (jwt != null) {
-        apiUserGetCreatorOwnSubscribers(jwt)
-          .then((res: any) => {
-            console.log(res);
-            setUsers(res.data.subscribers);
-            // const subscribersData = res.data.subscribers;
-            // dispatch(updatedSubscribers(subscribersData));
-            // dispatch(updatedSubscribers(res.data.subscribers));
-          })
-          .catch((error: any) => {
-            console.log(error);
-          });
+        apiUserGetCreatorOwnSubscribers(jwt).then((res: any) => {
+          dispatch(updatedSubscribers(res.data.subscribers));
+        });
       }
     }
     follow();
-  }, []);
+  }, [dispatch]);
 
   const router = useRouter();
   const routerPath = router.asPath;
@@ -134,28 +123,36 @@ const Sidebar = () => {
               hidden: !toggleCollapse,
             })}
           >
-            <div className="mt-5 flex w-full items-center py-4">
-              <div className="w-8">
-                <AiOutlineUsergroupDelete />
-              </div>
-              <div className="select-none font-medium">已追蹤</div>
-            </div>
-            <div className="mt-1 flex w-full items-center">
-              <ul>
-                {users.map(user => (
-                  <li key={user.id}>
-                    <a href={"/" + user.username}>
-                      <div className="flex h-fit w-full items-center rounded-md px-2 hover:bg-gray-300 hover:text-gray-700 dark:hover:bg-gray-500 dark:hover:text-gray-100">
-                        <div className="my-2 w-auto">
-                          <Avatar className="h-auto w-6 rounded-full" src={user.picture} alt="not find Avatar" />
-                        </div>
-                        <div className="ml-2">{user.username}</div>
-                      </div>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {Subscribers != "" ? (
+              <>
+                <div className="mt-5 flex w-full items-center py-4">
+                  <div className="w-8">
+                    <AiOutlineUsergroupDelete />
+                  </div>
+                  <div className="select-none font-medium">已追蹤</div>
+                </div>
+                <div className="mt-1 flex w-full items-center">
+                  <ul>
+                    {Subscribers.map((Subscribers: any) => (
+                      <li key={Subscribers.id}>
+                        <a href={"/" + Subscribers.username}>
+                          <div className="flex h-fit w-full items-center rounded-md px-2 hover:bg-gray-300 hover:text-gray-700 dark:hover:bg-gray-500 dark:hover:text-gray-100">
+                            <div className="my-2 w-auto">
+                              <Avatar
+                                className="h-auto w-6 rounded-full"
+                                src={Subscribers.picture}
+                                alt="not find Avatar"
+                              />
+                            </div>
+                            <div className="ml-2">{Subscribers.username}</div>
+                          </div>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </>
+            ) : null}
           </div>
           <div>
             <ThemeSwitch />

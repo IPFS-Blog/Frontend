@@ -1,25 +1,21 @@
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
-import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useClipboard } from "use-clipboard-copy";
 
-import FailAlert from "@/components/alert/Fail";
-import SucessAlert from "@/components/alert/Sucess";
 import {
   _apiCheckJwt,
   apiArticleGetCreaterArticle,
   apiArticleLikesRecord,
-  // apiUserDeleteCreatorData,
   apiUserGetCreaterData,
   apiUserGetCreatorOwnFollowers,
   apiUserGetCreatorOwnSubscribers,
-  apiUserGetCreatorSubscribers,
 } from "@/components/api";
 import ArticleItem from "@/components/article/ArticleItem";
 import Card from "@/components/users/Card";
 import DonateButton from "@/components/users/DonateButton";
 import Editprofile from "@/components/users/EditProfile";
+import Follow from "@/components/users/Follow";
 import UserWallet from "@/components/users/UserWallet";
 import { update } from "@/store/CreaterSlice";
 
@@ -56,11 +52,9 @@ export default function Users(props: any) {
       await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt || null));
       if (jwt != null) {
         apiUserGetCreatorOwnFollowers(jwt).then((res: any) => {
-          console.log(res);
           setFollowers(res.data.followers);
         });
         apiUserGetCreatorOwnSubscribers(jwt).then((res: any) => {
-          console.log(res);
           setSubscribers(res.data.subscribers);
         });
       }
@@ -105,33 +99,13 @@ export default function Users(props: any) {
       }
     }
   };
-  async function follow() {
-    let jwt = "";
-    await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt || null));
-    const uid = props.createrData.id;
-    if (jwt != null) {
-      apiUserGetCreatorSubscribers(jwt, uid)
-        .then(() => {
-          setFailure(false);
-          setSuccess(true);
-        })
-        .catch(() => {
-          setSuccess(false);
-          setFailure(true);
-        });
-    } else {
-      window.alert("請先登入");
-    }
-  }
   //TODO: UI function
   const { copy } = useClipboard();
-  const [success, setSuccess] = useState(false);
-  const [fail, setFailure] = useState(false);
 
   return (
     <div className="my-2 h-auto w-full">
       <div className="flex h-full w-full flex-row flex-wrap justify-around">
-        <div className=" p-2  tablet:w-1/2 laptop:basis-1/2">
+        <div className="h-full p-2  tablet:w-1/2 laptop:basis-1/2">
           <Card subscribers={subscribers.length} followers={followers.length} menuList={menuList.length} />
         </div>
         <div className="phone:h-full phone:w-auto phone:p-2">
@@ -176,13 +150,7 @@ export default function Users(props: any) {
               ) : (
                 // TODO:公開:追蹤按鈕以及打賞
                 <div className="flex flex-row justify-center p-2 text-center">
-                  <button
-                    className="tabelet:my-0 tabelet:py-2 tabelet:px-10 m-2 rounded border border-red-500 p-2 px-20 font-semibold text-red-500 hover:bg-red-500 hover:text-white tablet:mx-2 tablet:px-5"
-                    onClick={follow}
-                  >
-                    <PersonAddAlt1Icon />
-                    <span>追蹤</span>
-                  </button>
+                  <Follow subscriberId={props.createrData.id} />
                   <DonateButton />
                 </div>
               )}
@@ -261,8 +229,6 @@ export default function Users(props: any) {
             })}
         </ul>
       </main>
-      {success && <SucessAlert message="追蹤成功" />}
-      {fail && <FailAlert message="追蹤失敗" />}
     </div>
   );
 }

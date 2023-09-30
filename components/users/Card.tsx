@@ -13,11 +13,11 @@ const Card = (props: any) => {
   };
 
   return (
-    <div className="h-full w-full dark:text">
+    <div className="my-2 h-full w-full dark:text">
       <div className="tablet:h-full tablet:w-full">
         {isFlipped ? (
           <button
-            className="h-full rounded-lg bg-cover bg-center bg-no-repeat drop-shadow-xl"
+            className="h-full w-full rounded-lg bg-cover bg-center bg-no-repeat drop-shadow-xl"
             style={{
               backgroundImage: `url(${Creater.profile.background})`,
             }}
@@ -25,12 +25,8 @@ const Card = (props: any) => {
           >
             <div className="absolute inset-0 rounded-lg bg-gray-300 opacity-75 transition group-hover:opacity-75"></div>
             <div className="flex h-full flex-row">
-              <div className="flex h-48 w-2/6 flex-col items-center p-3 ">
-                <Avatar
-                  src={Creater.profile.picture}
-                  className="h-auto w-full rounded-lg"
-                  alt="Picture of the author"
-                />
+              <div className="flex h-full w-1/3 flex-col items-center p-3 ">
+                <Avatar src={Creater.profile.picture} className="h-48 w-full rounded-lg" alt="Picture of the author" />
               </div>
               <div className="z-40 flex h-auto w-4/6 flex-col justify-start p-3 text-left dark:text">
                 <h5 className="mb-2 text-3xl font-medium">{Creater.profile.username}</h5>
@@ -45,7 +41,7 @@ const Card = (props: any) => {
           </button>
         ) : (
           <button
-            className="h-full rounded-lg bg-cover bg-center bg-no-repeat drop-shadow-xl"
+            className="h-full w-full rounded-lg bg-cover bg-center bg-no-repeat drop-shadow-xl"
             style={{
               backgroundImage: `url(${Creater.profile.background})`,
             }}
@@ -53,12 +49,8 @@ const Card = (props: any) => {
           >
             <div className="absolute inset-0 rounded-lg bg-gray-300 opacity-75 transition group-hover:opacity-75"></div>
             <div className="flex h-full flex-row">
-              <div className="flex h-48 w-2/6 flex-col items-center p-3">
-                <Avatar
-                  src={Creater.profile.picture}
-                  className="h-auto w-full rounded-lg"
-                  alt="Picture of the author"
-                />
+              <div className="flex h-full w-1/3 flex-col items-center p-3">
+                <Avatar src={Creater.profile.picture} className="h-48 w-full rounded-lg" alt="Picture of the author" />
               </div>
 
               <div className="z-40 flex h-auto w-4/6 flex-col justify-start p-3 text-left dark:text">

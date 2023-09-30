@@ -56,6 +56,8 @@ export const apiUserGetCreaterData = (username: any) => userRequest.get(`/${user
 export const apiUserGetCreatorSubscribers = (jwt: string, uid: any) =>
   userRequest.post(`/${uid}/subscribers`, {
     headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
       Authorization: `Bearer ${jwt}`,
     },
   }); // 新增訂閱指定使用者

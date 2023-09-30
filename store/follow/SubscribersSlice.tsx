@@ -1,5 +1,4 @@
-// subscribersSlice.ts
-
+// 獲取本人訂閱的創作者們
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface Subscriber {
@@ -17,10 +16,13 @@ const subscribersSlice = createSlice({
   initialState: initialState,
   reducers: {
     updatedSubscribers(state, action: PayloadAction<Subscriber[]>) {
-      return action.payload; // 更新订阅者数据
+      return action.payload; // 更新訂閱者
+    },
+    clearSubscribers() {
+      return initialState; // 重置為空
     },
   },
 });
 
-export const { updatedSubscribers } = subscribersSlice.actions;
+export const { updatedSubscribers, clearSubscribers } = subscribersSlice.actions;
 export default subscribersSlice.reducer;

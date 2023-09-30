@@ -24,6 +24,7 @@ import Web3 from "web3";
 import AlertDialogSlide from "@/components/alert/AlertDialogSlide";
 import { CheckChainIdFunction } from "@/helpers/users/CheckChainIdFunction";
 import { LoginFunction } from "@/helpers/users/LoginFunction";
+import { clearSubscribers } from "@/store/follow/SubscribersSlice";
 import { setLogin, setLogout } from "@/store/UserSlice";
 
 import {
@@ -255,6 +256,7 @@ export default function Login() {
                 _apiAuthLogout();
                 localStorage.removeItem("UserData");
                 dispatch(setLogout());
+                dispatch(clearSubscribers());
                 if (localStorage.getItem("UserData")) {
                   localStorage.removeItem("UserData");
                 }

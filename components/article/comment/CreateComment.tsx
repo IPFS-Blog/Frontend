@@ -1,24 +1,26 @@
 import SendIcon from "@mui/icons-material/Send";
 import Avatar from "@mui/material/Avatar";
+import { useTheme } from "next-themes";
 import { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 
-import FailAlert from "@/components/alert/Fail";
-import SucessAlert from "@/components/alert/Sucess";
 import { _apiCheckJwt, apiArticleCommentCreate, apiArticleTakeAllArticle } from "@/components/api";
 const CreateComment = (props: any) => {
-  // TODO: Handle funtion
+  // TODO: Handle function
   const [articleid] = useState(props.articleid);
   const [Comment, setComment] = useState(""); // 留言
-  const [success, setSuccess] = useState(false);
-  const [fail, setFailure] = useState(false);
   async function Create() {
     let jwt = "";
     await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
     const articleId = Number(articleid);
     apiArticleCommentCreate(jwt, articleId, Comment)
       .then(async () => {
-        setFailure(false);
-        setSuccess(true);
+        toast.success("新增留言成功", {
+          style: {
+            boxShadow: "none",
+          },
+          theme: theme ? "light" : "dark",
+        });
         const data = { aid: articleId };
         await apiArticleTakeAllArticle(data)
           .then(async res => {
@@ -33,10 +35,17 @@ const CreateComment = (props: any) => {
           });
       })
       .catch(() => {
-        setSuccess(false);
-        setFailure(true);
+        toast.error("新增留言失敗", {
+          style: {
+            boxShadow: "none",
+          },
+          theme: theme ? "light" : "dark",
+        });
       });
   }
+
+  //UI function
+  const { theme } = useTheme();
 
   return (
     <div className="mb-2">
@@ -57,8 +66,7 @@ const CreateComment = (props: any) => {
           <SendIcon />
         </button>
       </div>
-      {success && <SucessAlert message="留言成功" />}
-      {fail && <FailAlert message="留言失敗" />}
+      <ToastContainer position="bottom-left" autoClose={3000} />
     </div>
   );
 };

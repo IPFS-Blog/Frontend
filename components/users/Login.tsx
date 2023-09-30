@@ -1,4 +1,3 @@
-import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -10,7 +9,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import Snackbar from "@mui/material/Snackbar";
 import { useTheme } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
@@ -19,6 +17,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast, ToastContainer } from "react-toastify";
 import Web3 from "web3";
 
 import AlertDialogSlide from "@/components/alert/AlertDialogSlide";
@@ -86,7 +85,11 @@ export default function Login() {
             () => setRegisterOpen(true),
           );
       } catch (error) {
-        setAlertRejectOpen(true);
+        toast.error("用戶拒絕了授權!", {
+          style: {
+            boxShadow: "none",
+          },
+        });
       }
     } else {
       window.alert("Please download MetaMask");
@@ -124,7 +127,11 @@ export default function Login() {
         window.alert("網站抓取資料錯誤");
       }
     } catch (error) {
-      setAlertRejectOpen(true);
+      toast.error("用戶拒絕了授權!", {
+        style: {
+          boxShadow: "none",
+        },
+      });
     }
   }
 
@@ -138,7 +145,12 @@ export default function Login() {
       apiAuthEmailConfirm(data)
         .then(() => {
           setRegisterOpen(false);
-          setAlertRegisterOpen(true);
+          toast.success("註冊成功", {
+            style: {
+              boxShadow: "none",
+            },
+            theme: theme ? "light" : "dark",
+          });
         })
         .catch(() => {
           setMessageConfirmCode("驗證失敗");
@@ -174,8 +186,6 @@ export default function Login() {
 
   // TODO: UI function
   const [registerOpen, setRegisterOpen] = useState(false);
-  const [alertRejectOpen, setAlertRejectOpen] = useState(false);
-  const [alertRegisterOpen, setAlertRegisterOpen] = useState(false);
   const [errorMessageUsername, setErrorMessageUsername] = useState("");
   const [errorMessageEmail, setErrorMessageEmail] = useState("");
   const [messageConfirmCode, setMessageConfirmCode] = useState("");
@@ -188,20 +198,8 @@ export default function Login() {
   function jumpPage() {
     router.push("./docs/NetworkInstructions");
   }
-  //material ui toast
-  const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-  });
   const registerHandleClose = () => {
     setRegisterOpen(false);
-  };
-
-  const alertHandleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setAlertRejectOpen(false);
-    setAlertRegisterOpen(false);
   };
 
   const handleAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -376,16 +374,7 @@ export default function Login() {
           </Button>
         </DialogActions>
       </Dialog>
-      <Snackbar open={alertRejectOpen} autoHideDuration={6000} onClose={alertHandleClose}>
-        <Alert onClose={alertHandleClose} severity="error" sx={{ width: "100%" }}>
-          用戶拒絕了授權!
-        </Alert>
-      </Snackbar>
-      <Snackbar open={alertRegisterOpen} autoHideDuration={6000} onClose={alertHandleClose}>
-        <Alert onClose={alertHandleClose} severity="success" sx={{ width: "100%" }}>
-          註冊成功!
-        </Alert>
-      </Snackbar>
+      <ToastContainer position="bottom-left" autoClose={3000} />
       {alertDialogSlide ? (
         <AlertDialogSlide
           handlefunction={jumpPage}

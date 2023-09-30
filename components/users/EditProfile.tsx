@@ -1,7 +1,6 @@
 import { Edit } from "@mui/icons-material";
-import { AlertProps, Box, IconButton, Snackbar, TextField } from "@mui/material";
+import { Box, IconButton, TextField } from "@mui/material";
 import { Avatar } from "@mui/material";
-import MuiAlert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import Dialog, { DialogProps } from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -13,13 +12,14 @@ import { CldUploadWidget } from "next-cloudinary";
 import * as React from "react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { toast, ToastContainer } from "react-toastify";
 
 import styles from "@/styles/users/EditProfile.module.css";
 
 import { _apiCheckJwt, apiUserEditProfile } from "../api";
 
 export default function Editprofile() {
-  // TODO: Handle funtion
+  // TODO: Handle function
   const User = useSelector((state: any) => state.User);
 
   const [username, setUsername] = useState(User.profile.username); // 使用者名稱
@@ -37,33 +37,32 @@ export default function Editprofile() {
     const data = { username, email, picture, background };
     if (jwt != null) {
       apiUserEditProfile(jwt, data)
-        .then(() => setalertEditSucess(true))
-        .catch(() => setalertEditFail(true));
+        .then(() =>
+          toast.info("編輯成功", {
+            style: {
+              padding: "16px",
+              boxShadow: "none",
+            },
+          }),
+        )
+        .catch(() =>
+          toast.error("編輯留言失敗", {
+            style: {
+              boxShadow: "none",
+            },
+          }),
+        );
     } else {
       window.alert("請先登入謝謝");
     }
     setOpen(false);
   }
 
-  // TODO: UI funtion
+  // TODO: UI function
   const [open, setOpen] = useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("lg"));
   const [maxWidth] = useState<DialogProps["maxWidth"]>("lg");
-  const [alertEditFail, setalertEditFail] = useState(false);
-  const [alertEditSucess, setalertEditSucess] = useState(false);
-  const alertHandleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setalertEditFail(false);
-    setalertEditSucess(false);
-  };
-
-  //material ui toast
-  const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-  });
 
   return (
     <>
@@ -185,8 +184,6 @@ export default function Editprofile() {
                     <div className={styles.wordsizediv}>
                       <div className="flex items-center justify-between">
                         <div className={styles.wordsize}>電子信箱</div>
-                        {/* FIXME: 按下發送驗證碼 要多一格填驗證碼的輸入框 */}
-                        <button className="text-lg">發送驗證碼</button>
                       </div>
                       <TextField
                         fullWidth
@@ -195,6 +192,7 @@ export default function Editprofile() {
                         variant="outlined"
                         defaultValue={email}
                         onChange={e => setemail(e.target.value)}
+                        disabled
                       />
                     </div>
                     {/* 個人簡介部分 */}
@@ -263,16 +261,7 @@ export default function Editprofile() {
             </Button>
           </DialogActions>
         </Dialog>
-        <Snackbar open={alertEditFail} autoHideDuration={6000} onClose={alertHandleClose}>
-          <Alert onClose={alertHandleClose} severity="error" sx={{ width: "100%" }}>
-            編輯錯誤!
-          </Alert>
-        </Snackbar>
-        <Snackbar open={alertEditSucess} autoHideDuration={6000} onClose={alertHandleClose}>
-          <Alert onClose={alertHandleClose} severity="success" sx={{ width: "100%" }}>
-            編輯成功!
-          </Alert>
-        </Snackbar>
+        <ToastContainer position="bottom-left" autoClose={3000} />
       </div>
     </>
   );

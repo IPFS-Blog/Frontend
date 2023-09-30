@@ -7,16 +7,15 @@ import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast, ToastContainer } from "react-toastify";
 import Web3 from "web3";
 
-import FailAlert from "@/components/alert/Fail";
-import SucessAlert from "@/components/alert/Sucess";
 import { MyTokenFunction } from "@/helpers/Contract/MyTokenFunction";
 import { GetACFunction } from "@/helpers/users/GetACFunction";
 import Mining from "@/pages/loading/mining";
 
 export default function DonationForm() {
-  // TODO: Handle funtion
+  // TODO: Handle function
   const [AC, setAC] = useState("");
   const dispatch = useDispatch();
   const Creater = useSelector((state: any) => state.Creater);
@@ -55,7 +54,12 @@ export default function DonationForm() {
       })
       .then(async () => {
         setIsLoading(false);
-        setSuccess(true);
+        toast.success("轉錢成功", {
+          style: {
+            boxShadow: "none",
+          },
+          theme: theme ? "light" : "dark",
+        });
         // TODO: 拿取帳號
         const accounts = await window.ethereum.request({
           method: "eth_requestAccounts",
@@ -69,10 +73,14 @@ export default function DonationForm() {
       })
       .catch(() => {
         setIsLoading(false);
-        setFailure(true);
+        toast.error("轉錢失敗", {
+          style: {
+            boxShadow: "none",
+          },
+        });
       });
   };
-  // TODO: UI funtion
+  // TODO: UI function
   const [open, setOpen] = useState(false);
   const [maxWidth] = useState<DialogProps["maxWidth"]>("md");
   const [price, setPrice] = useState(1);
@@ -80,8 +88,6 @@ export default function DonationForm() {
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
   // Loading
   const [isLoading, setIsLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [fail, setFailure] = useState(false);
 
   return (
     <>
@@ -137,8 +143,7 @@ export default function DonationForm() {
           )}
         </DialogContent>
       </Dialog>
-      {success && <SucessAlert message="轉錢成功" />}
-      {fail && <FailAlert message="轉錢失敗" />}
+      <ToastContainer position="bottom-left" autoClose={3000} />
     </>
   );
 }

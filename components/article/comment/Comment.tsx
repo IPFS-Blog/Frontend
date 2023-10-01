@@ -1,3 +1,5 @@
+import "react-toastify/dist/ReactToastify.css";
+
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import SendIcon from "@mui/icons-material/Send";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
@@ -13,9 +15,9 @@ import { useTheme } from "@mui/material/styles";
 import * as React from "react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { toast, ToastContainer } from "react-toastify";
 
-import FailAlert from "@/components/alert/Fail";
-import SucessAlert from "@/components/alert/Sucess";
+import AlertDialogSlide from "@/components/alert/AlertDialogSlide";
 import {
   _apiCheckJwt,
   apiArticleCommentDelete,
@@ -71,10 +73,6 @@ const Comment = (props: any) => {
   };
   const [articleId] = useState(props.articleId);
   const [Comment, setComment] = useState(props.contents);
-  const [success, setSuccess] = useState(false);
-  const [fail, setFailure] = useState(false);
-  const [Deletesuccess, setDeleteSuccess] = useState(false);
-  const [Deletefail, setDeleteFailure] = useState(false);
   const [edit, setEdit] = useState(false);
   /* 編輯留言 */
   async function Edit() {
@@ -85,14 +83,22 @@ const Comment = (props: any) => {
     if (jwt != null) {
       apiArticleCommentEdit(jwt, id, cid, Comment)
         .then(() => {
-          setFailure(false);
-          setSuccess(true);
+          toast.info("編輯成功", {
+            style: {
+              padding: "16px",
+              boxShadow: "none",
+            },
+          });
           setEdit(true);
           handleDialogClose();
         })
         .catch(() => {
-          setSuccess(false);
-          setFailure(true);
+          toast.error("編輯留言失敗", {
+            style: {
+              boxShadow: "none",
+            },
+            theme: theme ? "light" : "dark",
+          });
           handleDialogClose();
         });
     } else {
@@ -108,8 +114,11 @@ const Comment = (props: any) => {
     if (jwt != null) {
       apiArticleCommentDelete(jwt, id, cid)
         .then(async () => {
-          setDeleteFailure(false);
-          setDeleteSuccess(true);
+          toast.error("已刪除一則留言", {
+            style: {
+              boxShadow: "none",
+            },
+          });
           setEdit(true);
           handleDialogClose();
           const data = { aid: articleId };
@@ -125,8 +134,6 @@ const Comment = (props: any) => {
             });
         })
         .catch(() => {
-          setDeleteSuccess(false);
-          setDeleteFailure(true);
           handleDialogClose();
         });
     } else {
@@ -285,11 +292,9 @@ const Comment = (props: any) => {
             <p>變更留言</p>
           </button>
         </Dialog>
-        {success && <SucessAlert message="留言成功" />}
-        {fail && <FailAlert message="留言失敗" />}
       </div>
       <div>
-        <Dialog
+        {/* <Dialog
           open={DeletedialogOpen}
           onClose={handleDialogClose}
           fullScreen={fullScreen}
@@ -297,17 +302,18 @@ const Comment = (props: any) => {
           aria-labelledby="responsive-dialog-title"
           className="fixed h-screen w-screen "
         >
-          <DialogContent className="flex bg-gray-200 md:w-full lg:w-96"></DialogContent>
-          <button
-            className="inline-flex cursor-pointer justify-center rounded-full p-2 text-blue-600 hover:bg-gray-300 dark:text-blue-500 dark:hover:bg-gray-100"
-            onClick={Delete}
-          >
-            <p>確定刪除</p>
-          </button>
-        </Dialog>
-        {Deletesuccess && <SucessAlert message="刪除成功" />}
-        {Deletefail && <FailAlert message="刪除失敗" />}
+          <DialogContent className="flex bg-gray-200 md:w-full lg:w-96">
+            <button
+              className="inline-flex cursor-pointer justify-center rounded-full p-2 text-blue-600 hover:bg-gray-300 dark:text-blue-500 dark:hover:bg-gray-100"
+              onClick={Delete}
+            >
+              <p>確定刪除</p>
+            </button>
+          </DialogContent>
+        </Dialog> */}
+        {DeletedialogOpen && <AlertDialogSlide handlefunction={Delete} title={"確認刪除 " + Comment + " 這則留言"} />}
       </div>
+      <ToastContainer position="bottom-left" autoClose={3000} />
     </div>
   );
 };

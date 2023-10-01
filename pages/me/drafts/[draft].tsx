@@ -10,10 +10,10 @@ import MarkdownIt from "markdown-it";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import { toast, ToastContainer } from "react-toastify";
 import Web3 from "web3";
 
 import AlertDialogSlide from "@/components/alert/AlertDialogSlide";
-import FailAlert from "@/components/alert/Fail";
 import { _apiCheckJwt, apiArticleEditArticle, apiArticleTakeArticle } from "@/components/api";
 import { ArticleHistoryFunction } from "@/helpers/Contract/ArticleHistoryFunction";
 import { LoginFunction } from "@/helpers/users/LoginFunction";
@@ -88,9 +88,11 @@ export default function Draft() {
             statusCode === 400 && errorMessages.length > 0
               ? errorMessages.join("\n")
               : "失敗，請再重新試試（如有問題可以向平台反映）。\n";
-
-          setFailMessage(errorMessage);
-          setFailAlert(true);
+          toast.error(`${errorMessage}`, {
+            style: {
+              boxShadow: "none",
+            },
+          });
         });
     } else {
       window.alert("請先登入謝謝");
@@ -125,7 +127,11 @@ export default function Draft() {
         })
         .catch(() => {
           setFailMessage("歷史紀錄失敗，請再重新試試（如有問題可以向平台反映）。\n");
-          setFailAlert(true);
+          toast.error(`${failMessage}`, {
+            style: {
+              boxShadow: "none",
+            },
+          });
           setIsLoading(false);
         });
     }
@@ -134,7 +140,6 @@ export default function Draft() {
   //TODO: UI function
   const [edit, setedit] = useState(true);
   const [preview, setpreview] = useState(true);
-  const [fail, setFailAlert] = useState(false);
   const [failMessage, setFailMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [alertDialogSlide, setAlertDialogSlide] = useState(false);
@@ -328,7 +333,7 @@ export default function Draft() {
           />
         </div>
       )}
-      {fail && <FailAlert message={failMessage} />}
+      <ToastContainer position="bottom-left" autoClose={3000} />
       {alertDialogSlide && (
         <AlertDialogSlide
           handlefunction={jumpPage}

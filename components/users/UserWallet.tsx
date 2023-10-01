@@ -1,5 +1,5 @@
-import { AlertProps, Snackbar } from "@mui/material";
-import MuiAlert from "@mui/material/Alert";
+import "react-toastify/dist/ReactToastify.css";
+
 import Button from "@mui/material/Button";
 import Dialog, { DialogProps } from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -10,6 +10,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { toast, ToastContainer } from "react-toastify";
 import Web3 from "web3";
 
 import { MyTokenFunction } from "@/helpers/Contract/MyTokenFunction";
@@ -62,7 +63,12 @@ export default function ResponsiveDialog() {
           gas: gasLimit,
         })
         .then(async () => {
-          setchangeMoneySucess(true);
+          toast.success("交換成功", {
+            style: {
+              boxShadow: "none",
+            },
+            theme: theme ? "light" : "dark",
+          });
           setIsLoading(false);
           // TODO: 拿取帳號
           const accounts = await window.ethereum.request({
@@ -78,7 +84,11 @@ export default function ResponsiveDialog() {
           });
         })
         .catch(() => {
-          setchangeMoneyFail(true);
+          toast.error("交換失敗", {
+            style: {
+              boxShadow: "none",
+            },
+          });
           setIsLoading(false);
         });
     }
@@ -97,7 +107,12 @@ export default function ResponsiveDialog() {
           gas: gasLimit,
         })
         .then(async () => {
-          setchangeMoneySucess(true);
+          toast.success("交換成功", {
+            style: {
+              boxShadow: "none",
+            },
+            theme: theme ? "light" : "dark",
+          });
           setIsLoading(false);
           // TODO: 拿取帳號
           const accounts = await window.ethereum.request({
@@ -113,7 +128,11 @@ export default function ResponsiveDialog() {
           });
         })
         .catch(() => {
-          setchangeMoneyFail(true);
+          toast.error("交換失敗", {
+            style: {
+              boxShadow: "none",
+            },
+          });
           setIsLoading(false);
         });
     }
@@ -129,19 +148,6 @@ export default function ResponsiveDialog() {
   const [selectedNumber1, setSelectedNumber1] = useState(1);
   // Loading
   const [isLoading, setIsLoading] = useState(false);
-  const [changeMoneyFail, setchangeMoneyFail] = useState(false);
-  const [changeMoneySucess, setchangeMoneySucess] = useState(false);
-  const alertHandleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setchangeMoneyFail(false);
-    setchangeMoneySucess(false);
-  };
-  //material ui toast
-  const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-  });
 
   function handleNumberChange(event: any) {
     setSelectedNumber(parseInt(event.target.value));
@@ -272,16 +278,7 @@ export default function ResponsiveDialog() {
             </Button>
           </DialogActions>
         </Dialog>
-        <Snackbar open={changeMoneyFail} autoHideDuration={6000} onClose={alertHandleClose}>
-          <Alert onClose={alertHandleClose} severity="error" sx={{ width: "100%" }}>
-            交換失敗!
-          </Alert>
-        </Snackbar>
-        <Snackbar open={changeMoneySucess} autoHideDuration={6000} onClose={alertHandleClose}>
-          <Alert onClose={alertHandleClose} severity="success" sx={{ width: "100%" }}>
-            交換成功!
-          </Alert>
-        </Snackbar>
+        <ToastContainer position="bottom-left" autoClose={3000} />
       </div>
     </>
   );

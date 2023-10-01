@@ -85,7 +85,7 @@ const Sidebar = () => {
                     <div key={menu.id} className={classes}>
                       <Link href={menu.link}>
                         <div className="flex w-full items-center rounded-md py-4 px-3 hover:bg-gray-300 hover:text-gray-700 dark:hover:bg-gray-500 dark:hover:text-gray-100">
-                          <div className="mr-2 w-auto">
+                          <div className="w-auto">
                             <Icon className="text-lg text-gray-700 dark:text-gray-200" />
                           </div>
                           {toggleCollapse && (
@@ -104,7 +104,7 @@ const Sidebar = () => {
                     <div key={menu.id} className={classes}>
                       <Link href={menu.link}>
                         <div className="flex w-full items-center rounded-md py-4 hover:bg-gray-300 hover:text-gray-700 dark:hover:bg-gray-500 dark:hover:text-gray-100">
-                          <div className="mr-2 w-auto">
+                          <div className="m-1 w-auto">
                             <Icon className="text-lg text-gray-700 dark:text-gray-200" />
                           </div>
                           {toggleCollapse && (

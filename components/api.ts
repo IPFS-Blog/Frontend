@@ -159,3 +159,21 @@ export const apiCommentLike = (jwt: string, id: string, cid: string, data: any) 
       Authorization: `Bearer ${jwt}`,
     },
   }); //對留言按讚
+export const apiBookMarkAdd = (jwt: string, id: string) =>
+  articleRequest.post(`/${id}/favorite`, "", {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  }); //收藏文章
+export const apiBookMarkDelete = (jwt: string, id: string) =>
+  articleRequest.delete(`/${id}/favorite`, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  }); //刪除收藏文章
+export const apiBookMarkAddReord = (jwt: string) =>
+  articleRequest.get(`/own/favorite`, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  }); //收藏文章紀錄

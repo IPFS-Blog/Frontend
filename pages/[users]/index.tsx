@@ -7,6 +7,7 @@ import {
   _apiCheckJwt,
   apiArticleGetCreaterArticle,
   apiArticleLikesRecord,
+  apiBookMarkAddReord,
   apiUserGetCreaterData,
 } from "@/components/api";
 import ArticleItem from "@/components/article/ArticleItem";
@@ -21,6 +22,7 @@ export default function Users(props: any) {
   const [IsPrivate, SetIsPrivate] = useState(false);
   const [menuList, setmenuList] = useState(props.Articles || null);
   const [createrData, setCreaterData] = useState(props.createrData || null);
+  const [menuID, setmenuID] = useState(1);
   const dispatch = useDispatch();
   const User = useSelector((state: any) => state.User);
   useEffect(() => {
@@ -32,10 +34,10 @@ export default function Users(props: any) {
       window.alert("網站抓取資料錯誤");
     }
   }, [User.profile.username, dispatch, props.IsCreater, props.createrData]);
-
   const menu = async (menuID: any) => {
     let jwt = "";
     await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt || null));
+    setmenuID(menuID);
     //所有
     if (menuID == 1) {
       const url = props.url;
@@ -48,6 +50,7 @@ export default function Users(props: any) {
           .catch(() => {
             // 找不到使用者
           });
+
         if (createrData.username !== "") {
           const Articles = await apiArticleGetCreaterArticle(createrData.username);
           setmenuList(Articles.data.articles);
@@ -57,6 +60,9 @@ export default function Users(props: any) {
     //收藏
     else if (jwt != null) {
       if (menuID == 2) {
+        await apiBookMarkAddReord(jwt).then((res: any) => {
+          setmenuList(res.data.articles);
+        });
       }
       //瀏覽紀錄
       else if (menuID == 3) {
@@ -65,7 +71,6 @@ export default function Users(props: any) {
       else if (menuID == 4) {
         await apiArticleLikesRecord(jwt).then((res: any) => {
           setmenuList(res.data.article);
-          console.log(res.data.article);
         });
       }
     }
@@ -150,7 +155,7 @@ export default function Users(props: any) {
                 onClick={() => menu(2)}
                 className="ml-4 select-none rounded-md px-3 py-2 text-gray-300 hover:bg-gray-700 hover:text-white"
               >
-                收藏
+                收藏紀錄
               </button>
             </li>
             <li className="w-28 text-center">
@@ -182,12 +187,14 @@ export default function Users(props: any) {
           </ul>
         </menu>
       )}
+
       <main className="my-2 w-full px-2">
         <ul role="list">
           {menuList != null &&
             menuList.length != 0 &&
             menuList.map((item: any) => {
-              const { id, title, subtitle, updateAt, likes } = item;
+              const { id, title, subtitle, updateAt, likes, createAt } =
+                menuID.toString() == "2" ? item?.articleId || {} : item || {};
               return (
                 <ArticleItem
                   username={props.createrData.username}
@@ -198,6 +205,8 @@ export default function Users(props: any) {
                   subtitle={subtitle}
                   updateAt={updateAt}
                   likes={likes}
+                  menuID={menuID}
+                  createAt={createAt}
                 />
               );
             })}

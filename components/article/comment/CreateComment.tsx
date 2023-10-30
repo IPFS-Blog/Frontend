@@ -17,8 +17,6 @@ const CreateComment = (props: any) => {
     const articleId = Number(articleid);
     apiArticleCommentCreate(jwt, articleId, Comment)
       .then(async () => {
-        setFailure(false);
-        setSuccess(true);
         const data = { aid: articleId };
         await apiArticleTakeAllArticle(data)
           .then(async res => {
@@ -31,10 +29,16 @@ const CreateComment = (props: any) => {
               notFound: true,
             };
           });
+        setSuccess(true);
+        setTimeout(() => {
+          setSuccess(false);
+        }, 3000);
       })
       .catch(() => {
-        setSuccess(false);
         setFailure(true);
+        setTimeout(() => {
+          setFailure(false);
+        }, 3000);
       });
   }
 
@@ -57,8 +61,8 @@ const CreateComment = (props: any) => {
           <SendIcon />
         </button>
       </div>
-      {success && <SucessAlert message="留言成功" />}
-      {fail && <FailAlert message="留言失敗" />}
+      {success && <SucessAlert message="新增留言成功" />}
+      {fail && <FailAlert message="新增留言失敗" />}
     </div>
   );
 };

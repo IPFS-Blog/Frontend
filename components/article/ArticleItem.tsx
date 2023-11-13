@@ -25,7 +25,9 @@ export default function ArticleItem(props: any) {
           </div> */}
           <div className="col-span-12  flex items-center justify-between">
             <div className="flex items-center">
-              <p className="ml-2">{props.updateAt.substring(0, 10)}</p>
+              <p className="ml-2">
+                {props.menuID == "2" ? props.createAt?.substring(0, 10) : props.updateAt?.substring(0, 10)}
+              </p>
               {/* TODO:喜歡 */}
               <div className="ml-2 rounded font-semibold text-red-500 phone:ml-6">
                 <FavoriteBorderOutlinedIcon />

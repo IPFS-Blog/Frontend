@@ -1,12 +1,21 @@
 import ArrowOutwardOutlinedIcon from "@mui/icons-material/ArrowOutwardOutlined";
-import BookmarkAddOutlinedIcon from "@mui/icons-material/BookmarkAddOutlined";
+import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
+import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import Avatar from "@mui/material/Avatar";
 import MarkdownIt from "markdown-it";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { _apiCheckJwt, apiArticleLike, apiArticleLikesRecord, apiArticleTakeAllArticle } from "@/components/api";
+import {
+  _apiCheckJwt,
+  apiArticleLike,
+  apiArticleLikesRecord,
+  apiArticleTakeAllArticle,
+  apiBookMarkAdd,
+  apiBookMarkAddReord,
+  apiBookMarkDelete,
+} from "@/components/api";
 import Comment from "@/components/article/comment/Comment";
 import CreateComment from "@/components/article/comment/CreateComment";
 import DonateButton from "@/components/users/DonateButton";
@@ -28,6 +37,8 @@ export default function Article(props: any) {
   const { contents } = props.article;
   const [likeSuccess, setLikeSuccess] = useState(false);
   const [articleLike, setArticleLike] = useState(false);
+  const [bookmark, setbookmark] = useState(false);
+  const [bookmarksuccess, setbookmarksuccess] = useState(false);
   const md = new MarkdownIt({
     html: true,
     linkify: true,
@@ -147,10 +158,72 @@ export default function Article(props: any) {
                 <IosShareOutlinedIcon />
               </button> */}
               {/* 收藏 */}
-              <button className="mx-1 h-10 w-10 rounded-lg text-yellow-500 hover:bg-yellow-300 hover:text-white">
-                <BookmarkAddOutlinedIcon />
-              </button>
-              <p className="mx-1 font-mono">{props.article.updateAt.substr(0, 10)}</p>
+              {User.profile.login ? (
+                <div className="flex items-center">
+                  <button
+                    className="relative mx-1 h-10 w-10 rounded-lg text-yellow-500 hover:bg-yellow-300 hover:text-white"
+                    onClick={async () => {
+                      let jwt = "";
+                      await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
+                      if (jwt.trim() !== "" && props.ArticleUrl != null) {
+                        let BookMarkStatus = false;
+                        await apiBookMarkAddReord(jwt).then((res: any) => {
+                          const BookMarkAddReord = res.data.articles;
+                          if (BookMarkAddReord !== null) {
+                            BookMarkStatus = BookMarkAddReord.some((article: any) => {
+                              const BookMarkAddMatching = article.articleId.id.toString() === props.ArticleUrl;
+                              return BookMarkAddMatching;
+                            });
+                          }
+                          setbookmark(BookMarkStatus);
+                        });
+                        if (BookMarkStatus) {
+                          await apiBookMarkDelete(jwt, props.ArticleUrl)
+                            .then(() => {
+                              setbookmark(false);
+                              setbookmarksuccess(true);
+                              setTimeout(() => {
+                                setbookmarksuccess(false);
+                              }, 2000);
+                            })
+                            .catch(() => {
+                              return {
+                                notFound: true,
+                              };
+                            });
+                        } else {
+                          await apiBookMarkAdd(jwt, props.ArticleUrl)
+                            .then(() => {
+                              setbookmark(true);
+                              setbookmarksuccess(true);
+                              setTimeout(() => {
+                                setbookmarksuccess(false);
+                              }, 2000);
+                            })
+                            .catch(() => {
+                              return {
+                                notFound: true,
+                              };
+                            });
+                        }
+                      }
+                    }}
+                  >
+                    {bookmark ? <BookmarkAddedIcon /> : <BookmarkAddIcon />}
+                    {bookmarksuccess ? (
+                      <span
+                        className={`pointer-events-none absolute bottom-full -left-1/2 z-10 mb-2 ml-2 w-24 rounded-lg p-2 text-center text-xs ${
+                          !bookmark ? "bg-gray-800 text-gray-100" : "bg-red-500 text-white"
+                        }`}
+                      >
+                        {bookmark ? "收藏成功" : "刪除收藏"}
+                      </span>
+                    ) : null}
+                  </button>
+
+                  <p className="m-1 flex font-mono">{props.article.updateAt.substr(0, 10)}</p>
+                </div>
+              ) : null}
             </div>
           </div>
           {/* 輸入留言 */}

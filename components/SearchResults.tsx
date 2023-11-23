@@ -39,6 +39,7 @@ const SearchResults = (props: any) => {
               id={article.id}
               title={article.title}
               subtitle={article.subtitle}
+              like={"-1"}
             />
           </li>
         ))}

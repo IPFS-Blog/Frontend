@@ -34,6 +34,10 @@ const authRequest = axios.create({
 const articleRequest = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_API}/articles`,
 });
+// default api
+const Request = axios.create({
+  baseURL: `${process.env.NEXT_PUBLIC_API}`,
+});
 
 // TODO: User 相關的 api
 export const apiUserRegister = (data: any) => userRequest.post("/", data, config); // 註冊
@@ -204,3 +208,9 @@ export const apiBookMarkAddReord = (jwt: string) =>
       Authorization: `Bearer ${jwt}`,
     },
   }); //收藏文章紀錄
+
+export const apiSearch = (data: any) =>
+  Request.get(`/search`, {
+    headers: { "Content-Type": "application/json" },
+    params: data,
+  }); //搜尋關鍵詞

@@ -7,14 +7,14 @@ import Follow from "@/components/users/Follow";
 const SearchResults = (props: any) => {
   const User = useSelector((state: any) => state.User);
   return (
-    <div>
-      <h2>使用者結果：</h2>
+    <div className="my-2">
+      <h1>使用者：</h1>
       <ul>
         {props.userResults.map((user: any) => (
           <li key={user.id}>
             <a
               href={"/" + user.username}
-              className="my-2 flex flex-row items-center justify-between rounded border border-blue-200 bg-gray-50 p-2 dark:bg-gray-700"
+              className="my-2 flex flex-row items-center justify-between rounded border border-blue-200 bg-gray-50 p-2 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-500"
             >
               {/* TODO: 文章擁有者資料 頭貼、名稱 */}
               <div className="flex flex-row items-center">
@@ -29,7 +29,7 @@ const SearchResults = (props: any) => {
         ))}
       </ul>
 
-      <h2>文章結果：</h2>
+      <h1 className="my-2">文章結果：</h1>
       <ul>
         {props.articleResults.map((article: any) => (
           <li key={article.id}>

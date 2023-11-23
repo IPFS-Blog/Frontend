@@ -75,23 +75,11 @@ const Navbar = () => {
                 </span>
               </div>
             </Link>
-            <form className="grid justify-items-start tablet:w-auto laptop:mx-20">
-              <div className="flex flex-col rounded-lg bg-gray-200 p-2 dark:bg-slate-700 tablet:flex-row tablet:space-x-2">
-                {/* // <div className="mb-1 flex items-center rounded-md bg-gray-100 dark:bg-slate-800">
-                //   <input
-                //     type="text"
-                //     id="inputSearch"
-                //     className="w-full items-center rounded-r-md bg-gray-100 px-3 text-gray-500 outline-none focus:outline-none dark:bg-slate-800  placeholder:dark:text-gray-300"
-                //     placeholder="創作者姓名或文章名稱"
-                //     onChange={e => setSearchText(e.target.value)}
-                //   />
-                // </div> */}
-
-                <Stack spacing={2} sx={{ width: 300 }} className="dark:text-gray-500">
+            <form className="grid w-1/3 justify-items-start tablet:w-auto laptop:mx-20">
+              <div className="flex w-full flex-col rounded-lg bg-gray-200 p-2 dark:bg-slate-700 tablet:flex-row tablet:space-x-2">
+                <Stack spacing={2} className="w-full rounded-md dark:bg-gray-500">
                   <Autocomplete
                     freeSolo
-                    id="free-solo-2-demo"
-                    disableClearable
                     options={results}
                     renderInput={params => (
                       <TextField
@@ -99,9 +87,10 @@ const Navbar = () => {
                         label="搜尋創作者姓名或文章名稱"
                         InputProps={{
                           ...params.InputProps,
-                          type: "search",
                         }}
                         onChange={e => setSearchText(e.target.value)}
+                        className="w-96 dark:text-slate-400 xs:w-20 phone:w-40 tablet:w-80"
+                        id="outlined-helperText"
                       />
                     )}
                   />

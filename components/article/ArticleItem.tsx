@@ -28,7 +28,7 @@ export default function ArticleItem(props: any) {
               <p className="ml-2">
                 {props.menuID == "2" ? props.createAt?.substring(0, 10) : props.updateAt?.substring(0, 10)}
               </p>
-              {props.likes > 0 ? (
+              {props.likes >= 0 ? (
                 <>
                   <div className="ml-2 rounded font-semibold text-red-500 phone:ml-6">
                     <FavoriteBorderOutlinedIcon />

@@ -22,6 +22,18 @@ const Navbar = () => {
   const hideNavbar = routerPath === "/Dashboard" || routerPath.startsWith("/articleHistory/");
   const data = { query: searchText, search_type: null };
   const [results, setResults] = useState<string[]>([]);
+  const [debouncedSearchText, setDebouncedSearchText] = useState("");
+
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setDebouncedSearchText(searchText);
+    }, 500);
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [searchText]);
+
   useEffect(() => {
     async function Search() {
       try {
@@ -45,9 +57,11 @@ const Navbar = () => {
       }
     }
 
-    Search();
+    if (debouncedSearchText) {
+      Search();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
+  }, [debouncedSearchText]);
   function SearchResults() {
     router.push({
       pathname: "/Search",

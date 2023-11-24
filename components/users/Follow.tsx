@@ -1,5 +1,4 @@
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -7,7 +6,7 @@ import {
   _apiCheckJwt,
   apiUserDeleteCreatorData,
   apiUserGetCreatorOwnSubscribers,
-  // apiUserGetCreatorSubscribers,
+  apiUserGetCreatorSubscribers,
 } from "@/components/api";
 import { updatedSubscribers } from "@/store/follow/SubscribersSlice";
 export default function Follow(props: any) {
@@ -58,48 +57,21 @@ export default function Follow(props: any) {
           });
       } else {
         //新增追蹤
-        const headers = {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${jwt}`,
-        };
 
-        const options = {
-          method: "POST",
-          url: `${process.env.NEXT_PUBLIC_API}/users/${uid}/subscribers`,
-          headers: headers,
-        };
-
-        axios(options)
+        apiUserGetCreatorSubscribers(jwt, uid)
           .then((res: any) => {
             setSubscribersTip(true);
-            setMessage("成功追蹤");
-            setIsSubscribers(!isSubscribers);
             console.log("成功追蹤", res);
+            setMessage("已追蹤");
+            setIsSubscribers(!isSubscribers);
             setTimeout(() => {
               setSubscribersTip(false);
             }, 3000);
-            update();
           })
           .catch((error: any) => {
             console.log("失敗", error);
             setMessage("追蹤失敗");
           });
-
-        // apiUserGetCreatorSubscribers(jwt, uid)
-        //   .then((res: any) => {
-        //     setSubscribersTip(true);
-        //     console.log("成功追蹤", res);
-        //     setMessage("已追蹤");
-        //     setIsSubscribers(!isSubscribers);
-        //     setTimeout(() => {
-        //       setSubscribersTip(false);
-        //     }, 3000);
-        //   })
-        //   .catch((error: any) => {
-        //     console.log("失敗", error);
-        //     setMessage("追蹤失敗");
-        //   });
       }
     } else {
       window.alert("請先登入");

@@ -58,13 +58,15 @@ export const apiUserEditProfile = (jwt: string, data: any) =>
 export const apiUserGetCreaterData = (username: any) => userRequest.get(`/${username}`, config); // 搜尋特定使用者
 
 export const apiUserGetCreatorSubscribers = (jwt: string, uid: any) =>
-  userRequest.post(`/${uid}/subscribers`, {
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      Authorization: `Bearer ${jwt}`,
+  userRequest.post(
+    `/${uid}/subscribers`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
     },
-  }); // 新增訂閱指定使用者
+  ); // 新增訂閱指定使用者
 export const apiUserDeleteCreatorData = (jwt: string, uid: any) =>
   userRequest.delete(`/${uid}/subscribers`, {
     headers: {

@@ -4,7 +4,6 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useTheme } from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import { useRouter } from "next/router";
 import * as React from "react";
 import { useEffect, useState } from "react";
@@ -31,12 +30,11 @@ export default function JoinCoin() {
   }, []);
 
   // TODO: 加入錢幣到metamask
-  // FIXME: Lin AC 圖片設計
   async function AddCoinToMetaMask() {
     const tokenAddress = `${process.env.NEXT_PUBLIC_MyTokenContractAddress}`;
     const tokenSymbol = "AC";
     const tokenDecimals = 0;
-    const tokenImage = "http://placekitten.com/200/300";
+    const tokenImage = getRandomImage();
     await window.ethereum
       .request({
         method: "wallet_watchAsset",
@@ -70,7 +68,6 @@ export default function JoinCoin() {
   // TODO: UI function
   const [open, setOpen] = useState(false);
   const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("lg"));
   const [maxWidth] = useState<DialogProps["maxWidth"]>("lg");
   const [alertDialogSlide, setAlertDialogSlide] = useState(false);
 
@@ -89,19 +86,22 @@ export default function JoinCoin() {
   const handleClose = () => {
     setOpen(false);
   };
+
+  function getRandomImage() {
+    const images = [
+      "https://i.ibb.co/0ZFZCy4/11zon-cropped.png", // dark mode
+      "https://i.ibb.co/XSCZKJF/11zon-cropped-1.png", // light mode
+    ];
+    const randomIndex = Math.floor(Math.random() * images.length);
+    return images[randomIndex];
+  }
   return (
     <>
       <div>
         {/*  dialog部分皆為彈窗*/}
         <button onClick={handleClickOpen}>加入 AC 貨幣</button>
 
-        <Dialog
-          fullScreen={fullScreen}
-          maxWidth={maxWidth}
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="responsive-dialog-title"
-        >
+        <Dialog maxWidth={maxWidth} open={open} onClose={handleClose} aria-labelledby="responsive-dialog-title">
           <DialogTitle id="responsive-dialog-title"> 加入 AC </DialogTitle>
           <DialogContent>
             {/* TODO: 加入錢幣到metamask */}

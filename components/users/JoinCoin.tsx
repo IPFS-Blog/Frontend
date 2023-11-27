@@ -1,14 +1,13 @@
-import { AlertProps, Snackbar } from "@mui/material";
-import MuiAlert from "@mui/material/Alert";
+import "react-toastify/dist/ReactToastify.css";
+
 import Dialog, { DialogProps } from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useTheme } from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import { useRouter } from "next/router";
 import * as React from "react";
 import { useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 
 import AlertDialogSlide from "@/components/alert/AlertDialogSlide";
 import { CheckChainIdFunction } from "@/helpers/users/CheckChainIdFunction";
@@ -31,12 +30,11 @@ export default function JoinCoin() {
   }, []);
 
   // TODO: 加入錢幣到metamask
-  // FIXME: Lin AC 圖片設計
   async function AddCoinToMetaMask() {
     const tokenAddress = `${process.env.NEXT_PUBLIC_MyTokenContractAddress}`;
     const tokenSymbol = "AC";
     const tokenDecimals = 0;
-    const tokenImage = "http://placekitten.com/200/300";
+    const tokenImage = getRandomImage();
     await window.ethereum
       .request({
         method: "wallet_watchAsset",
@@ -51,35 +49,28 @@ export default function JoinCoin() {
         },
       })
       .then(() => {
-        setalertJoinCoinSucess(true);
+        toast.success("加入 AC 成功 \n 可以到 MetaMask 確認 AC 的加入", {
+          style: {
+            boxShadow: "none",
+          },
+          theme: theme ? "light" : "dark",
+        });
       })
       .catch(() => {
-        setalertJoinCoinFail(true);
+        toast.error("加入 AC 失敗，請確認網路有無問題 \n 如有問題可以填寫回饋單跟我們詢問", {
+          style: {
+            boxShadow: "none",
+          },
+        });
       });
   }
 
   // TODO: UI function
   const [open, setOpen] = useState(false);
   const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("lg"));
   const [maxWidth] = useState<DialogProps["maxWidth"]>("lg");
   const [alertDialogSlide, setAlertDialogSlide] = useState(false);
 
-  const [alertJoinCoinFail, setalertJoinCoinFail] = useState(false);
-
-  const [alertJoinCoinSucess, setalertJoinCoinSucess] = useState(false);
-
-  const alertHandleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setalertJoinCoinSucess(false);
-    setalertJoinCoinFail(false);
-  };
-  //material ui toast
-  const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-  });
   function jumpPage() {
     router.push("./docs/NetworkInstructions");
   }
@@ -95,22 +86,24 @@ export default function JoinCoin() {
   const handleClose = () => {
     setOpen(false);
   };
+
+  function getRandomImage() {
+    const images = [
+      "https://i.ibb.co/0ZFZCy4/11zon-cropped.png", // dark mode
+      "https://i.ibb.co/XSCZKJF/11zon-cropped-1.png", // light mode
+    ];
+    const randomIndex = Math.floor(Math.random() * images.length);
+    return images[randomIndex];
+  }
   return (
     <>
       <div>
         {/*  dialog部分皆為彈窗*/}
         <button onClick={handleClickOpen}>加入 AC 貨幣</button>
 
-        <Dialog
-          fullScreen={fullScreen}
-          maxWidth={maxWidth}
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="responsive-dialog-title"
-        >
+        <Dialog maxWidth={maxWidth} open={open} onClose={handleClose} aria-labelledby="responsive-dialog-title">
           <DialogTitle id="responsive-dialog-title"> 加入 AC </DialogTitle>
           <DialogContent>
-            {/* 彈窗後整個畫面設計 */}
             {/* TODO: 加入錢幣到metamask */}
             <button
               className="items-center rounded-lg bg-gray-200 py-2 px-20 text hover:bg-gray-300"
@@ -119,22 +112,8 @@ export default function JoinCoin() {
               加入錢幣到metamask
             </button>
           </DialogContent>
-          <DialogActions>
-            {/* <Button autoFocus onClick={handleClose}>
-              加入!
-            </Button> */}
-          </DialogActions>
         </Dialog>
-        <Snackbar open={alertJoinCoinSucess} autoHideDuration={6000} onClose={alertHandleClose}>
-          <Alert onClose={alertHandleClose} severity="success" sx={{ width: "100%" }}>
-            加入 AC 成功 可以到 MetaMask 確認 AC 的加入
-          </Alert>
-        </Snackbar>
-        <Snackbar open={alertJoinCoinFail} autoHideDuration={6000} onClose={alertHandleClose}>
-          <Alert onClose={alertHandleClose} severity="error" sx={{ width: "100%" }}>
-            加入 AC 失敗
-          </Alert>
-        </Snackbar>
+        <ToastContainer position="bottom-left" autoClose={3000} />
         {alertDialogSlide ? (
           <AlertDialogSlide
             handlefunction={jumpPage}

@@ -19,6 +19,7 @@ import {
 import Comment from "@/components/article/comment/Comment";
 import CreateComment from "@/components/article/comment/CreateComment";
 import DonateButton from "@/components/users/DonateButton";
+import Follow from "@/components/users/Follow";
 import { update } from "@/store/CreaterSlice";
 import styles from "@/styles/MarkdownEditor.module.css";
 export default function Article(props: any) {
@@ -55,9 +56,12 @@ export default function Article(props: any) {
         >
           {/* TODO: 文章擁有者資料 頭貼、名稱 */}
           <div className="flex flex-row items-center">
-            <Avatar className="h-auto w-10 rounded-full" src={props.createrData.picture} alt="not find Avatar" />
+            <Avatar src={props.createrData.picture} alt="not find Avatar" />
             <div className="px-2">
               <div>{props.createrData.username}</div>
+            </div>
+            <div className="ml-10">
+              {props.createrData.id != User.profile.id ? <Follow subscriberId={props.createrData.id} /> : null}
             </div>
           </div>
           <button>
@@ -251,106 +255,6 @@ export default function Article(props: any) {
                 />
               );
             })}
-          </div>
-        </div>
-      </div>
-
-      {/* 右側欄 */}
-      <div className="hidden tablet:col-span-3 tablet:flex tablet:flex-col laptop:col-span-4">
-        {/* TODO: 文章擁有者資料 頭貼、名稱 */}
-        <div className="flex justify-center">
-          <Avatar className="h-auto w-1/2 rounded-full" src={props.createrData.picture} alt="not find Avatar" />
-        </div>
-        <div className="text-center">
-          {/* ${Username} */}
-          <div className="my-2 px-2">{props.createrData.username}</div>
-          {/* FIXME: 標籤 */}
-          {/*Label*/}
-          {/* <span className="inline-grid grid-cols-3 gap-1">{label}</span> */}
-          <button className="my-2 rounded border border-red-500 py-2 px-20 font-semibold text-red-500 hover:bg-red-500 hover:text-white">
-            追蹤
-          </button>
-        </div>
-        {/* FIXME:推薦使用者資料 */}
-        <div className="my-5 px-2">
-          <div className="text-base font-semibold">推薦使用者</div>
-          <ul className="divide-y divide-blue-200">
-            <li className="grid w-full grid-cols-4 py-1">
-              <div className="col-span-3 flex">
-                <Avatar></Avatar>
-                <div className="px-2">
-                  <p>Lin</p>
-                  <p className="line-clamp-2">Hello</p>
-                </div>
-              </div>
-              <button className="my-2 h-8 rounded-full border border-red-500 px-2 font-semibold text-red-500 hover:bg-red-500 hover:text-white">
-                追蹤
-              </button>
-            </li>
-            <li className="grid w-full grid-cols-4 py-1">
-              <div className="col-span-3 flex">
-                <Avatar></Avatar>
-                <div className="px-2">
-                  <p>Rj</p>
-                  <p className="line-clamp-2">
-                    ng duis excepteur esse in duis nostrud occaecat mollit incididunt desaccaecat
-                  </p>
-                </div>
-              </div>
-              <button className="my-2 h-8  rounded-full border border-red-500 px-2 font-semibold text-red-500 hover:bg-red-500 hover:text-white">
-                追蹤
-              </button>
-            </li>
-            <li className="grid w-full grid-cols-4 py-1">
-              <div className="col-span-3 flex">
-                <Avatar></Avatar>
-                <div className="px-2">
-                  <p>Amy</p>
-                  <p className="line-clamp-2">我是一位熱愛設計的設計師</p>
-                </div>
-              </div>
-              <button className="my-2 h-8 rounded-full border border-red-500 px-2 font-semibold text-red-500 hover:bg-red-500 hover:text-white">
-                追蹤
-              </button>
-            </li>
-          </ul>
-        </div>
-        {/* FIXME:熱門標籤資料 10筆 */}
-        <div className="my-5 px-2">
-          <div className="text-base font-semibold">熱門標籤</div>
-          <div className="flex flex-wrap gap-2 py-2">
-            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">前端</p>
-            </div>
-            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">狗狗</p>
-            </div>
-            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-              <p className="inline-block pr-1 align-middle">#</p>
-              <p className="inline-block align-middle">網頁設計</p>
-            </div>
-            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">家庭</p>
-            </div>
-            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-              <p className="inline-block pr-1 align-middle">#</p>{" "}
-              <p className="inline-block align-middle">家庭旅遊好去處</p>
-            </div>
-            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">新生季</p>
-            </div>
-            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">Chatgpt</p>
-            </div>
-            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">Java</p>
-            </div>
-            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">C++</p>
-            </div>
-            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">後端</p>
-            </div>
           </div>
         </div>
       </div>

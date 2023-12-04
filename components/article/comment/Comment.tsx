@@ -294,23 +294,6 @@ const Comment = (props: any) => {
         </Dialog>
       </div>
       <div>
-        {/* <Dialog
-          open={DeletedialogOpen}
-          onClose={handleDialogClose}
-          fullScreen={fullScreen}
-          maxWidth={maxWidth}
-          aria-labelledby="responsive-dialog-title"
-          className="fixed h-screen w-screen "
-        >
-          <DialogContent className="flex bg-gray-200 md:w-full lg:w-96">
-            <button
-              className="inline-flex cursor-pointer justify-center rounded-full p-2 text-blue-600 hover:bg-gray-300 dark:text-blue-500 dark:hover:bg-gray-100"
-              onClick={Delete}
-            >
-              <p>確定刪除</p>
-            </button>
-          </DialogContent>
-        </Dialog> */}
         {DeletedialogOpen && <AlertDialogSlide handlefunction={Delete} title={"確認刪除 " + Comment + " 這則留言"} />}
       </div>
       <ToastContainer position="bottom-left" autoClose={3000} />

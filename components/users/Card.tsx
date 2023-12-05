@@ -2,7 +2,7 @@ import { Avatar } from "@mui/material";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
-const Card = () => {
+const Card = (props: any) => {
   const Creater = useSelector((state: any) => state.Creater);
 
   //ui function
@@ -13,11 +13,11 @@ const Card = () => {
   };
 
   return (
-    <div className="h-full w-full dark:text">
+    <div className="my-2 h-full w-full dark:text">
       <div className="tablet:h-full tablet:w-full">
         {isFlipped ? (
           <button
-            className="h-full rounded-lg bg-cover bg-center bg-no-repeat drop-shadow-xl"
+            className="h-full w-full rounded-lg bg-cover bg-center bg-no-repeat drop-shadow-xl"
             style={{
               backgroundImage: `url(${Creater.profile.background})`,
             }}
@@ -25,12 +25,8 @@ const Card = () => {
           >
             <div className="absolute inset-0 rounded-lg bg-gray-300 opacity-75 transition group-hover:opacity-75"></div>
             <div className="flex h-full flex-row">
-              <div className="flex h-48 w-2/6 flex-col items-center p-3 ">
-                <Avatar
-                  src={Creater.profile.picture}
-                  className="h-auto w-full rounded-lg"
-                  alt="Picture of the author"
-                />
+              <div className="flex h-full w-1/3 flex-col items-center p-3 ">
+                <Avatar src={Creater.profile.picture} className="h-48 w-full rounded-lg" alt="Picture of the author" />
               </div>
               <div className="z-40 flex h-auto w-4/6 flex-col justify-start p-3 text-left dark:text">
                 <h5 className="mb-2 text-3xl font-medium">{Creater.profile.username}</h5>
@@ -44,9 +40,8 @@ const Card = () => {
             </div>
           </button>
         ) : (
-          //FIXME: 更改上傳圖片後的背景
           <button
-            className="h-full rounded-lg bg-cover bg-center bg-no-repeat drop-shadow-xl"
+            className="h-full w-full rounded-lg bg-cover bg-center bg-no-repeat drop-shadow-xl"
             style={{
               backgroundImage: `url(${Creater.profile.background})`,
             }}
@@ -54,12 +49,8 @@ const Card = () => {
           >
             <div className="absolute inset-0 rounded-lg bg-gray-300 opacity-75 transition group-hover:opacity-75"></div>
             <div className="flex h-full flex-row">
-              <div className="flex h-48 w-2/6 flex-col items-center p-3">
-                <Avatar
-                  src={Creater.profile.picture}
-                  className="h-auto w-full rounded-lg"
-                  alt="Picture of the author"
-                />
+              <div className="flex h-full w-1/3 flex-col items-center p-3">
+                <Avatar src={Creater.profile.picture} className="h-48 w-full rounded-lg" alt="Picture of the author" />
               </div>
 
               <div className="z-40 flex h-auto w-4/6 flex-col justify-start p-3 text-left dark:text">
@@ -67,15 +58,15 @@ const Card = () => {
                 <dl className="mx-auto grid grid-cols-3 p-3 text-gray-900 sm:grid-cols-3 sm:p-2 xl:grid-cols-3">
                   <div className="flex flex-col p-2 text-center">
                     <dt className="text-base">所有文章</dt>
-                    <dd className="text-gray-800 ">50</dd>
+                    <dd className="text-gray-800 ">{props.menuList}</dd>
                   </div>
                   <div className="flex flex-col p-2 text-center">
                     <dt className="text-base">粉絲</dt>
-                    <dd className="text-gray-800 ">40</dd>
+                    <dd className="text-gray-800 ">{props.followers}</dd>
                   </div>
                   <div className="flex flex-col p-2 text-center">
                     <dt className="text-base">追蹤中</dt>
-                    <dd className="text-gray-800 ">20</dd>
+                    <dd className="text-gray-800 ">{props.subscribers}</dd>
                   </div>
                 </dl>
                 {/* FIXME:社群關係*/}

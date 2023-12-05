@@ -1,15 +1,25 @@
 import ArrowOutwardOutlinedIcon from "@mui/icons-material/ArrowOutwardOutlined";
-import BookmarkAddOutlinedIcon from "@mui/icons-material/BookmarkAddOutlined";
+import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
+import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import Avatar from "@mui/material/Avatar";
 import MarkdownIt from "markdown-it";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { _apiCheckJwt, apiArticleLike, apiArticleLikesRecord, apiArticleTakeAllArticle } from "@/components/api";
+import {
+  _apiCheckJwt,
+  apiArticleLike,
+  apiArticleLikesRecord,
+  apiArticleTakeAllArticle,
+  apiBookMarkAdd,
+  apiBookMarkAddReord,
+  apiBookMarkDelete,
+} from "@/components/api";
 import Comment from "@/components/article/comment/Comment";
 import CreateComment from "@/components/article/comment/CreateComment";
 import DonateButton from "@/components/users/DonateButton";
+import Follow from "@/components/users/Follow";
 import { update } from "@/store/CreaterSlice";
 import styles from "@/styles/MarkdownEditor.module.css";
 export default function Article(props: any) {
@@ -27,6 +37,8 @@ export default function Article(props: any) {
   const { contents } = props.article;
   const [likeSuccess, setLikeSuccess] = useState(false);
   const [articleLike, setArticleLike] = useState(false);
+  const [bookmark, setbookmark] = useState(false);
+  const [bookmarksuccess, setbookmarksuccess] = useState(false);
   const md = new MarkdownIt({
     html: true,
     linkify: true,
@@ -44,9 +56,12 @@ export default function Article(props: any) {
         >
           {/* TODO: 文章擁有者資料 頭貼、名稱 */}
           <div className="flex flex-row items-center">
-            <Avatar className="h-auto w-10 rounded-full" src={props.createrData.picture} alt="not find Avatar" />
+            <Avatar src={props.createrData.picture} alt="not find Avatar" />
             <div className="px-2">
               <div>{props.createrData.username}</div>
+            </div>
+            <div className="ml-10">
+              {props.createrData.id != User.profile.id ? <Follow subscriberId={props.createrData.id} /> : null}
             </div>
           </div>
           <button>
@@ -143,10 +158,72 @@ export default function Article(props: any) {
                 <IosShareOutlinedIcon />
               </button> */}
               {/* 收藏 */}
-              <button className="mx-1 h-10 w-10 rounded-lg text-yellow-500 hover:bg-yellow-300 hover:text-white">
-                <BookmarkAddOutlinedIcon />
-              </button>
-              <p className="mx-1 font-mono">{props.article.updateAt.substr(0, 10)}</p>
+              {User.profile.login ? (
+                <div className="flex items-center">
+                  <button
+                    className="relative mx-1 h-10 w-10 rounded-lg text-yellow-500 hover:bg-yellow-300 hover:text-white"
+                    onClick={async () => {
+                      let jwt = "";
+                      await _apiCheckJwt().then((res: any) => (jwt = res.data.jwt));
+                      if (jwt.trim() !== "" && props.ArticleUrl != null) {
+                        let BookMarkStatus = false;
+                        await apiBookMarkAddReord(jwt).then((res: any) => {
+                          const BookMarkAddReord = res.data.articles;
+                          if (BookMarkAddReord !== null) {
+                            BookMarkStatus = BookMarkAddReord.some((article: any) => {
+                              const BookMarkAddMatching = article.articleId.id.toString() === props.ArticleUrl;
+                              return BookMarkAddMatching;
+                            });
+                          }
+                          setbookmark(BookMarkStatus);
+                        });
+                        if (BookMarkStatus) {
+                          await apiBookMarkDelete(jwt, props.ArticleUrl)
+                            .then(() => {
+                              setbookmark(false);
+                              setbookmarksuccess(true);
+                              setTimeout(() => {
+                                setbookmarksuccess(false);
+                              }, 2000);
+                            })
+                            .catch(() => {
+                              return {
+                                notFound: true,
+                              };
+                            });
+                        } else {
+                          await apiBookMarkAdd(jwt, props.ArticleUrl)
+                            .then(() => {
+                              setbookmark(true);
+                              setbookmarksuccess(true);
+                              setTimeout(() => {
+                                setbookmarksuccess(false);
+                              }, 2000);
+                            })
+                            .catch(() => {
+                              return {
+                                notFound: true,
+                              };
+                            });
+                        }
+                      }
+                    }}
+                  >
+                    {bookmark ? <BookmarkAddedIcon /> : <BookmarkAddIcon />}
+                    {bookmarksuccess ? (
+                      <span
+                        className={`pointer-events-none absolute bottom-full -left-1/2 z-10 mb-2 ml-2 w-24 rounded-lg p-2 text-center text-xs ${
+                          !bookmark ? "bg-gray-800 text-gray-100" : "bg-red-500 text-white"
+                        }`}
+                      >
+                        {bookmark ? "收藏成功" : "刪除收藏"}
+                      </span>
+                    ) : null}
+                  </button>
+
+                  <p className="m-1 flex font-mono">{props.article.updateAt.substr(0, 10)}</p>
+                </div>
+              ) : null}
             </div>
           </div>
           {/* 輸入留言 */}
@@ -178,106 +255,6 @@ export default function Article(props: any) {
                 />
               );
             })}
-          </div>
-        </div>
-      </div>
-
-      {/* 右側欄 */}
-      <div className="hidden tablet:col-span-3 tablet:flex tablet:flex-col laptop:col-span-4">
-        {/* TODO: 文章擁有者資料 頭貼、名稱 */}
-        <div className="flex justify-center">
-          <Avatar className="h-auto w-1/2 rounded-full" src={props.createrData.picture} alt="not find Avatar" />
-        </div>
-        <div className="text-center">
-          {/* ${Username} */}
-          <div className="my-2 px-2">{props.createrData.username}</div>
-          {/* FIXME: 標籤 */}
-          {/*Label*/}
-          {/* <span className="inline-grid grid-cols-3 gap-1">{label}</span> */}
-          <button className="my-2 rounded border border-red-500 py-2 px-20 font-semibold text-red-500 hover:bg-red-500 hover:text-white">
-            追蹤
-          </button>
-        </div>
-        {/* FIXME:推薦使用者資料 */}
-        <div className="my-5 px-2">
-          <div className="text-base font-semibold">推薦使用者</div>
-          <ul className="divide-y divide-blue-200">
-            <li className="grid w-full grid-cols-4 py-1">
-              <div className="col-span-3 flex">
-                <Avatar></Avatar>
-                <div className="px-2">
-                  <p>Lin</p>
-                  <p className="line-clamp-2">Hello</p>
-                </div>
-              </div>
-              <button className="my-2 h-8 rounded-full border border-red-500 px-2 font-semibold text-red-500 hover:bg-red-500 hover:text-white">
-                追蹤
-              </button>
-            </li>
-            <li className="grid w-full grid-cols-4 py-1">
-              <div className="col-span-3 flex">
-                <Avatar></Avatar>
-                <div className="px-2">
-                  <p>Rj</p>
-                  <p className="line-clamp-2">
-                    ng duis excepteur esse in duis nostrud occaecat mollit incididunt desaccaecat
-                  </p>
-                </div>
-              </div>
-              <button className="my-2 h-8  rounded-full border border-red-500 px-2 font-semibold text-red-500 hover:bg-red-500 hover:text-white">
-                追蹤
-              </button>
-            </li>
-            <li className="grid w-full grid-cols-4 py-1">
-              <div className="col-span-3 flex">
-                <Avatar></Avatar>
-                <div className="px-2">
-                  <p>Amy</p>
-                  <p className="line-clamp-2">我是一位熱愛設計的設計師</p>
-                </div>
-              </div>
-              <button className="my-2 h-8 rounded-full border border-red-500 px-2 font-semibold text-red-500 hover:bg-red-500 hover:text-white">
-                追蹤
-              </button>
-            </li>
-          </ul>
-        </div>
-        {/* FIXME:熱門標籤資料 10筆 */}
-        <div className="my-5 px-2">
-          <div className="text-base font-semibold">熱門標籤</div>
-          <div className="flex flex-wrap gap-2 py-2">
-            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">前端</p>
-            </div>
-            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">狗狗</p>
-            </div>
-            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-              <p className="inline-block pr-1 align-middle">#</p>
-              <p className="inline-block align-middle">網頁設計</p>
-            </div>
-            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">家庭</p>
-            </div>
-            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-              <p className="inline-block pr-1 align-middle">#</p>{" "}
-              <p className="inline-block align-middle">家庭旅遊好去處</p>
-            </div>
-            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">新生季</p>
-            </div>
-            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">Chatgpt</p>
-            </div>
-            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">Java</p>
-            </div>
-            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">C++</p>
-            </div>
-            <div className="flex items-center rounded-lg border border-gray-500 px-2 text-slate-900 dark:text-white ">
-              <p className="inline-block pr-1 align-middle">#</p> <p className="inline-block align-middle">後端</p>
-            </div>
           </div>
         </div>
       </div>

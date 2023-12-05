@@ -1,3 +1,5 @@
+import "react-toastify/dist/ReactToastify.css";
+
 import {
   ChevronLeft,
   ChevronRight,
@@ -9,15 +11,14 @@ import {
 import MarkdownIt from "markdown-it";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 import Web3 from "web3";
 
-import FailAlert from "@/components/alert/Fail";
+import AlertDialogSlide from "@/components/alert/AlertDialogSlide";
 import { _apiCheckJwt, apiArticleCreate } from "@/components/api";
 import { ArticleHistoryFunction } from "@/helpers/Contract/ArticleHistoryFunction";
 import Mining from "@/pages/loading/mining";
 import styles from "@/styles/MarkdownEditor.module.css";
-
-import AlertDialogSlide from "../alert/AlertDialogSlide";
 
 const MarkdownEditor = () => {
   //TODO: Handle function
@@ -55,8 +56,11 @@ const MarkdownEditor = () => {
               ? errorMessages.join("\n")
               : "失敗，請再重新試試（如有問題可以向平台反映）。\n";
 
-          setFailMessage(errorMessage);
-          setFailAlert(true);
+          toast.error(`${errorMessage}`, {
+            style: {
+              boxShadow: "none",
+            },
+          });
         });
     } else {
       window.alert("請先登入謝謝");
@@ -90,8 +94,11 @@ const MarkdownEditor = () => {
           setMarkdown("");
         })
         .catch(() => {
-          setFailMessage("歷史紀錄失敗，請再重新試試（如有問題可以向平台反映）。\n");
-          setFailAlert(true);
+          toast.error("歷史紀錄失敗，請再重新試試（如有問題可以向平台反映）。\n", {
+            style: {
+              boxShadow: "none",
+            },
+          });
           setIsLoading(false);
         });
     }
@@ -100,8 +107,6 @@ const MarkdownEditor = () => {
   //TODO: UI function
   const [edit, setedit] = useState(true);
   const [preview, setpreview] = useState(true);
-  const [fail, setFailAlert] = useState(false);
-  const [failMessage, setFailMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [alertDialogSlide, setAlertDialogSlide] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -294,7 +299,7 @@ const MarkdownEditor = () => {
           />
         </div>
       )}
-      {fail && <FailAlert message={failMessage} />}
+      <ToastContainer position="bottom-left" autoClose={3000} />
       {alertDialogSlide && (
         <AlertDialogSlide
           handlefunction={jumpPage}
